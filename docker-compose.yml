@@ -1,0 +1,35 @@
+version: '3.2'
+
+services:
+  mariadb_laravel:
+    image: docker.io/bitnami/mariadb:10.6
+    # volumes:
+    #   - ./backup:/bitnami/mariadb
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=user
+      - MARIADB_DATABASE=api_rest
+  api_rest_laravel:
+    image: docker.io/bitnami/laravel:9
+    ports:
+      - 8100:8000
+    environment:
+      - DB_HOST=mariadb_laravel
+      - DB_PORT=3306
+      - DB_USERNAME=user
+      - DB_DATABASE=api_rest
+    volumes:
+      - './api-rest:/app'
+    depends_on:
+      - mariadb_laravel
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8110:80
+    environment:
+      - MYSQL_HOST=mysql
+      - PMA_ARBITRARY=1
+    depends_on:
+      - mariadb_laravel
