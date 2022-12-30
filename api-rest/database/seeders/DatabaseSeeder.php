@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             DepartamentoSeeder::class,
             MunicipioSeeder::class,
             GeneroSeeder::class,
+            UniversidadSeeder::class,
         ]);
         // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

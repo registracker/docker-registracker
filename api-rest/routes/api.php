@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\DepartamentoController;
 use App\Http\Controllers\Api\MunicipioController;
 use App\Http\Controllers\Api\DepartamentoMunicipioController;
 use App\Http\Controllers\Api\GeneroController;
+use App\Http\Controllers\Api\UniversidadController;
 use App\Http\Controllers\Api\ZonaDepartamentoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('departamentos', DepartamentoController::class);
     Orion::resource('municipios', MunicipioController::class);
     Orion::resource('generos', GeneroController::class);
+    Orion::resource('universidades', UniversidadController::class);
 
     // No es necesario incluirlo ya que se puede agregar cómo paramentros la asociación
     /**

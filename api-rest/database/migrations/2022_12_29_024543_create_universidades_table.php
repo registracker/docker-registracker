@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('universidades', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100);
-            $table->string('abreviatura', 20);
+            $table->string('nombre', 200);
+            $table->string('abreviatura', 20)->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();
