@@ -16,9 +16,9 @@ class ZonaSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Zona::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // Zona::truncate();
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $data = [
             [
                 'id' => 1,
@@ -37,6 +37,10 @@ class ZonaSeeder extends Seeder
                 'nombre' => 'Zona Oriental',
             ],
         ];
-        Zona::insert($data);
+
+        foreach ($data as $valor) {
+            Zona::create($valor);
+        }
+
     }
 }

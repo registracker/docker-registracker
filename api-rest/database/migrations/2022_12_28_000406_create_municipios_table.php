@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('municipios', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_departamento')->constrained('departamentos');
-            $table->string('nombre', 30);
-            $table->string('abreviatura', 30)->nullable();
+            $table->string('nombre', 40);
+            $table->string('abreviatura', 10)->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();

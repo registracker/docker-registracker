@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['as' => 'api.'], function() {
+    // Orion::resource('zonas', ZonaController::class)->only(['index', 'store']);
     Orion::resource('zonas', ZonaController::class);
 });
 
