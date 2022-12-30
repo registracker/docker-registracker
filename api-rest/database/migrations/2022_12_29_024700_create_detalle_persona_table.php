@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_genero')->constrained('generos')->nullable();
             $table->foreignId('id_universidad')->constrained('universidades')->nullable();
-            $table->foreignId('id_clasificacion_carrera')->constrained('clasificacion_carreras')->nullable();
             $table->date('fecha_nacimiento')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
