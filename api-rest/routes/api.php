@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\DepartamentoController;
+use App\Http\Controllers\Api\DepartamentoMunicipioController;
+use App\Http\Controllers\Api\MunicipioController;
 use App\Http\Controllers\Api\ZonaController;
+use App\Http\Controllers\Api\ZonaDepartamentoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Orion\Facades\Orion;
@@ -23,6 +27,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['as' => 'api.'], function() {
     // Orion::resource('zonas', ZonaController::class)->only(['index', 'store']);
     Orion::resource('zonas', ZonaController::class);
+    Orion::resource('departamentos', DepartamentoController::class);
+    Orion::resource('municipios', MunicipioController::class);
+    Orion::hasManyResource('zonas', 'departamentos', ZonaDepartamentoController::class);
+    Orion::hasManyResource('departamentos', 'municipios', DepartamentoMunicipioController::class);
 });
 
 

@@ -16,4 +16,9 @@ class Departamento extends Model
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
+
+    public function municipios()
+    {
+        return $this->hasMany(Municipio::class, 'id_departamento');
+    }
 }
