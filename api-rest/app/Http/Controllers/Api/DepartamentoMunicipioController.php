@@ -14,11 +14,6 @@ class DepartamentoMunicipioController extends Controller
 
     protected $model = Departamento::class;
 
-    public function resolveUser()
-    {
-        return Auth::guard('sanctum')->user();
-    }
-
     protected $relation = 'municipios';
 
 }

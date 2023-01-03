@@ -9,12 +9,5 @@ use Orion\Http\Controllers\Controller;
 
 class GeneroController extends Controller
 {
-    use DisableAuthorization;
-
     protected $model = Genero::class;
-
-    public function resolveUser()
-    {
-        return Auth::guard('sanctum')->user();
-    }
 }

@@ -10,12 +10,5 @@ use Orion\Concerns\DisableAuthorization;
 
 class MunicipioController extends Controller
 {
-    use DisableAuthorization;
-
     protected $model = Municipio::class;
-
-    public function resolveUser()
-    {
-        return Auth::guard('sanctum')->user();
-    }
 }

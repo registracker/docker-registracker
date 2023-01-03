@@ -23,6 +23,8 @@ services:
       - './api-rest:/app'
     depends_on:
       - mariadb_laravel
+    extra_hosts:
+      - "host.docker.internal:host-gateway" 
   phpmyadmin:
     image: phpmyadmin
     restart: always

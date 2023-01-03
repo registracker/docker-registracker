@@ -33,8 +33,8 @@ class GeneroSeeder extends Seeder
             ],
             [
                 'id' => 4,
-                'nombre' => 'Reservador',
-                'abreviatura' => 'R',
+                'nombre' => 'Prefiero No Decirlo',
+                'abreviatura' => 'PND',
             ],
         ];
 

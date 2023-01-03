@@ -11,13 +11,6 @@ use Orion\Concerns\DisableAuthorization;
 
 class UniversidadController extends Controller
 {
-    use DisableAuthorization;
-
     protected $model = Universidad::class;
-
-    public function resolveUser()
-    {
-        return Auth::guard('sanctum')->user();
-    }
 
 }
