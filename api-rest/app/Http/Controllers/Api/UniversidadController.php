@@ -12,5 +12,4 @@ use Orion\Concerns\DisableAuthorization;
 class UniversidadController extends Controller
 {
     protected $model = Universidad::class;
-
 }

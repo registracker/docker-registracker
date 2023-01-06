@@ -15,5 +15,4 @@ class DepartamentoMunicipioController extends Controller
     protected $model = Departamento::class;
 
     protected $relation = 'municipios';
-
 }

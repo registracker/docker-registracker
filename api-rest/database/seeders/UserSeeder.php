@@ -34,6 +34,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
+        echo ($permisos);
         $user = $usuario->createToken('developer',  $permisos->toArray());
         echo ($user->plainTextToken);
     }

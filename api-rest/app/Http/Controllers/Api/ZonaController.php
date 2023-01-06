@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+// use App\Http\Controllers\Controller as ControllersController;
 use App\Models\Zona;
 use App\Policies\ZonaPolicy;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,6 @@ class ZonaController extends Controller
     // ];
 
     protected $model = Zona::class;
-
 
     /**
      * @var string $policy
@@ -54,10 +54,10 @@ class ZonaController extends Controller
     }
 
     /**
-    * The relations that are loaded by default together with a resource.
-    *
-    * @return array
-    */
+     * The relations that are loaded by default together with a resource.
+     *
+     * @return array
+     */
     // public function alwaysIncludes() : array
     // {
     //     return ['departamentos'];
