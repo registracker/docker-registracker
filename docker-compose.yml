@@ -12,13 +12,6 @@ services:
       - MARIADB_DATABASE=api_rest
   api_rest_laravel:
     image: docker.io/bitnami/laravel:9
-    command: 
-      - /bin/bash -c | php composer install
-    
-    #   - /bin/bash
-    #   - -c
-    #   - |
-    #     php composer install
     ports:
       - 8100:8000
     environment:
