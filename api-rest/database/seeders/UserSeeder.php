@@ -17,25 +17,16 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $separator = ':';
-        $accionesDisponibles = collect(['listar', 'crear', 'actualizar', 'eliminar']);
-        $tablas = collect(['zona', 'departamento', 'municipio', 'genero', 'universidad']);
-        $permisos = collect([]);
-
-        foreach ($tablas as $tabla) {
-            foreach ($accionesDisponibles as $accion) {
-                $permisos->push(collect([$tabla, $accion])->join($separator));
-            }
-        }
-
         $usuario = User::create([
             'name' => 'developer',
             'email' => 'developer@gmail.com',
             'password' => Hash::make('password'),
         ]);
 
-        echo ($permisos);
-        $user = $usuario->createToken('developer',  $permisos->toArray());
+        $usuario->assignRole(Constant::NOMBRE_ROL_ADMIN);
+        $nombrePermisos = $usuario->getAllPermissions()->pluck('name');
+
+        $user = $usuario->createToken(Constant::NOMBRE_ROL_ADMIN,  $nombrePermisos->toArray());
         echo ($user->plainTextToken);
     }
 }
