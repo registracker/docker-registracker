@@ -1,3 +1,12 @@
+## Paquetes instalados
+### [larevel-orion](https://tailflow.github.io/laravel-orion-docs/)
+_Utilizado para la creación de CRUD de tablas independientes._
+
+### [larevel-sanctum](https://laravel.com/docs/9.x/sanctum)
+_Paquete para validar las peticiones de la API._  
+### [larevel-permission](https://spatie.be/docs/laravel-permission/v5/introduction)
+_Gestiona los permisos y roles del apartado web._
+
 ### Iniciar los contenedores
 docker compose up -d
 
@@ -13,6 +22,3 @@ docker-compose exec api_rest_laravel php artisan route:list
 ### Correr commando-off en contenedor
 docker-compose run api_rest_laravel composer install
 
-### Paquetes utilizados
-- https://tailflow.github.io/laravel-orion-docs/
-- https://laravel.com/docs/9.x/sanctum
