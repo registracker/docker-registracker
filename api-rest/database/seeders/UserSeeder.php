@@ -24,9 +24,9 @@ class UserSeeder extends Seeder
         ]);
 
         $usuario->assignRole(Constant::NOMBRE_ROL_ADMIN);
-        $nombrePermisos = $usuario->getAllPermissions()->pluck('name');
+        $nombrePermisos = $usuario->getAllPermissions()->pluck('name')->toArray();
 
-        $user = $usuario->createToken(Constant::NOMBRE_ROL_ADMIN,  $nombrePermisos->toArray());
+        $user = $usuario->createToken(Constant::NOMBRE_ROL_ADMIN,  $nombrePermisos);
         echo ($user->plainTextToken);
     }
 }
