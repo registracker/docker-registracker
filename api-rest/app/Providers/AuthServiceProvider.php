@@ -16,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        'Spatie\Permission\Models\Role' => 'App\Policies\RolePolicy',
         // Zona::class => ZonaPolicy::class,
     ];
 

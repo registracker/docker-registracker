@@ -10,8 +10,6 @@ use Orion\Concerns\DisableAuthorization;
 
 class DepartamentoMunicipioController extends Controller
 {
-    use DisableAuthorization;
-
     protected $model = Departamento::class;
 
     protected $relation = 'municipios';

@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ZonaController;
 use App\Http\Controllers\Api\DepartamentoController;
 use App\Http\Controllers\Api\MunicipioController;
 use App\Http\Controllers\Api\GeneroController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UniversidadController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -59,6 +60,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('municipios', MunicipioController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
     Orion::resource('generos', GeneroController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
     Orion::resource('universidades', UniversidadController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
+    Orion::resource('roles', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
 
     /**
      * TODO
