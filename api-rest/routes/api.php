@@ -8,10 +8,12 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UniversidadController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Orion\Facades\Orion;
+use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,22 +34,55 @@ Route::post('/sanctum/token', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
-        'device_name' => 'required',
+        // 'device_name' => 'required',
     ]);
 
     $user = User::where('email', $request->email)->first();
 
     if (!$user || !Hash::check($request->password, $user->password)) {
         throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
+            'email' => ['Las credenciales proporcionadas son incorrectas.'],
         ]);
     }
 
-    $token =  $user->createToken($request->device_name)->plainTextToken;
+    $token =  $user->createToken('sanctum')->plainTextToken;
 
     return response()->json([
         'token' =>  $token
     ]);
+});
+
+Route::post('/usuario', function (Request $request) {
+    $request->validate([
+        'email' => ['required', 'email', 'unique:users,email', 'max:255'],
+        'password' => ['required'],
+        'nombre_usuario' => ['nullable'],
+        'roles' => ['required', 'exists:roles,id'],
+    ]);
+    DB::beginTransaction();
+    try {
+        $usuario = User::create([
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'name' => $request->nombre_usuario ?? '',
+        ]);
+
+        $idRoles = gettype($request->roles) == 'integer' ? [$request->roles] : $request->roles;
+
+        $roles = Role::whereIn('id', $idRoles);
+        foreach ($roles as $rol) {
+            $usuario->assignRole($rol->name);
+        }
+        DB::commit();
+
+        return response()->json([
+            'usuario' =>  $usuario
+        ]);
+    } catch (\Throwable $th) {
+        //throw $th;
+        DB::rollBack();
+        return response($th);
+    }
 });
 
 Route::group(['as' => 'api.'], function () {
