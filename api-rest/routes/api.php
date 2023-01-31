@@ -96,6 +96,9 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('generos', GeneroController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
     Orion::resource('universidades', UniversidadController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
     Orion::resource('roles', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
+    Orion::resource('medios_desplazamiento', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
+    Orion::resource('incidentes', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
+    Orion::resource('marcadores', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
 
     /**
      * TODO

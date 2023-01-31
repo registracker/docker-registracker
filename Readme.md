@@ -22,3 +22,6 @@ docker-compose exec api_rest_laravel php artisan route:list
 ### Correr commando-off en contenedor
 docker-compose run api_rest_laravel composer install
 
+php artisan make:model MedioDesplazamiento -sc
+php artisan make:model Incidente -sc
+php artisan make:model Marcador -sc
