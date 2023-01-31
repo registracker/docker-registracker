@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
             GeneroSeeder::class,
             UniversidadSeeder::class,
             RolPermissionSeeder::class,
+            IncidenteSeeder::class,
+            MarcadorSeeder::class,
+            MedioDesplazamientoSeeder::class,
             /**
              * UserSeeder debe ir luego de RolPermissionSeeder
              */

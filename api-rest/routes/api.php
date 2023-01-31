@@ -6,6 +6,9 @@ use App\Http\Controllers\Api\MunicipioController;
 use App\Http\Controllers\Api\GeneroController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UniversidadController;
+use App\Http\Controllers\Api\IncidenteController;
+use App\Http\Controllers\Api\MarcadorController;
+use App\Http\Controllers\Api\MedioDesplazamientoController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -96,9 +99,9 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('generos', GeneroController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
     Orion::resource('universidades', UniversidadController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
     Orion::resource('roles', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
-    Orion::resource('medios_desplazamiento', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
-    Orion::resource('incidentes', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
-    Orion::resource('marcadores', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
+    Orion::resource('medios-desplazamiento', MedioDesplazamientoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
+    Orion::resource('incidentes', IncidenteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
+    Orion::resource('marcadores', MarcadorController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy']);
 
     /**
      * TODO

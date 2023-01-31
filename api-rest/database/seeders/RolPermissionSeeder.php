@@ -19,7 +19,7 @@ class RolPermissionSeeder extends Seeder
         $separador = Constant::SEPARADOR;
 
         $accionesDisponibles = collect(['listar', 'crear', 'actualizar', 'eliminar']);
-        $tablas = collect(['zona', 'departamento', 'municipio', 'genero', 'universidad', 'rol']);
+        $tablas = collect(['zona', 'departamento', 'municipio', 'genero', 'universidad', 'rol', 'incidente', 'marcador', 'medio_desplazamiento']);
 
         $role = Role::create(['name' => Constant::NOMBRE_ROL_ADMIN]);
 
