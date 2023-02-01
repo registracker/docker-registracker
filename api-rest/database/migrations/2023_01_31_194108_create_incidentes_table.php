@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('incidentes', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_incidente', 40);
-            $table->string('md_icono_incidente', 40)->nullable();
+            $table->string('nombre', 40);
+            $table->string('icono', 40)->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();

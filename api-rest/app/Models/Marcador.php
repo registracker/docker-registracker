@@ -12,6 +12,7 @@ class Marcador extends Model
 
     protected $table = 'marcadores';
 
+    protected $fillable = ['nombre', 'id', 'icono'];
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';

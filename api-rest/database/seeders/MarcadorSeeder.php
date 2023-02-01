@@ -18,23 +18,23 @@ class MarcadorSeeder extends Seeder
         $data = [
             [
                 'id' => 1,
-                'nombre_marcador' => 'Parada de autobús',
-                'md_icono_marcador' => 'bus-stop',
+                'nombre' => 'Parada de autobús',
+                'icono' => 'bus-stop',
             ],
             [
                 'id' => 2,
-                'nombre_marcador' => 'Semáforo',
-                'md_icono_marcador' => 'traffic-light',
+                'nombre' => 'Semáforo',
+                'icono' => 'traffic-light',
             ],
             [
                 'id' => 3,
-                'nombre_marcador' => 'Alerta',
-                'md_icono_marcador' => 'traffic-cone',
+                'nombre' => 'Alerta',
+                'icono' => 'traffic-cone',
             ],
             [
                 'id' => 4,
-                'nombre_marcador' => 'Rampa de acceso',
-                'md_icono_marcador' => 'wheelchair-accessibility',
+                'nombre' => 'Rampa de acceso',
+                'icono' => 'wheelchair-accessibility',
             ],
         ];
 

@@ -18,23 +18,23 @@ class IncidenteSeeder extends Seeder
         $data = [
             [
                 'id' => 1,
-                'nombre_incidente' => 'Tráfico pesado',
-                'md_icono_incidente' => 'car-speed-limiter',
+                'nombre' => 'Tráfico pesado',
+                'icono' => 'car-speed-limiter',
             ],
             [
                 'id' => 2,
-                'nombre_incidente' => 'Vehículo quedado',
-                'md_icono_incidente' => 'car-off',
+                'nombre' => 'Vehículo quedado',
+                'icono' => 'car-off',
             ],
             [
                 'id' => 3,
-                'nombre_incidente' => 'Reten vehicular',
-                'md_icono_incidente' => 'car',
+                'nombre' => 'Reten vehicular',
+                'icono' => 'car',
             ],
             [
                 'id' => 4,
-                'nombre_incidente' => 'Protesta',
-                'md_icono_incidente' => 'account-group
+                'nombre' => 'Protesta',
+                'icono' => 'account-group
                 ',
             ],
         ];

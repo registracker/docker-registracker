@@ -10,6 +10,8 @@ class Incidente extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = ['nombre', 'id', 'icono'];
+
     protected $table = 'incidentes';
 
     const CREATED_AT = 'fecha_creado';

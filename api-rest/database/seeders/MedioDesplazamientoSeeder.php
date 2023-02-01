@@ -18,33 +18,33 @@ class MedioDesplazamientoSeeder extends Seeder
         $data = [
             [
                 'id' => 1,
-                'nombre_medio_desplazamiento' => 'Autobús',
-                'md_icono_medio_desplazamiento' => '🚌',
+                'nombre' => 'Autobús',
+                'icono' => '🚌',
             ],
             [
                 'id' => 2,
-                'nombre_medio_desplazamiento' => 'Scooter',
-                'md_icono_medio_desplazamiento' => '🛴',
+                'nombre' => 'Scooter',
+                'icono' => '🛴',
             ],
             [
                 'id' => 3,
-                'nombre_medio_desplazamiento' => 'Bicicleta',
-                'md_icono_medio_desplazamiento' => '🚲',
+                'nombre' => 'Bicicleta',
+                'icono' => '🚲',
             ],
             [
                 'id' => 4,
-                'nombre_medio_desplazamiento' => 'Taxi',
-                'md_icono_medio_desplazamiento' => '🚕',
+                'nombre' => 'Taxi',
+                'icono' => '🚕',
             ],
             [
                 'id' => 5,
-                'nombre_medio_desplazamiento' => 'Vehículo',
-                'md_icono_medio_desplazamiento' => '🚗',
+                'nombre' => 'Vehículo',
+                'icono' => '🚗',
             ],
             [
                 'id' => 6,
-                'nombre_medio_desplazamiento' => 'U.F.O.',
-                'md_icono_medio_desplazamiento' => '🛸',
+                'nombre' => 'U.F.O.',
+                'icono' => '🛸',
             ],
         ];
 
