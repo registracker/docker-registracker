@@ -55,6 +55,22 @@ Route::post('/sanctum/token', function (Request $request) {
     ]);
 });
 
+Route::middleware('auth:sanctum')->delete('/token', function (Request $request) {
+    $request->user()->currentAccessToken()->delete();
+
+    return response()->json([
+        'token' =>  'Token eliminado.'
+    ]);
+});
+
+Route::middleware('auth:sanctum')->delete('/tokens', function (Request $request) {
+    $request->user()->tokens()->delete();
+
+    return response()->json([
+        'token' =>  'Token eliminado.'
+    ]);
+});
+
 Route::post('/usuario', function (Request $request) {
     $request->validate([
         'email' => ['required', 'email', 'unique:users,email', 'max:255'],
