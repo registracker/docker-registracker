@@ -1,4 +1,3 @@
-README UPDATED
 ## Paquetes instalados
 ### [larevel-orion](https://tailflow.github.io/laravel-orion-docs/)
 _Utilizado para la creación de CRUD de tablas independientes._
