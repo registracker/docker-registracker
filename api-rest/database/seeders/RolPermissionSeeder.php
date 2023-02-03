@@ -21,12 +21,19 @@ class RolPermissionSeeder extends Seeder
         $accionesDisponibles = collect(['listar', 'crear', 'actualizar', 'eliminar']);
         $tablas = collect(['zona', 'departamento', 'municipio', 'genero', 'universidad', 'rol', 'incidente', 'marcador', 'medio_desplazamiento']);
 
-        $role = Role::create(['name' => Constant::NOMBRE_ROL_ADMIN]);
+        $roleAdministrador = Role::create(['name' => Constant::ROL_ADMINISTRADOR]);
+        $roleParticipante = Role::create(['name' => Constant::ROL_PARTICIPANTE]);
+        $roleInvestigador = Role::create(['name' => Constant::ROL_INVESTIGADOR]);
 
         foreach ($tablas as $tbl) {
             foreach ($accionesDisponibles as $accion) {
                 $permission = Permission::create(['name' => $tbl . $separador . $accion, 'guard_name' => 'web']);
-                $role->givePermissionTo($permission);
+
+                $roleAdministrador->givePermissionTo($permission);
+                if (in_array($accion, ['listar', 'crear'])) {
+                    $roleParticipante->givePermissionTo($permission);
+                    $roleInvestigador->givePermissionTo($permission);
+                }
             }
         }
     }

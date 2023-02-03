@@ -23,10 +23,10 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $usuario->assignRole(Constant::NOMBRE_ROL_ADMIN);
-        $nombrePermisos = $usuario->getAllPermissions()->pluck('name')->toArray();
+        $usuario->assignRole(Constant::ROL_ADMINISTRADOR);
+        $nombrePermisos = $usuario->getPermisos();
 
-        $user = $usuario->createToken(Constant::NOMBRE_ROL_ADMIN,  $nombrePermisos);
+        $user = $usuario->createToken(Constant::ROL_ADMINISTRADOR,  $nombrePermisos);
         echo ($user->plainTextToken);
     }
 }

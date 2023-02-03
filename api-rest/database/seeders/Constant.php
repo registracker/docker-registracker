@@ -5,5 +5,7 @@ namespace Database\Seeders;
 class Constant
 {
     const SEPARADOR = ':';
-    const NOMBRE_ROL_ADMIN = 'admin_developer';
+    const ROL_ADMINISTRADOR = 'rol_administrador';
+    const ROL_INVESTIGADOR = 'rol_investigador';
+    const ROL_PARTICIPANTE = 'rol_participante';
 }

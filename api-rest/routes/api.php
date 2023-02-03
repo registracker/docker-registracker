@@ -48,10 +48,19 @@ Route::post('/sanctum/token', function (Request $request) {
         ]);
     }
 
-    $token =  $user->createToken('sanctum')->plainTextToken;
+    $nombrePermisos =  $user->getPermisos();
+    $token =  $user->createToken('sanctum',  $nombrePermisos)->plainTextToken;
 
     return response()->json([
         'token' =>  $token
+    ]);
+});
+
+
+Route::middleware('auth:sanctum')->post('/token/permisos', function (Request $request) {
+
+    return response()->json([
+        'token' => $request->user()->currentAccessToken()
     ]);
 });
 
