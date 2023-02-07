@@ -58,9 +58,8 @@ Route::post('/sanctum/token', function (Request $request) {
 
 
 Route::middleware('auth:sanctum')->post('/token/permisos', function (Request $request) {
-
     return response()->json([
-        'token' => $request->user()->currentAccessToken()
+        'user' => $request->user()->currentAccessToken()
     ]);
 });
 

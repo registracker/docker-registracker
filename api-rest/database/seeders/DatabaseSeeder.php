@@ -26,10 +26,13 @@ class DatabaseSeeder extends Seeder
             IncidenteSeeder::class,
             MarcadorSeeder::class,
             MedioDesplazamientoSeeder::class,
+            EstadoSolicitudSeeder::class,
             /**
              * UserSeeder debe ir luego de RolPermissionSeeder
+             * EstadoCuentaSeeder debe ir luego de UserSeeder
              */
             UserSeeder::class,
+            EstadoCuentaSeeder::class,
         ]);
         // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
