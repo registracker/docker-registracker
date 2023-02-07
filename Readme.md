@@ -16,6 +16,8 @@ docker-compose exec api_rest_laravel php artisan migrate:refresh --seed
 ### Crear politica
 docker-compose exec api_rest_laravel php artisan make:policy PostPolicy --model=Post
 docker-compose exec api_rest_laravel php artisan make:seeder EstadoSolicitud
+docker-compose exec api_rest_laravel php artisan make:migration create_puntos_seguimiento_table
+sudo chown -R $USER:$USER api-rest/app/Models/
 
 ### Listar las rutas
 docker-compose exec api_rest_laravel php artisan route:list

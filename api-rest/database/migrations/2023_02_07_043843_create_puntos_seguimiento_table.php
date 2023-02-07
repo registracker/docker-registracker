@@ -13,10 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('solicitud_cuenta', function (Blueprint $table) {
+        Schema::create('puntos_seguimiento', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_usuario')->unique()->constrained('users');
-            $table->foreignId('id_estado_solicitud')->constrained('estados_solicitud');
+            $table->foreignId('id_medio_desplazamiento')->constrained('medios_desplazamiento');
+            $table->foreignId('id_incidente')->constrained('incidentes')->nullable();
+            $table->uuid('identificador_recorrido');
+            $table->double('latitude', 10, 8);
+            $table->double('longitude', 11, 8);
+            $table->double('altitude')->nullable();
+            $table->double('precision')->nullable();
+            $table->double('velocidad')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();
@@ -30,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('solicitud_cuenta');
+        Schema::dropIfExists('puntos_seguimiento');
     }
 };
