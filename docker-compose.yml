@@ -15,14 +15,17 @@ services:
     ports:
       - 8100:8000
     environment:
-      - DB_HOST=mariadb_laravel
-      - DB_PORT=3306
-      - DB_USERNAME=user
-      - DB_DATABASE=api_rest
+      - DB_HOST=postgis
+      - DB_PORT=5432
+      - DB_USERNAME=postgis
+      - DB_DATABASE=postgres
+      - DB_CONNECTION=pgsql
+      - DB_PASSWORD=postgis1234
     volumes:
-      - './api-rest:/app'
+      - ./api-rest:/app
     depends_on:
       - mariadb_laravel
+      - postgis
     extra_hosts:
       - "host.docker.internal:host-gateway" 
   phpmyadmin:
@@ -35,3 +38,22 @@ services:
       - PMA_ARBITRARY=1
     depends_on:
       - mariadb_laravel
+  postgis:
+    image: postgis/postgis:13-3.3
+    restart: always
+    ports:
+      - 8300:80
+    environment:
+      - POSTGRES_USER=postgis
+      - POSTGRES_PASSWORD=postgis1234
+      - POSTGRES_DB=postgis
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=postgis@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=postgis
+    ports:
+      - 8400:80
+    depends_on:
+      - postgis

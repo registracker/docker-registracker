@@ -28,3 +28,7 @@ docker-compose run api_rest_laravel composer install
 php artisan make:model MedioDesplazamiento -sc
 php artisan make:model Incidente -sc
 php artisan make:model Marcador -sc
+
+docker exec -ti tracking_api_rest_laravel_1 bash 
+echo 'extension=pdo_pgsql' >> /opt/bitnami/php/etc/php.ini && echo 'extension=php_pdo_pgsql' >> /opt/bitnami/php/etc/php.ini
+echo 'extension=pdo_pgsql.so' >> /opt/bitnami/php/etc/php.ini && echo 'extension=pgsql.so' >> /opt/bitnami/php/etc/php.ini

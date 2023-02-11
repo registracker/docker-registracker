@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('puntos_seguimiento', function (Blueprint $table) {
             $table->id();
+            $table->foreignUuid('recorrido_id');
             $table->foreignId('id_medio_desplazamiento')->constrained('medios_desplazamiento');
-            $table->foreignId('id_incidente')->constrained('incidentes')->nullable();
-            $table->uuid('identificador_recorrido');
             $table->double('latitude', 10, 8);
             $table->double('longitude', 11, 8);
             $table->double('altitude')->nullable();
