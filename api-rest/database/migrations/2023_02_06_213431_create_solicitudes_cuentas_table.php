@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('solicitud_cuenta', function (Blueprint $table) {
+        Schema::create('solicitudes_cuentas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_usuario')->unique()->constrained('users');
             $table->foreignId('id_estado_solicitud')->constrained('estados_solicitud');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('solicitud_cuenta');
+        Schema::dropIfExists('solicitudes_cuentas');
     }
 };
