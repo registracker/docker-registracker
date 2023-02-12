@@ -13,15 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('coordenadas_desplazamiento', function (Blueprint $table) {
+        Schema::create('clasificaciones_vehicular', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('desaplazamiento_id');
-            $table->foreignId('id_medio_desplazamiento')->constrained('medios_desplazamiento');
-            $table->double('latitud', 10, 8);
-            $table->double('longitud', 11, 8);
-            $table->double('altitud')->nullable();
-            $table->double('precision')->nullable();
-            $table->double('velocidad')->nullable();
+            $table->string('nombre', 64);
+            $table->string('version', 10)->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();
@@ -35,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coordenadas_desplazamiento');
+        Schema::dropIfExists('clasificaciones_vehicular');
     }
 };
