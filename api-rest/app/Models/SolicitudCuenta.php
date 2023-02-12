@@ -10,7 +10,7 @@ class SolicitudCuenta extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'solicitud_cuenta';
+    protected $table = 'solicitudes_cuentas';
 
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';

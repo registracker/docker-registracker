@@ -15,12 +15,17 @@ services:
     ports:
       - 8100:8000
     environment:
-      - DB_HOST=postgis
-      - DB_PORT=5432
-      - DB_USERNAME=postgis
-      - DB_DATABASE=postgres
-      - DB_CONNECTION=pgsql
-      - DB_PASSWORD=postgis1234
+      - DB_CONNECTION=mysql
+      - DB_HOST=mariadb_laravel
+      - DB_PORT=3306
+      - DB_USERNAME=user
+      - DB_DATABASE=api_rest
+      # - DB_HOST=postgis
+      # - DB_PORT=5432
+      # - DB_USERNAME=postgis
+      # - DB_DATABASE=postgres
+      # - DB_CONNECTION=pgsql
+      # - DB_PASSWORD=postgis1234
     volumes:
       - ./api-rest:/app
     depends_on:

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\UniversidadController;
 use App\Http\Controllers\Api\IncidenteController;
 use App\Http\Controllers\Api\MarcadorController;
 use App\Http\Controllers\Api\MedioDesplazamientoController;
+use App\Http\Controllers\Api\RoleControllerDisableAuthorization;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -122,7 +123,8 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('municipios', MunicipioController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('generos', GeneroController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('universidades', UniversidadController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('roles', RoleController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('roles', RoleController::class)->only(['search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('roles', RoleControllerDisableAuthorization::class)->only(['index'])->withSoftDeletes();
     Orion::resource('medios-desplazamiento', MedioDesplazamientoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('incidentes', IncidenteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('marcadores', MarcadorController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
