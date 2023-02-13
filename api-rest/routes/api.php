@@ -129,7 +129,7 @@ Route::post('/usuario', function (Request $request) {
     }
 });
 
-Route::post('/usuario/admin', function (Request $request) {
+Route::middleware('auth:sanctum')->post('/usuario/admin', function (Request $request) {
     $ID_ESTADO_ACTIVA = 1;
 
     $request->validate([
