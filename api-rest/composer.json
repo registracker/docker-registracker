@@ -12,7 +12,7 @@
         "laravel/tinker": "^2.7",
         "spatie/laravel-permission": "^5.7",
         "spatie/laravel-ray": "^1.31",
-        "tailflow/laravel-orion": "^2.17"
+        "tailflow/laravel-orion": "^2.19"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

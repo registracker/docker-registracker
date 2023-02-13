@@ -9,7 +9,8 @@ use App\Http\Controllers\Api\UniversidadController;
 use App\Http\Controllers\Api\IncidenteController;
 use App\Http\Controllers\Api\MarcadorController;
 use App\Http\Controllers\Api\MedioDesplazamientoController;
-use App\Http\Controllers\Api\RoleControllerDisableAuthorization;
+use App\Http\Controllers\Api\RoleDisableAuthorizationController;
+use App\Models\SolicitudCuenta;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Orion\Facades\Orion;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +40,6 @@ Route::post('/sanctum/token', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
-        // 'device_name' => 'required',
     ]);
 
     $user = User::where('email', $request->email)->first();
@@ -74,19 +75,26 @@ Route::middleware('auth:sanctum')->delete('/token', function (Request $request) 
 
 Route::middleware('auth:sanctum')->delete('/tokens', function (Request $request) {
     $request->user()->tokens()->delete();
-
     return response()->json([
-        'token' =>  'Token eliminado.'
+        'token' =>  'Tokens eliminados.'
     ]);
 });
 
 Route::post('/usuario', function (Request $request) {
+    $ID_ESTADO_REVISION = 2;
+    $ID_ESTADO_ACTIVA = 1;
+
     $request->validate([
         'email' => ['required', 'email', 'unique:users,email', 'max:255'],
         'password' => ['required'],
         'nombre_usuario' => ['nullable'],
-        'roles' => ['required', 'exists:roles,id'],
+        'rol' => ['required', 'exists:roles,id'],
+    ], [
+        'email' => 'El correo es requerido y debe ser único.',
+        'password' => 'Debe agregar password.',
+        'rol' => 'El rol es inválido.'
     ]);
+
     DB::beginTransaction();
     try {
         $usuario = User::create([
@@ -95,16 +103,24 @@ Route::post('/usuario', function (Request $request) {
             'name' => $request->nombre_usuario ?? '',
         ]);
 
-        $idRoles = gettype($request->roles) == 'integer' ? [$request->roles] : $request->roles;
-
-        $roles = Role::whereIn('id', $idRoles);
-        foreach ($roles as $rol) {
-            $usuario->assignRole($rol->name);
-        }
+        $rol = Role::findOrFail($request->rol);
+        $usuario->assignRole($rol->name);
         DB::commit();
 
+        $estadoCuenta = $ID_ESTADO_REVISION;
+
+        if ($request->rol ==  $ID_ESTADO_REVISION && Str::of($request->email)->endsWith('@ues.edu.sv')) {
+            $estadoCuenta = $ID_ESTADO_ACTIVA;
+        }
+
+        SolicitudCuenta::create([
+            'id_usuario' => $usuario->id,
+            'id_estado_solicitud' => $estadoCuenta,
+        ]);
+
         return response()->json([
-            'usuario' =>  $usuario
+            'usuario' =>  $usuario,
+            'estado_cuenta' =>  $usuario->solicitud->estado->nombre,
         ]);
     } catch (\Throwable $th) {
         //throw $th;
@@ -112,6 +128,49 @@ Route::post('/usuario', function (Request $request) {
         return response($th);
     }
 });
+
+Route::post('/usuario/admin', function (Request $request) {
+    $ID_ESTADO_ACTIVA = 1;
+
+    $request->validate([
+        'email' => ['required', 'email', 'unique:users,email', 'max:255'],
+        'password' => ['required'],
+        'nombre_usuario' => ['nullable'],
+        'rol' => ['required', 'exists:roles,id'],
+    ], [
+        'email' => 'El correo es requerido y debe ser único.',
+        'password' => 'Debe agregar password.',
+        'rol' => 'El rol es inválido.'
+    ]);
+
+    DB::beginTransaction();
+    try {
+        $usuario = User::create([
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'name' => $request->nombre_usuario ?? '',
+        ]);
+
+        $rol = Role::findOrFail($request->rol);
+        $usuario->assignRole($rol->name);
+        DB::commit();
+
+        SolicitudCuenta::create([
+            'id_usuario' => $usuario->id,
+            'id_estado_solicitud' => $ID_ESTADO_ACTIVA,
+        ]);
+
+        return response()->json([
+            'usuario' =>  $usuario,
+            'estado_cuenta' =>  $usuario->solicitud->estado->nombre,
+        ]);
+    } catch (\Throwable $th) {
+        //throw $th;
+        DB::rollBack();
+        return response($th);
+    }
+});
+
 
 Route::group(['as' => 'api.'], function () {
     /**
@@ -124,7 +183,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('generos', GeneroController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('universidades', UniversidadController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('roles', RoleController::class)->only(['search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('roles', RoleControllerDisableAuthorization::class)->only(['index'])->withSoftDeletes();
+    Orion::resource('roles', RoleDisableAuthorizationController::class)->only(['index'])->withSoftDeletes();
     Orion::resource('medios-desplazamiento', MedioDesplazamientoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('incidentes', IncidenteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('marcadores', MarcadorController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();

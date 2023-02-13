@@ -48,4 +48,8 @@ class User extends Authenticatable
         return $this->getAllPermissions()->pluck('name')->toArray();
     }
 
+    public function solicitud()
+    {
+        return $this->hasOne(SolicitudCuenta::class, 'id_usuario');
+    }
 }

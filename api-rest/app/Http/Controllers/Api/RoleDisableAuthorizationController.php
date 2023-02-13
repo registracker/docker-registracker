@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use Orion\Concerns\DisableAuthorization;
-use Spatie\Permission\Models\Role;
 use Orion\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
 
-class RoleControllerDisableAuthorization extends Controller
+class RoleDisableAuthorizationController extends Controller
 {
     use DisableAuthorization;
 
@@ -16,4 +16,5 @@ class RoleControllerDisableAuthorization extends Controller
     {
         return ['permissions', 'users'];
     }
+
 }

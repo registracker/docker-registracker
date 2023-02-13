@@ -22,17 +22,17 @@ class EstadoSolicitudSeeder extends Seeder
             ],
             [
                 'id' => 2,
-                'nombre' => 'Rechazada',
-                'permitir_acceso' => false,
-            ],
-            [
-                'id' => 3,
                 'nombre' => 'En revisión',
                 'permitir_acceso' => false,
             ],
             [
-                'id' => 4,
+                'id' => 3,
                 'nombre' => 'Suspendida',
+                'permitir_acceso' => false,
+            ],
+            [
+                'id' => 4,
+                'nombre' => 'Rechazada',
                 'permitir_acceso' => false,
             ],
         ];
