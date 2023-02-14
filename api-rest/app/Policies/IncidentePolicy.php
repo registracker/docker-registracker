@@ -18,7 +18,7 @@ class IncidentePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('incidente:listar');
+        return $user->tokenCan('api:incidente:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class IncidentePolicy
      */
     public function view(User $user, Incidente $incidente)
     {
-        return $user->tokenCan('incidente:listar');
+        return $user->tokenCan('api:incidente:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class IncidentePolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('incidente:crear');
+        return $user->tokenCan('api:incidente:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class IncidentePolicy
      */
     public function update(User $user, Incidente $incidente)
     {
-        return $user->tokenCan('incidente:actualizar');
+        return $user->tokenCan('api:incidente:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class IncidentePolicy
      */
     public function delete(User $user, Incidente $incidente)
     {
-        return $user->tokenCan('incidente:eliminar');
+        return $user->tokenCan('api:incidente:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class IncidentePolicy
      */
     public function restore(User $user, Incidente $incidente)
     {
-        return $user->tokenCan('incidente:actualizar');
+        return $user->tokenCan('api:incidente:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class IncidentePolicy
      */
     public function forceDelete(User $user, Incidente $incidente)
     {
-        return $user->tokenCan('incidente:eliminar');
+        return $user->tokenCan('api:incidente:eliminar');
     }
 }

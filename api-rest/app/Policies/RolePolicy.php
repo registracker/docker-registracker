@@ -20,7 +20,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('rol:listar');
+        return $user->tokenCan('api:rol:listar');
     }
 
     /**
@@ -32,7 +32,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        return $user->tokenCan('rol:listar');
+        return $user->tokenCan('api:rol:listar');
     }
 
     /**
@@ -43,7 +43,7 @@ class RolePolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('rol:crear');
+        return $user->tokenCan('api:rol:crear');
     }
 
     /**
@@ -55,7 +55,7 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        return $user->tokenCan('rol:actualizar');
+        return $user->tokenCan('api:rol:actualizar');
     }
 
     /**
@@ -67,7 +67,7 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        return $user->tokenCan('rol:eliminar');
+        return $user->tokenCan('api:rol:eliminar');
     }
 
     /**
@@ -79,7 +79,7 @@ class RolePolicy
      */
     public function restore(User $user, Role $role)
     {
-        return $user->tokenCan('rol:actualizar');
+        return $user->tokenCan('api:rol:actualizar');
     }
 
     /**
@@ -91,6 +91,6 @@ class RolePolicy
      */
     public function forceDelete(User $user, Role $role)
     {
-        return $user->tokenCan('rol:eliminar');
+        return $user->tokenCan('api:rol:eliminar');
     }
 }

@@ -18,7 +18,7 @@ class MunicipioPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('municipio:listar');
+        return $user->tokenCan('api:municipio:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class MunicipioPolicy
      */
     public function view(User $user, Municipio $municipio)
     {
-        return $user->tokenCan('municipio:listar');
+        return $user->tokenCan('api:municipio:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class MunicipioPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('municipio:crear');
+        return $user->tokenCan('api:municipio:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class MunicipioPolicy
      */
     public function update(User $user, Municipio $municipio)
     {
-        return $user->tokenCan('municipio:actualizar');
+        return $user->tokenCan('api:municipio:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class MunicipioPolicy
      */
     public function delete(User $user, Municipio $municipio)
     {
-        return $user->tokenCan('municipio:eliminar');
+        return $user->tokenCan('api:municipio:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class MunicipioPolicy
      */
     public function restore(User $user, Municipio $municipio)
     {
-        return $user->tokenCan('municipio:actualizar');
+        return $user->tokenCan('api:municipio:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class MunicipioPolicy
      */
     public function forceDelete(User $user, Municipio $municipio)
     {
-        return $user->tokenCan('municipio:eliminar');
+        return $user->tokenCan('api:municipio:eliminar');
     }
 }

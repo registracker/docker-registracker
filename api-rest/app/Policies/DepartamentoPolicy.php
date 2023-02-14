@@ -19,7 +19,7 @@ class DepartamentoPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('departamento:listar');
+        return $user->tokenCan('api:departamento:listar');
     }
 
     /**
@@ -31,7 +31,7 @@ class DepartamentoPolicy
      */
     public function view(User $user, Departamento $departamento)
     {
-        return $user->tokenCan('departamento:listar');
+        return $user->tokenCan('api:departamento:listar');
     }
 
     /**
@@ -42,7 +42,7 @@ class DepartamentoPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('departamento:crear');
+        return $user->tokenCan('api:departamento:crear');
     }
 
     /**
@@ -54,7 +54,7 @@ class DepartamentoPolicy
      */
     public function update(User $user, Departamento $departamento)
     {
-        return $user->tokenCan('departamento:actualizar');
+        return $user->tokenCan('api:departamento:actualizar');
     }
 
     /**
@@ -66,7 +66,7 @@ class DepartamentoPolicy
      */
     public function delete(User $user, Departamento $departamento)
     {
-        return $user->tokenCan('departamento:eliminar');
+        return $user->tokenCan('api:departamento:eliminar');
     }
 
     /**
@@ -78,7 +78,7 @@ class DepartamentoPolicy
      */
     public function restore(User $user, Departamento $departamento)
     {
-        return $user->tokenCan('departamento:actualizar');
+        return $user->tokenCan('api:departamento:actualizar');
     }
 
     /**
@@ -90,6 +90,6 @@ class DepartamentoPolicy
      */
     public function forceDelete(User $user, Departamento $departamento)
     {
-        return $user->tokenCan('departamento:eliminar');
+        return $user->tokenCan('api:departamento:eliminar');
     }
 }

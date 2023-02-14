@@ -18,7 +18,7 @@ class MarcadorPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('marcador:listar');
+        return $user->tokenCan('api:marcador:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class MarcadorPolicy
      */
     public function view(User $user, Marcador $marcador)
     {
-        return $user->tokenCan('marcador:listar');
+        return $user->tokenCan('api:marcador:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class MarcadorPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('marcador:crear');
+        return $user->tokenCan('api:marcador:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class MarcadorPolicy
      */
     public function update(User $user, Marcador $marcador)
     {
-        return $user->tokenCan('marcador:actualizar');
+        return $user->tokenCan('api:marcador:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class MarcadorPolicy
      */
     public function delete(User $user, Marcador $marcador)
     {
-        return $user->tokenCan('marcador:eliminar');
+        return $user->tokenCan('api:marcador:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class MarcadorPolicy
      */
     public function restore(User $user, Marcador $marcador)
     {
-        return $user->tokenCan('marcador:actualizar');
+        return $user->tokenCan('api:marcador:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class MarcadorPolicy
      */
     public function forceDelete(User $user, Marcador $marcador)
     {
-        return $user->tokenCan('marcador:eliminar');
+        return $user->tokenCan('api:marcador:eliminar');
     }
 }

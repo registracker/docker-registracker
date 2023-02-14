@@ -18,7 +18,7 @@ class ZonaPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('zona:listar');
+        return $user->tokenCan('api:zona:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class ZonaPolicy
      */
     public function view(User $user, Zona $zona)
     {
-        return $user->tokenCan('zona:listar');
+        return $user->tokenCan('api:zona:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class ZonaPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('zona:crear');
+        return $user->tokenCan('api:zona:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class ZonaPolicy
      */
     public function update(User $user, Zona $zona)
     {
-        return $user->tokenCan('zona:actualizar');
+        return $user->tokenCan('api:zona:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class ZonaPolicy
      */
     public function delete(User $user, Zona $zona)
     {
-        return $user->tokenCan('zona:eliminar');
+        return $user->tokenCan('api:zona:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class ZonaPolicy
      */
     public function restore(User $user, Zona $zona)
     {
-       return $user->tokenCan('zona:actualizar');
+       return $user->tokenCan('api:zona:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class ZonaPolicy
      */
     public function forceDelete(User $user, Zona $zona)
     {
-       return $user->tokenCan('zona:eliminar');
+       return $user->tokenCan('api:zona:eliminar');
     }
 }

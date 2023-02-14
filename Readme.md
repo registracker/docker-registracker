@@ -36,3 +36,6 @@ echo 'extension=pdo_pgsql.so' >> /opt/bitnami/php/etc/php.ini && echo 'extension
 
 
 php artisan make:model MedioDesplazamiento -seed --policy --controller --migration
+
+docker-compose exec api_rest_laravel composer show "tailflow/laravel-orion" --available
+docker-compose exec api_rest_laravel php artisan make:request StoreRoleRequest --user $USER
