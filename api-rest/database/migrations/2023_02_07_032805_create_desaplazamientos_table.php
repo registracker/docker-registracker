@@ -23,8 +23,8 @@ return new class extends Migration
             $table->double('elevacion_min')->nullable();//mts
             $table->double('elevacion_max')->nullable();//mts
             $table->time('duracion')->nullable();
-            $table->timestamp('inicio_desplazamientos');
-            $table->timestamp('fin_desplazamientos')->nullable();
+            $table->timestamp('inicio_desplazamiento')->nullable();
+            $table->timestamp('fin_desplazamiento')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();

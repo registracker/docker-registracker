@@ -18,31 +18,36 @@ class MedioDesplazamientoSeeder extends Seeder
         $data = [
             [
                 'id' => 1,
+                'nombre' => 'Caminando',
+                'icono' => '🚶',
+            ],
+            [
+                'id' => 2,
                 'nombre' => 'Autobús',
                 'icono' => '🚌',
             ],
             [
-                'id' => 2,
+                'id' => 3,
                 'nombre' => 'Scooter',
                 'icono' => '🛴',
             ],
             [
-                'id' => 3,
+                'id' => 4,
                 'nombre' => 'Bicicleta',
                 'icono' => '🚲',
             ],
             [
-                'id' => 4,
+                'id' => 5,
                 'nombre' => 'Taxi',
                 'icono' => '🚕',
             ],
             [
-                'id' => 5,
+                'id' => 6,
                 'nombre' => 'Vehículo',
                 'icono' => '🚗',
             ],
             [
-                'id' => 6,
+                'id' => 7,
                 'nombre' => 'U.F.O.',
                 'icono' => '🛸',
             ],

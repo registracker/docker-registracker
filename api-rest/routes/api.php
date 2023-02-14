@@ -11,8 +11,12 @@ use App\Http\Controllers\Api\MarcadorController;
 use App\Http\Controllers\Api\MedioDesplazamientoController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleDisableAuthorizationController;
+use App\Models\CoordenadaDesplazamiento;
+use App\Models\Desplazamiento;
+use App\Models\MedioDesplazamiento;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -32,6 +36,51 @@ use Illuminate\Support\Str;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (Request $request) {
+    $now = Carbon::now()->toDateTimeString();
+    $uuid = $request->uuid;
+
+    Desplazamiento::updateOrCreate([
+        'id' => $uuid
+    ], [
+        'id' => $uuid
+    ]);
+
+    $ruta = collect($request->desplazamiento)->map(function ($item, $key) use ($now, $uuid) {
+        $item['fecha_creado'] = $now;
+        $item['desplazamiento_id'] = $uuid;
+        $item['fecha_actualizado'] = $now;
+        $item['fecha_registro'] = Carbon::parse($item['fecha_registro']);
+        return $item;
+    })->toArray();
+
+    CoordenadaDesplazamiento::insert($ruta);
+
+    return response()->json(['ruta' => $ruta]);
+});
+
+Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (Request $request) {
+    $uuid = $request->uuid;
+    Desplazamiento::findOrFail($uuid);
+    $fechaInicio = CoordenadaDesplazamiento::where('desplazamiento_id', $uuid)->orderBy('fecha_registro', 'asc')->first();
+    $fechaFin = CoordenadaDesplazamiento::where('desplazamiento_id', $uuid)->orderBy('fecha_registro', 'desc')->first();;
+
+    $desplazamiento = Desplazamiento::updateOrCreate([
+        'id' => $uuid
+    ], [
+        'id' => $uuid,
+        'inicio_desplazamiento' => $fechaInicio->fecha_registro,
+        'fin_desplazamiento' => $fechaFin->fecha_registro,
+    ]);
+
+    return response()->json(['ruta' => $desplazamiento]);
+});
+
+Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', function (Request $request, Desplazamiento $desplazamiento) {
+    $desplazamiento = CoordenadaDesplazamiento::where('desplazamiento_id', $desplazamiento->id)->orderBy('fecha_registro', 'asc')->get();
+    return response()->json(['desplazamiento' => $desplazamiento]);
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
