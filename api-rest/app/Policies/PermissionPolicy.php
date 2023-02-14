@@ -2,14 +2,14 @@
 
 namespace App\Policies;
 
+
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
-class RolePolicy
+class PermissionPolicy
 {
     use HandlesAuthorization;
-
 
     /**
      * Determine whether the user can view any models.
@@ -19,19 +19,19 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('api:rol:listar');
+        return $user->tokenCan('api:permiso:listar');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Departamento  $departamento
+     * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Role $role)
+    public function view(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:rol:listar');
+        return $user->tokenCan('api:permiso:listar');
     }
 
     /**
@@ -42,54 +42,54 @@ class RolePolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('api:rol:crear');
+        return $user->tokenCan('api:permiso:crear');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Departamento  $departamento
+     * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Role $role)
+    public function update(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:rol:actualizar');
+        return $user->tokenCan('api:permiso:actualizar');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Departamento  $departamento
+     * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Role $role)
+    public function delete(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:rol:eliminar');
+        return $user->tokenCan('api:permiso:eliminar');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Departamento  $departamento
+     * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Role $role)
+    public function restore(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:rol:actualizar');
+        return $user->tokenCan('api:permiso:actualizar');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Departamento  $departamento
+     * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Role $role)
+    public function forceDelete(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:rol:eliminar');
+        return $user->tokenCan('api:permiso:eliminar');
     }
 }

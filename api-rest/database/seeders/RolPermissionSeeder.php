@@ -21,7 +21,7 @@ class RolPermissionSeeder extends Seeder
         $guardWeb = Constant::GUARD_WEB;
 
         $accionesDisponibles = collect(['listar', 'crear', 'actualizar', 'eliminar']);
-        $tablas = collect(['zona', 'departamento', 'municipio', 'genero', 'universidad', 'rol', 'incidente', 'marcador', 'medio_desplazamiento']);
+        $tablas = collect(['zona', 'departamento', 'municipio', 'genero', 'universidad', 'rol', 'incidente', 'marcador', 'medio_desplazamiento', 'permiso']);
 
         $sitios = collect([
             'administracion:usuarios',
@@ -46,6 +46,7 @@ class RolPermissionSeeder extends Seeder
                 $permission = Permission::create(['name' => $guardApi . $separador . $tbl . $separador . $accion, 'guard_name' => 'web']);
 
                 $roleAdministrador->givePermissionTo($permission);
+
                 if (in_array($accion, ['listar', 'crear'])) {
                     $roleParticipante->givePermissionTo($permission);
                     $roleInvestigador->givePermissionTo($permission);

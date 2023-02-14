@@ -39,3 +39,5 @@ php artisan make:model MedioDesplazamiento -seed --policy --controller --migrati
 
 docker-compose exec api_rest_laravel composer show "tailflow/laravel-orion" --available
 docker-compose exec api_rest_laravel php artisan make:request StoreRoleRequest --user $USER
+
+docker-compose exec api_rest_laravel php artisan make:policy PermissionPolicy --model=Permission

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\UniversidadController;
 use App\Http\Controllers\Api\IncidenteController;
 use App\Http\Controllers\Api\MarcadorController;
 use App\Http\Controllers\Api\MedioDesplazamientoController;
+use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleDisableAuthorizationController;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
@@ -50,7 +51,7 @@ Route::post('/sanctum/token', function (Request $request) {
         ]);
     }
 
-    $nombrePermisos =  $user->getPermisos();
+    $nombrePermisos = $user->getPermisos();
     $token =  $user->createToken('sanctum',  $nombrePermisos)->plainTextToken;
 
     return response()->json([
@@ -58,6 +59,23 @@ Route::post('/sanctum/token', function (Request $request) {
     ]);
 });
 
+Route::post('/roless', function (Request $request) {
+    $request->validate([
+        'nombre_rol' => ['required', 'unique:roles,name', 'max:255'],
+        'permisos' => ['required', 'exists:permissions,name', 'distinct:strict'],
+    ], [
+        'nombre_rol.required' => 'El nombre del rol es requerido.',
+        'nombre_rol.unique' => 'El nombre del rol ya existe.',
+        'nombre_rol.max' => 'La longitud no debe superar los 255 caracteres.',
+        'permisos.required' => 'Debe agregar al menos un permiso.',
+        'permisos.exists' => 'El permiso no existe.',
+        'permisos.distinct' => 'Los permisos deben ser distintos.',
+    ]);
+
+    return response()->json([
+        'request' =>  $request->all()
+    ]);
+});
 
 Route::middleware('auth:sanctum')->post('/token/permisos', function (Request $request) {
     return response()->json([
@@ -184,6 +202,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('universidades', UniversidadController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('roles', RoleController::class)->only(['search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('roles', RoleDisableAuthorizationController::class)->only(['index'])->withSoftDeletes();
+    Orion::resource('permisos', PermissionController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('medios-desplazamiento', MedioDesplazamientoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('incidentes', IncidenteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('marcadores', MarcadorController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();

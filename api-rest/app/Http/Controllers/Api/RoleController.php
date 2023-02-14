@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\RoleRequest;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Role;
 use Orion\Http\Controllers\Controller;
@@ -10,6 +11,8 @@ use Orion\Http\Requests\Request;
 class RoleController extends Controller
 {
     protected $model = Role::class;
+
+    protected $request = RoleRequest::class;
 
     public function includes(): array
     {
@@ -27,11 +30,8 @@ class RoleController extends Controller
      */
     protected function performStore(Request $request, Model $rol, array $attributes): void
     {
-        // if ($this->resolveUser()->hasRole('admin')) {
-        //     $rol->forceFill($attributes);
-        // } else {
-        //     $rol->fill($attributes);
-        // }
+        $rol->name = $request->nombre_rol;
+        collect([$request->permisos])->flatten()->unique()->each(fn ($permiso) => $rol->givePermissionTo($permiso));
         $rol->save();
     }
 }
