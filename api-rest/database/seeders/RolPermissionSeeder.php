@@ -21,7 +21,21 @@ class RolPermissionSeeder extends Seeder
         $guardWeb = Constant::GUARD_WEB;
 
         $accionesDisponibles = collect(['listar', 'crear', 'actualizar', 'eliminar']);
-        $tablas = collect(['zona', 'departamento', 'municipio', 'genero', 'universidad', 'rol', 'incidente', 'marcador', 'medio_desplazamiento', 'permiso']);
+        $tablas = collect([
+            'zona',
+            'departamento',
+            'municipio',
+            'genero',
+            'universidad',
+            'rol',
+            'incidente',
+            'marcador',
+            'medio_desplazamiento',
+            'permiso',
+            'clasificacion_vehicular',
+            'clase_vehicular',
+            'vehiculo',
+        ]);
 
         $sitios = collect([
             'administracion:usuarios',

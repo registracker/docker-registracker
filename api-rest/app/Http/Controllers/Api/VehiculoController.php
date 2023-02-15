@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
+use App\Models\Vehiculo;
 use Orion\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class VehiculoController extends Controller
 {
-    //
+    protected $model = Vehiculo::class;
 }

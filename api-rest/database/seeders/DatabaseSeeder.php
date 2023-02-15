@@ -28,6 +28,12 @@ class DatabaseSeeder extends Seeder
             MedioDesplazamientoSeeder::class,
             EstadoSolicitudSeeder::class,
             /**
+             * Estas pueden hacerse una sola
+             */
+            ClasificacionVehicularSeeder::class,
+            ClasesVehicularSeeder::class,
+            VehiculoSeeder::class,
+            /**
              * UserSeeder debe ir luego de RolPermissionSeeder
              * EstadoCuentaSeeder debe ir luego de UserSeeder
              */

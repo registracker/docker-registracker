@@ -18,7 +18,7 @@ class ClaseVehicularPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->tokenCan('api:clase_vehicular:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class ClaseVehicularPolicy
      */
     public function view(User $user, ClaseVehicular $ClaseVehicular)
     {
-        //
+        return $user->tokenCan('api:clase_vehicular:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class ClaseVehicularPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->tokenCan('api:clase_vehicular:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class ClaseVehicularPolicy
      */
     public function update(User $user, ClaseVehicular $ClaseVehicular)
     {
-        //
+        return $user->tokenCan('api:clase_vehicular:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class ClaseVehicularPolicy
      */
     public function delete(User $user, ClaseVehicular $ClaseVehicular)
     {
-        //
+        return $user->tokenCan('api:clase_vehicular:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class ClaseVehicularPolicy
      */
     public function restore(User $user, ClaseVehicular $ClaseVehicular)
     {
-        //
+        return $user->tokenCan('api:clase_vehicular:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class ClaseVehicularPolicy
      */
     public function forceDelete(User $user, ClaseVehicular $ClaseVehicular)
     {
-        //
+        return $user->tokenCan('api:clase_vehicular:eliminar');
     }
 }

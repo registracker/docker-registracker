@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('vehiculos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_clase')->unique()->constrained('clases_vehicular');
+            $table->foreignId('id_clase')->constrained('clases_vehicular');
             $table->string('nombre', 64);
             $table->string('nomenclatura', 64)->nullable();
             $table->integer('cantidad_ejes')->nullable();

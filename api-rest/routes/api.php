@@ -11,11 +11,16 @@ use App\Http\Controllers\Api\MarcadorController;
 use App\Http\Controllers\Api\MedioDesplazamientoController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleDisableAuthorizationController;
+use App\Http\Controllers\Api\VehiculoController;
+use App\Http\Controllers\Api\ClaseVehicularController;
+use App\Http\Controllers\Api\ClasificacionVehicularController;
+
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\MedioDesplazamiento;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -240,10 +245,6 @@ Route::middleware('auth:sanctum')->post('/usuario/admin', function (Request $req
 
 
 Route::group(['as' => 'api.'], function () {
-    /**
-     * TODO
-     * Remover metodos innecesarios de los resources
-     */
     Orion::resource('zonas', ZonaController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('departamentos', DepartamentoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('municipios', MunicipioController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
@@ -255,6 +256,9 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('medios-desplazamiento', MedioDesplazamientoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('incidentes', IncidenteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('marcadores', MarcadorController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('clases-vehicular', ClaseVehicularController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('vehiculos', VehiculoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
 
     /**
      * TODO
