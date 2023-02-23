@@ -18,7 +18,7 @@ class MedioDesplazamientoPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('api:medio_desplazamiento:listar');
+        return $user->can('api:medio_desplazamiento:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class MedioDesplazamientoPolicy
      */
     public function view(User $user, MedioDesplazamiento $medioDesplazamiento)
     {
-        return $user->tokenCan('api:medio_desplazamiento:listar');
+        return $user->can('api:medio_desplazamiento:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class MedioDesplazamientoPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('api:medio_desplazamiento:crear');
+        return $user->can('api:medio_desplazamiento:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class MedioDesplazamientoPolicy
      */
     public function update(User $user, MedioDesplazamiento $medioDesplazamiento)
     {
-        return $user->tokenCan('api:medio_desplazamiento:actualizar');
+        return $user->can('api:medio_desplazamiento:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class MedioDesplazamientoPolicy
      */
     public function delete(User $user, MedioDesplazamiento $medioDesplazamiento)
     {
-        return $user->tokenCan('api:medio_desplazamiento:eliminar');
+        return $user->can('api:medio_desplazamiento:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class MedioDesplazamientoPolicy
      */
     public function restore(User $user, MedioDesplazamiento $medioDesplazamiento)
     {
-        return $user->tokenCan('api:medio_desplazamiento:actualizar');
+        return $user->can('api:medio_desplazamiento:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class MedioDesplazamientoPolicy
      */
     public function forceDelete(User $user, MedioDesplazamiento $medioDesplazamiento)
     {
-        return $user->tokenCan('api:medio_desplazamiento:eliminar');
+        return $user->can('api:medio_desplazamiento:eliminar');
     }
 }

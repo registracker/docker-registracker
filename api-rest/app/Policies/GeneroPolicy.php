@@ -18,7 +18,7 @@ class GeneroPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('api:genero:listar');
+        return $user->can('api:genero:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class GeneroPolicy
      */
     public function view(User $user, Genero $genero)
     {
-        return $user->tokenCan('api:genero:listar');
+        return $user->can('api:genero:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class GeneroPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('api:genero:crear');
+        return $user->can('api:genero:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class GeneroPolicy
      */
     public function update(User $user, Genero $genero)
     {
-        return $user->tokenCan('api:genero:actualizar');
+        return $user->can('api:genero:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class GeneroPolicy
      */
     public function delete(User $user, Genero $genero)
     {
-        return $user->tokenCan('api:genero:eliminar');
+        return $user->can('api:genero:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class GeneroPolicy
      */
     public function restore(User $user, Genero $genero)
     {
-        return $user->tokenCan('api:genero:actualizar');
+        return $user->can('api:genero:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class GeneroPolicy
      */
     public function forceDelete(User $user, Genero $genero)
     {
-        return $user->tokenCan('api:genero:eliminar');
+        return $user->can('api:genero:eliminar');
     }
 }

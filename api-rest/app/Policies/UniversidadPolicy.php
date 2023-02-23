@@ -18,7 +18,7 @@ class UniversidadPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('api:universidad:listar');
+        return $user->can('api:universidad:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class UniversidadPolicy
      */
     public function view(User $user, Universidad $universidad)
     {
-        return $user->tokenCan('api:universidad:listar');
+        return $user->can('api:universidad:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class UniversidadPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('api:universidad:crear');
+        return $user->can('api:universidad:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class UniversidadPolicy
      */
     public function update(User $user, Universidad $universidad)
     {
-        return $user->tokenCan('api:universidad:actualizar');
+        return $user->can('api:universidad:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class UniversidadPolicy
      */
     public function delete(User $user, Universidad $universidad)
     {
-        return $user->tokenCan('api:universidad:eliminar');
+        return $user->can('api:universidad:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class UniversidadPolicy
      */
     public function restore(User $user, Universidad $universidad)
     {
-        return $user->tokenCan('api:universidad:actualizar');
+        return $user->can('api:universidad:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class UniversidadPolicy
      */
     public function forceDelete(User $user, Universidad $universidad)
     {
-        return $user->tokenCan('api:universidad:eliminar');
+        return $user->can('api:universidad:eliminar');
     }
 }

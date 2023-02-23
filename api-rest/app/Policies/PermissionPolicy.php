@@ -19,7 +19,7 @@ class PermissionPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('api:permiso:listar');
+        return $user->can('api:permiso:listar');
     }
 
     /**
@@ -31,7 +31,7 @@ class PermissionPolicy
      */
     public function view(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:permiso:listar');
+        return $user->can('api:permiso:listar');
     }
 
     /**
@@ -42,7 +42,7 @@ class PermissionPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('api:permiso:crear');
+        return $user->can('api:permiso:crear');
     }
 
     /**
@@ -54,7 +54,7 @@ class PermissionPolicy
      */
     public function update(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:permiso:actualizar');
+        return $user->can('api:permiso:actualizar');
     }
 
     /**
@@ -66,7 +66,7 @@ class PermissionPolicy
      */
     public function delete(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:permiso:eliminar');
+        return $user->can('api:permiso:eliminar');
     }
 
     /**
@@ -78,7 +78,7 @@ class PermissionPolicy
      */
     public function restore(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:permiso:actualizar');
+        return $user->can('api:permiso:actualizar');
     }
 
     /**
@@ -90,6 +90,6 @@ class PermissionPolicy
      */
     public function forceDelete(User $user, Permission $permission)
     {
-        return $user->tokenCan('api:permiso:eliminar');
+        return $user->can('api:permiso:eliminar');
     }
 }

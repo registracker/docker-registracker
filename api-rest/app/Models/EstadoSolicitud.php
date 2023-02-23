@@ -13,6 +13,12 @@ class EstadoSolicitud extends Model
 
     protected $table = 'estados_solicitud';
 
+    protected $fillable = [
+        'id',
+        'nombre',
+        'permitir_acceso'
+    ];
+
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
