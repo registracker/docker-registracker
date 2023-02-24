@@ -106,8 +106,7 @@ Route::post('/sanctum/token', function (Request $request) {
         ]);
     }
 
-    $nombrePermisos = $user->getPermisos();
-    $token =  $user->createToken('sanctum',  $nombrePermisos)->plainTextToken;
+    $token =  $user->createToken($user->getNombreRoles(), [])->plainTextToken;
 
     return response()->json([
         'token' =>  $token
@@ -202,6 +201,13 @@ Route::post('/usuario', function (Request $request) {
     }
 });
 
+Route::get('/estado-cuenta', function (Request $request) {
+    $usuario = User::where('email', $request->email)->firstOrFail();
+    return response()->json([
+        'estado' =>  $usuario->solicitud->estado,
+    ]);
+});
+
 Route::middleware('auth:sanctum')->post('/usuario/admin', function (Request $request) {
     $ID_ESTADO_ACTIVA = 1;
 
@@ -260,7 +266,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('clases-vehicular', ClaseVehicularController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('vehiculos', VehiculoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
-    Orion::resource('estado-solicitud', EstadoSolicitudController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
+    Orion::resource('estados-solicitud', EstadoSolicitudController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
 
     /**
      * TODO

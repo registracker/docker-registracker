@@ -43,6 +43,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getNombreRoles()
+    {
+        return $this->getRoleNames()->first();
+    }
+
     public function getPermisos()
     {
         return $this->getAllPermissions()->pluck('name')->toArray();
@@ -52,4 +57,5 @@ class User extends Authenticatable
     {
         return $this->hasOne(SolicitudCuenta::class, 'id_usuario');
     }
+
 }
