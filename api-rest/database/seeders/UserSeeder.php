@@ -25,9 +25,8 @@ class UserSeeder extends Seeder
         ]);
 
         $usuario->assignRole(Constant::ROL_ADMINISTRADOR);
-        $nombrePermisos = $usuario->getPermisos();
 
-        $user = $usuario->createToken(Constant::ROL_ADMINISTRADOR,  $nombrePermisos);
+        $user = $usuario->createToken($usuario->getNombreRoles(), []);
         echo ($user->plainTextToken);
     }
 }

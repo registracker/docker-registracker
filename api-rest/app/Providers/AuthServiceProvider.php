@@ -18,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         'Spatie\Permission\Models\Role' => 'App\Policies\RolePolicy',
         'Spatie\Permission\Models\Permission' => 'App\Policies\PermissionPolicy',
+        'App\Models\User' => 'App\Policies\UserPolicy',
         // Zona::class => ZonaPolicy::class,
     ];
 

@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\VehiculoController;
 use App\Http\Controllers\Api\ClaseVehicularController;
 use App\Http\Controllers\Api\ClasificacionVehicularController;
 use App\Http\Controllers\Api\EstadoSolicitudController;
-
+use App\Http\Controllers\Api\UsuarioController;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\MedioDesplazamiento;
@@ -203,8 +203,10 @@ Route::post('/usuario', function (Request $request) {
 
 Route::get('/estado-cuenta', function (Request $request) {
     $usuario = User::where('email', $request->email)->firstOrFail();
+    // $usuarios = User::with(['solicitud.estado'])->get();
     return response()->json([
         'estado' =>  $usuario->solicitud->estado,
+        // 'usuarios' =>  $usuarios,
     ]);
 });
 
@@ -267,6 +269,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('clases-vehicular', ClaseVehicularController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('vehiculos', VehiculoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
     Orion::resource('estados-solicitud', EstadoSolicitudController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('usuarios', UsuarioController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
 
     /**
      * TODO
