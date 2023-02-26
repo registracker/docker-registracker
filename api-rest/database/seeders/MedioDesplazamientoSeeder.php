@@ -19,37 +19,37 @@ class MedioDesplazamientoSeeder extends Seeder
             [
                 'id' => 1,
                 'nombre' => 'Caminando',
-                'icono' => '🚶',
+                'icono' => 'mdi-walk',
             ],
             [
                 'id' => 2,
                 'nombre' => 'Autobús',
-                'icono' => '🚌',
+                'icono' => 'mdi-bus',
             ],
             [
                 'id' => 3,
                 'nombre' => 'Scooter',
-                'icono' => '🛴',
+                'icono' => 'mdi-scooter',
             ],
             [
                 'id' => 4,
                 'nombre' => 'Bicicleta',
-                'icono' => '🚲',
+                'icono' => 'mdi-bike',
             ],
             [
                 'id' => 5,
                 'nombre' => 'Taxi',
-                'icono' => '🚕',
+                'icono' => 'mdi-taxi',
             ],
             [
                 'id' => 6,
                 'nombre' => 'Vehículo',
-                'icono' => '🚗',
+                'icono' => 'mdi-car',
             ],
             [
                 'id' => 7,
                 'nombre' => 'U.F.O.',
-                'icono' => '🛸',
+                'icono' => 'mdi-ufo-outline',
             ],
         ];
 
