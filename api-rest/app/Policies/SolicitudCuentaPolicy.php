@@ -89,6 +89,6 @@ class SolicitudCuentaPolicy
      */
     public function forceDelete(User $user, SolicitudCuenta $solicitudCuenta)
     {
-        //
+        return $user->can('api:solicitud_cuenta:eliminar');
     }
 }
