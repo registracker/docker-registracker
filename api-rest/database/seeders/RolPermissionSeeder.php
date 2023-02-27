@@ -38,6 +38,7 @@ class RolPermissionSeeder extends Seeder
             'vehiculo',
             'estado_solicitud',
             'user',
+            'solicitud_cuenta',
         ]);
 
         $sitios = collect([
