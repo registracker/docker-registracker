@@ -24,6 +24,11 @@ class Desplazamiento extends Model
         'fin_desplazamiento',
     ];
 
+    protected $keyType = 'string';
+    protected $casts = [
+        'id' => 'string'
+    ];
+
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';

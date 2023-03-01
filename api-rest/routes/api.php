@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\RoleDisableAuthorizationController;
 use App\Http\Controllers\Api\VehiculoController;
 use App\Http\Controllers\Api\ClaseVehicularController;
 use App\Http\Controllers\Api\ClasificacionVehicularController;
+use App\Http\Controllers\Api\DesplazamientoController;
 use App\Http\Controllers\Api\EstadoSolicitudController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Models\CoordenadaDesplazamiento;
@@ -24,6 +25,7 @@ use App\Models\User;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -54,8 +56,8 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
     ]);
 
     $ruta = collect($request->desplazamiento)->map(function ($item, $key) use ($now, $uuid) {
-        $item['fecha_creado'] = $now;
         $item['desplazamiento_id'] = $uuid;
+        $item['fecha_creado'] = $now;
         $item['fecha_actualizado'] = $now;
         $item['fecha_registro'] = Carbon::parse($item['fecha_registro']);
         return $item;
@@ -63,7 +65,55 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
 
     CoordenadaDesplazamiento::insert($ruta);
 
-    return response()->json(['ruta' => $ruta]);
+    $query = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid);
+
+    $totalRegistros = $query->count();
+
+    $inicioDesplazamiento = $query
+        ->orderBy('fecha_registro', 'asc')
+        ->first();
+
+    $finDesplazamiento = $query
+        ->orderBy('fecha_registro', 'desc')
+        ->first();
+
+    $velocidadMax = $query
+        ->max('velocidad');
+
+    $velocidadMed = $query
+        ->avg('velocidad');
+
+    $elevacionMin = $query
+        ->min('altitud');
+
+    $elevacionMax = $query
+        ->max('altitud');
+
+
+    Desplazamiento::updateOrCreate([
+        'id' => $uuid
+    ], [
+        'id' => $uuid,
+        'velocidad_max' => $velocidadMax,
+        'velocidad_media' => $velocidadMed,
+        'duracion' => Carbon::parse($finDesplazamiento->fecha_registro)->diffInMinutes(Carbon::parse($inicioDesplazamiento->fecha_registro)),
+        'inicio_desplazamiento' => $inicioDesplazamiento->fecha_registro,
+        'fin_desplazamiento' => $finDesplazamiento->fecha_registro,
+        'elevacion_min' => $elevacionMin,
+        'elevacion_max' => $elevacionMax,
+    ]);
+    ray([
+        'id' => $uuid,
+        'velocidad_max' => $velocidadMax,
+        'velocidad_media' => $velocidadMed,
+        'duracion' => Carbon::parse($finDesplazamiento->fecha_registro)->diffInMinutes(Carbon::parse($inicioDesplazamiento->fecha_registro)),
+        'inicio_desplazamiento' => $inicioDesplazamiento->fecha_registro,
+        'fin_desplazamiento' => $finDesplazamiento->fecha_registro,
+        'elevacion_min' => $elevacionMin,
+        'elevacion_max' => $elevacionMax,
+    ]);
+
+    return response()->json(['registros_insertados' =>  $totalRegistros], Response::HTTP_CREATED);
 });
 
 Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (Request $request) {
@@ -270,6 +320,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('vehiculos', VehiculoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
     Orion::resource('estados-solicitud', EstadoSolicitudController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('usuarios', UsuarioController::class)->only(['index', 'search', 'show', 'update'])->withSoftDeletes();
+    Orion::resource('desplazamientos', DesplazamientoController::class)->only(['index', 'search', 'show'])->withSoftDeletes();
 
     /**
      * TODO

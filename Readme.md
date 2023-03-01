@@ -34,7 +34,6 @@ docker exec -ti tracking_api_rest_laravel_1 bash
 echo 'extension=pdo_pgsql' >> /opt/bitnami/php/etc/php.ini && echo 'extension=php_pdo_pgsql' >> /opt/bitnami/php/etc/php.ini
 echo 'extension=pdo_pgsql.so' >> /opt/bitnami/php/etc/php.ini && echo 'extension=pgsql.so' >> /opt/bitnami/php/etc/php.ini
 
-
 php artisan make:model MedioDesplazamiento -seed --policy --controller --migration
 
 docker-compose exec api_rest_laravel composer show "tailflow/laravel-orion" --available

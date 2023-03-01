@@ -22,7 +22,7 @@ return new class extends Migration
             $table->double('velocidad_media')->nullable();//km
             $table->double('elevacion_min')->nullable();//mts
             $table->double('elevacion_max')->nullable();//mts
-            $table->time('duracion')->nullable();
+            $table->integer('duracion')->nullable();
             $table->timestamp('inicio_desplazamiento')->nullable();
             $table->timestamp('fin_desplazamiento')->nullable();
             $table->timestamp('fecha_creado')->nullable();
