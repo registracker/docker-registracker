@@ -15,11 +15,13 @@ use App\Http\Controllers\Api\VehiculoController;
 use App\Http\Controllers\Api\ClaseVehicularController;
 use App\Http\Controllers\Api\ClasificacionVehicularController;
 use App\Http\Controllers\Api\DesplazamientoController;
+use App\Http\Controllers\Api\DetalleMedioRecorridoController;
 use App\Http\Controllers\Api\EstadoSolicitudController;
 use App\Http\Controllers\Api\ReporteIncidenteController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
+use App\Models\DetalleMedioRecorrido;
 use App\Models\MedioDesplazamiento;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
@@ -262,12 +264,30 @@ Route::get('/estado-cuenta', function (Request $request) {
 });
 
 Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
-    $desplazamiento = CoordenadaDesplazamiento::select('id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
+    $now = Carbon::now()->toDateTimeString();
+
+    $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
         ->where('desplazamiento_id', $id)
         ->groupBy('agrupacion_medio_desplazamiento')
         ->orderBy('fecha_registro', 'asc')
         ->get();
-    return response()->json(['desplazamiento' => $desplazamiento]);
+
+    foreach ($desplazamientosAgrupado  as $desplazamiento) {
+        $duracion = Carbon::parse($desplazamiento['fecha_fin'])->diffInMinutes(Carbon::parse($desplazamiento['fecha_inicio']));
+        $desplazamiento['duracion'] = $duracion;
+        $desplazamiento['fecha_creado'] = $now;
+        $desplazamiento['fecha_actualizado'] = $now;
+    }
+
+    $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
+        return collect($item)
+            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado'])
+            ->toArray();
+    })->toArray();
+
+    DetalleMedioRecorrido::insert($coleccion);
+
+    return response()->json(['desplazamiento' => $coleccion]);
 });
 
 Route::middleware('auth:sanctum')->post('/usuario/admin', function (Request $request) {
@@ -332,6 +352,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('usuarios', UsuarioController::class)->only(['index', 'search', 'show', 'update'])->withSoftDeletes();
     Orion::resource('desplazamientos', DesplazamientoController::class)->only(['index', 'search', 'show', 'batchStore'])->withSoftDeletes();
     Orion::resource('reporte-incidente', ReporteIncidenteController::class)->only(['index', 'search', 'store', 'show', 'batchStore'])->withSoftDeletes();
+    Orion::resource('detalle-medio-recorrido', DetalleMedioRecorridoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
 
     /**
      * TODO

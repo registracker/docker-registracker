@@ -20,7 +20,7 @@ class RolPermissionSeeder extends Seeder
         $guardApi = Constant::GUARD_API;
         $guardWeb = Constant::GUARD_WEB;
 
-        $accionesDisponibles = collect(['listar', 'crear', 'actualizar', 'eliminar']);
+        $accionesDisponibles = collect(['crear', 'listar', 'actualizar', 'eliminar']);
 
         $modelos = collect([
             'zona',
@@ -40,6 +40,7 @@ class RolPermissionSeeder extends Seeder
             'user',
             'desplazamiento',
             'reporte_incidente',
+            'detalle_medio_recorrido',
         ]);
 
         $sitios = collect([

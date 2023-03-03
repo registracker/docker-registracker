@@ -40,3 +40,5 @@ docker-compose exec api_rest_laravel composer show "tailflow/laravel-orion" --av
 docker-compose exec api_rest_laravel php artisan make:request StoreRoleRequest --user $USER
 
 docker-compose exec api_rest_laravel php artisan make:policy PermissionPolicy --model=Permission
+
+docker-compose exec api_rest_laravel php artisan config:cache
