@@ -261,6 +261,15 @@ Route::get('/estado-cuenta', function (Request $request) {
     ]);
 });
 
+Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
+    $desplazamiento = CoordenadaDesplazamiento::select('id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_fin) as fecha_inicio'))
+        ->where('desplazamiento_id', $id)
+        ->groupBy('id_medio_desplazamiento')
+        ->orderBy('fecha_registro', 'asc')
+        ->get();
+    return response()->json(['desplazamiento' => $desplazamiento]);
+});
+
 Route::middleware('auth:sanctum')->post('/usuario/admin', function (Request $request) {
     $ID_ESTADO_ACTIVA = 1;
 
