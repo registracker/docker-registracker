@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('longitud', 11, 8);
             $table->timestamp('fecha_registro')->nullable();
             $table->double('altitud')->nullable();
+            $table->integer('agrupacion_medio_desplazamiento');
             // $table->double('precision')->nullable();
             $table->double('velocidad')->nullable();
             $table->timestamp('fecha_creado')->nullable();
