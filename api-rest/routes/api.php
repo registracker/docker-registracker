@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\ClaseVehicularController;
 use App\Http\Controllers\Api\ClasificacionVehicularController;
 use App\Http\Controllers\Api\DesplazamientoController;
 use App\Http\Controllers\Api\EstadoSolicitudController;
+use App\Http\Controllers\Api\ReporteIncidenteController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
@@ -321,6 +322,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('estados-solicitud', EstadoSolicitudController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('usuarios', UsuarioController::class)->only(['index', 'search', 'show', 'update'])->withSoftDeletes();
     Orion::resource('desplazamientos', DesplazamientoController::class)->only(['index', 'search', 'show', 'batchStore'])->withSoftDeletes();
+    Orion::resource('reporte-incidente', ReporteIncidenteController::class)->only(['index', 'search', 'store', 'show', 'batchStore'])->withSoftDeletes();
 
     /**
      * TODO
