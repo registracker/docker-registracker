@@ -59,7 +59,7 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
         $item['desplazamiento_id'] = $uuid;
         $item['fecha_creado'] = $now;
         $item['fecha_actualizado'] = $now;
-        $item['fecha_registro'] = Carbon::parse($item['fecha_registro']);
+        $item['fecha_registro'] = Carbon::createFromTimestampMs($item['fecha_registro']);
         return $item;
     })->toArray();
 
@@ -320,7 +320,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('vehiculos', VehiculoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
     Orion::resource('estados-solicitud', EstadoSolicitudController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('usuarios', UsuarioController::class)->only(['index', 'search', 'show', 'update'])->withSoftDeletes();
-    Orion::resource('desplazamientos', DesplazamientoController::class)->only(['index', 'search', 'show'])->withSoftDeletes();
+    Orion::resource('desplazamientos', DesplazamientoController::class)->only(['index', 'search', 'show', 'batchStore'])->withSoftDeletes();
 
     /**
      * TODO

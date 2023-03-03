@@ -21,6 +21,9 @@ class CoordenadaDesplazamiento extends Model
         'latitud',
         'velocidad'
     ];
+
+    protected $dates = ['fecha_registro'];
+
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
