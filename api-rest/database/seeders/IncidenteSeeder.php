@@ -34,8 +34,7 @@ class IncidenteSeeder extends Seeder
             [
                 'id' => 4,
                 'nombre' => 'Protesta',
-                'icono' => 'account-group
-                ',
+                'icono' => 'account-group',
             ],
         ];
 
