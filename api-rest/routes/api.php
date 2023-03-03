@@ -264,7 +264,7 @@ Route::get('/estado-cuenta', function (Request $request) {
 Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
     $desplazamiento = CoordenadaDesplazamiento::select('id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
         ->where('desplazamiento_id', $id)
-        ->groupBy('id_medio_desplazamiento')
+        ->groupBy('agrupacion_medio_desplazamiento')
         ->orderBy('fecha_registro', 'asc')
         ->get();
     return response()->json(['desplazamiento' => $desplazamiento]);
