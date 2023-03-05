@@ -29,6 +29,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -137,8 +138,62 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (R
 });
 
 Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', function (Request $request, Desplazamiento $desplazamiento) {
-    $desplazamiento = CoordenadaDesplazamiento::where('desplazamiento_id', $desplazamiento->id)->orderBy('fecha_registro', 'asc')->get();
-    return response()->json(['desplazamiento' => $desplazamiento]);
+    $coordenadas = CoordenadaDesplazamiento::where('desplazamiento_id', $desplazamiento->id)->orderBy('fecha_registro', 'asc')->get();
+
+    if ($request->query('group') == 'yes') {
+        // const defaultColor = '#37474F';
+        // point.latitud,
+        // point.longitud,
+        // id_medio_desplazamiento
+
+        $id = 1;
+        $idGrupoMedioDesplazamietoInicial = -1;
+        $agrupacion = collect();
+        $chunck = collect();
+
+        $colores = collect([
+            '#B71C1C',
+            '#4A148C',
+            '#311B92',
+            '#00695C',
+            '#AFB42B',
+            '#F9A825'
+        ]);
+
+        foreach ($coordenadas  as $coordenada) {
+            $latitud = $coordenada['latitud'];
+            $longitud = $coordenada['longitud'];
+            $agrupacionMedioDesplazamiento = $coordenada['agrupacion_medio_desplazamiento'];
+
+            if ($coordenadas->first() == $coordenada) {
+                $idGrupoMedioDesplazamietoInicial = $agrupacionMedioDesplazamiento;
+                $chunck->push([$latitud, $longitud]);
+                continue;
+            }
+
+            if ($coordenadas->last() == $coordenada) {
+                $idGrupoMedioDesplazamietoInicial = $agrupacionMedioDesplazamiento;
+                $colorChunk = $colores->get($idGrupoMedioDesplazamietoInicial - 1, '#37474F');
+                $agrupacion->push(['color' => $colorChunk, 'multilinea' => $chunck->toArray()]);
+                continue;
+            }
+
+            if ($agrupacionMedioDesplazamiento != $idGrupoMedioDesplazamietoInicial) {
+                $idGrupoMedioDesplazamietoInicial = $agrupacionMedioDesplazamiento;
+                $colorChunk = $colores->get($idGrupoMedioDesplazamietoInicial - 1, '#37474F');
+                $chunck->push([$latitud, $longitud]);
+                $agrupacion->push(['color' => $colorChunk, 'multilinea' => $chunck->toArray(), 'id' => $id]);
+                $id = $id + 1;
+                $chunck = collect();
+            }
+
+            $chunck->push([$latitud, $longitud]);
+        }
+
+        return response()->json(['segmentos' => $agrupacion->toArray()]);
+    }
+
+    return response()->json(['coordenadas' => $coordenadas]);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -275,7 +330,7 @@ Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
 
     foreach ($desplazamientosAgrupado  as $desplazamiento) {
         $fecha = Carbon::parse($desplazamiento['fecha_fin'])->diffAsCarbonInterval(Carbon::parse($desplazamiento['fecha_inicio']));
-        $duracion =  join(':', [str_pad($fecha->h, 2, '0', STR_PAD_LEFT), str_pad($fecha->i, 2, '0', STR_PAD_LEFT), str_pad($fecha->s, 2, '0', STR_PAD_LEFT)]);
+        $duracion =  Arr::join([Str::padLeft($fecha->h, 2, '0'), Str::padLeft($fecha->i, 2, '0'), Str::padLeft($fecha->s, 2, '0')], ':');
         $desplazamiento['duracion'] = $duracion;
         $desplazamiento['fecha_creado'] = $now;
         $desplazamiento['fecha_actualizado'] = $now;
