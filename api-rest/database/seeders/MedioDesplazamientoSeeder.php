@@ -54,7 +54,7 @@ class MedioDesplazamientoSeeder extends Seeder
             [
                 'id' => 8,
                 'nombre' => 'Motocicleta',
-                'icono' => 'mdi-motorbike',
+                'icono' => 'motorbike',
             ],
         ];
 
