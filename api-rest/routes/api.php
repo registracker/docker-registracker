@@ -49,6 +49,35 @@ use Illuminate\Support\Str;
 |
 */
 
+function calcularDuracionMediosPorUuid($id){
+    $now = Carbon::now()->toDateTimeString();
+    // DetalleMedioRecorrido::truncate();
+
+    $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
+        ->where('desplazamiento_id', $id)
+        ->groupBy('agrupacion_medio_desplazamiento')
+        ->orderBy('fecha_registro', 'asc')
+        ->get();
+
+    foreach ($desplazamientosAgrupado  as $desplazamiento) {
+        $fecha = Carbon::parse($desplazamiento['fecha_fin'])->diffAsCarbonInterval(Carbon::parse($desplazamiento['fecha_inicio']));
+        $duracion =  Arr::join([Str::padLeft($fecha->h, 2, '0'), Str::padLeft($fecha->i, 2, '0'), Str::padLeft($fecha->s, 2, '0')], ':');
+        $desplazamiento['duracion'] = $duracion;
+        $desplazamiento['fecha_creado'] = $now;
+        $desplazamiento['fecha_actualizado'] = $now;
+    }
+
+    $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
+        return collect($item)
+            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado'])
+            ->toArray();
+    })->toArray();
+
+    DetalleMedioRecorrido::insert($coleccion);
+
+    return $coleccion;
+}
+
 Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (Request $request) {
     $now = Carbon::now()->toDateTimeString();
     $uuid = $request->uuid;
@@ -116,6 +145,8 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
         'elevacion_min' => $elevacionMin,
         'elevacion_max' => $elevacionMax,
     ]);
+
+    calcularDuracionMediosPorUuid($uuid);
 
     return response()->json(['registros_insertados' =>  $totalRegistros], Response::HTTP_CREATED);
 });
@@ -319,31 +350,7 @@ Route::get('/estado-cuenta', function (Request $request) {
 });
 
 Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
-    $now = Carbon::now()->toDateTimeString();
-    // DetalleMedioRecorrido::truncate();
-
-    $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
-        ->where('desplazamiento_id', $id)
-        ->groupBy('agrupacion_medio_desplazamiento')
-        ->orderBy('fecha_registro', 'asc')
-        ->get();
-
-    foreach ($desplazamientosAgrupado  as $desplazamiento) {
-        $fecha = Carbon::parse($desplazamiento['fecha_fin'])->diffAsCarbonInterval(Carbon::parse($desplazamiento['fecha_inicio']));
-        $duracion =  Arr::join([Str::padLeft($fecha->h, 2, '0'), Str::padLeft($fecha->i, 2, '0'), Str::padLeft($fecha->s, 2, '0')], ':');
-        $desplazamiento['duracion'] = $duracion;
-        $desplazamiento['fecha_creado'] = $now;
-        $desplazamiento['fecha_actualizado'] = $now;
-    }
-
-    $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
-        return collect($item)
-            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado'])
-            ->toArray();
-    })->toArray();
-
-    DetalleMedioRecorrido::insert($coleccion);
-
+    $coleccion = calcularDuracionMediosPorUuid($id);
     return response()->json(['desplazamiento' => $coleccion]);
 });
 
