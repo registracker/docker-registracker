@@ -320,7 +320,7 @@ Route::get('/estado-cuenta', function (Request $request) {
 
 Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
     $now = Carbon::now()->toDateTimeString();
-    DetalleMedioRecorrido::truncate();
+    // DetalleMedioRecorrido::truncate();
 
     $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
         ->where('desplazamiento_id', $id)
