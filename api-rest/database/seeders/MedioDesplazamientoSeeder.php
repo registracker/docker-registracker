@@ -51,6 +51,11 @@ class MedioDesplazamientoSeeder extends Seeder
                 'nombre' => 'U.F.O.',
                 'icono' => 'ufo-outline',
             ],
+            [
+                'id' => 8,
+                'nombre' => 'Motocicleta',
+                'icono' => 'mdi-motorbike',
+            ],
         ];
 
         foreach ($data as $valor) {
