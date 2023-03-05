@@ -265,6 +265,7 @@ Route::get('/estado-cuenta', function (Request $request) {
 
 Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
     $now = Carbon::now()->toDateTimeString();
+    DetalleMedioRecorrido::truncate();
 
     $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
         ->where('desplazamiento_id', $id)
@@ -273,7 +274,8 @@ Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
         ->get();
 
     foreach ($desplazamientosAgrupado  as $desplazamiento) {
-        $duracion = Carbon::parse($desplazamiento['fecha_fin'])->diffInMinutes(Carbon::parse($desplazamiento['fecha_inicio']));
+        $fecha = Carbon::parse($desplazamiento['fecha_fin'])->diffAsCarbonInterval(Carbon::parse($desplazamiento['fecha_inicio']));
+        $duracion =  join(':', [str_pad($fecha->h, 2, '0', STR_PAD_LEFT), str_pad($fecha->i, 2, '0', STR_PAD_LEFT), str_pad($fecha->s, 2, '0', STR_PAD_LEFT)]);
         $desplazamiento['duracion'] = $duracion;
         $desplazamiento['fecha_creado'] = $now;
         $desplazamiento['fecha_actualizado'] = $now;

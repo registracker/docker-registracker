@@ -25,6 +25,7 @@ class Desplazamiento extends Model
     ];
 
     protected $keyType = 'string';
+
     protected $casts = [
         'id' => 'string'
     ];
@@ -32,4 +33,9 @@ class Desplazamiento extends Model
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
+
+    public function detalle_medios_desplazamiento()
+    {
+        return $this->hasMany(DetalleMedioRecorrido::class, 'desplazamiento_id');
+    }
 }

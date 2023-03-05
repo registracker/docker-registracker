@@ -14,8 +14,8 @@ class DesplazamientoController extends Controller
      *
      * @return array
      */
-    // public function includes(): array
-    // {
-    //     return ['municipios'];
-    // }
+    public function includes(): array
+    {
+        return ['detalle_medios_desplazamiento', 'detalle_medios_desplazamiento.medio_desplazamiento'];
+    }
 }

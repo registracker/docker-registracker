@@ -16,8 +16,12 @@ class DetalleMedioRecorrido extends Model
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
 
+    protected $casts = [
+        'duracion'  => 'date:H:i:s',
+    ];
+
     public function medio_desplazamiento()
     {
-        return $this->hasMany(MedioDesplazamiento::class, 'id','id_medio_desplazamiento');
+        return $this->hasOne(MedioDesplazamiento::class, 'id','id_medio_desplazamiento');
     }
 }
