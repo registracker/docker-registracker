@@ -29,13 +29,4 @@ class DesplazamientoController extends Controller
     {
         return ['fecha_creado'];
     }
-
-    protected function buildIndexFetchQuery(Request $request, array $requestedRelations): Builder
-    {
-        $query = parent::buildIndexFetchQuery($request, $requestedRelations);
-
-        $query->orderBy('fecha_creado', 'DESC');
-
-        return $query;
-    }
 }
