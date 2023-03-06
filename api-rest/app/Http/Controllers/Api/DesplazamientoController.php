@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Desplazamiento;
+use Illuminate\Database\Eloquent\Builder;
 use Orion\Http\Controllers\Controller;
+use Orion\Http\Requests\Request;
 
 class DesplazamientoController extends Controller
 {
@@ -17,5 +19,23 @@ class DesplazamientoController extends Controller
     public function includes(): array
     {
         return ['detalle_medios_desplazamiento', 'detalle_medios_desplazamiento.medio_desplazamiento'];
+    }
+    public function sortableBy() : array
+    {
+         return ['fecha_creado'];
+    }
+
+    public function filterableBy() : array
+    {
+        return ['fecha_creado'];
+    }
+
+    protected function buildIndexFetchQuery(Request $request, array $requestedRelations): Builder
+    {
+        $query = parent::buildIndexFetchQuery($request, $requestedRelations);
+
+        $query->orderBy('fecha_creado', 'DESC');
+
+        return $query;
     }
 }
