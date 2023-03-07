@@ -39,6 +39,7 @@ class RolPermissionSeeder extends Seeder
             'estado_solicitud',
             'user',
             'desplazamiento',
+            'solicitud_cuenta',
             'reporte_incidente',
             'detalle_medio_recorrido',
         ]);
