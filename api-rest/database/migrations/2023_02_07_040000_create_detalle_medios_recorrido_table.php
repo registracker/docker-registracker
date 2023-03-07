@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('detalle_medios_recorrido', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('recorrido_id');
+            $table->foreignUuid('desplazamiento_id');
             $table->foreignId('id_medio_desplazamiento')->constrained('medios_desplazamiento');
             $table->time('duracion');
             $table->timestamp('fecha_creado')->nullable();

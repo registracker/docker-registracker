@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('reportes_incidentes', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('desplazamiento_id');
+            $table->foreignUuid('desplazamiento_id')->nullable();
             $table->foreignId('id_incidente')->constrained('incidentes');
             $table->timestamp('fecha_reporte');
             $table->double('latitud', 10, 8);

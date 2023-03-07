@@ -48,8 +48,13 @@ class MedioDesplazamientoSeeder extends Seeder
             ],
             [
                 'id' => 7,
-                'nombre' => 'U.F.O.',
-                'icono' => 'ufo-outline',
+                'nombre' => 'Motocicleta',
+                'icono' => 'motorbike',
+            ],
+            [
+                'id' => 8,
+                'nombre' => 'Patineta',
+                'icono' => 'skateboarding',
             ],
         ];
 

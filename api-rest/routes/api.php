@@ -14,17 +14,23 @@ use App\Http\Controllers\Api\RoleDisableAuthorizationController;
 use App\Http\Controllers\Api\VehiculoController;
 use App\Http\Controllers\Api\ClaseVehicularController;
 use App\Http\Controllers\Api\ClasificacionVehicularController;
+use App\Http\Controllers\Api\DesplazamientoController;
+use App\Http\Controllers\Api\DetalleMedioRecorridoController;
 use App\Http\Controllers\Api\EstadoSolicitudController;
 use App\Http\Controllers\Api\SolicitudCuentaController;
+use App\Http\Controllers\Api\ReporteIncidenteController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
+use App\Models\DetalleMedioRecorrido;
 use App\Models\MedioDesplazamiento;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +50,35 @@ use Illuminate\Support\Str;
 |
 */
 
+function calcularDuracionMediosPorUuid($id){
+    $now = Carbon::now()->toDateTimeString();
+    // DetalleMedioRecorrido::truncate();
+
+    $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
+        ->where('desplazamiento_id', $id)
+        ->groupBy('agrupacion_medio_desplazamiento')
+        ->orderBy('fecha_registro', 'asc')
+        ->get();
+
+    foreach ($desplazamientosAgrupado  as $desplazamiento) {
+        $fecha = Carbon::parse($desplazamiento['fecha_fin'])->diffAsCarbonInterval(Carbon::parse($desplazamiento['fecha_inicio']));
+        $duracion =  Arr::join([Str::padLeft($fecha->h, 2, '0'), Str::padLeft($fecha->i, 2, '0'), Str::padLeft($fecha->s, 2, '0')], ':');
+        $desplazamiento['duracion'] = $duracion;
+        $desplazamiento['fecha_creado'] = $now;
+        $desplazamiento['fecha_actualizado'] = $now;
+    }
+
+    $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
+        return collect($item)
+            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado'])
+            ->toArray();
+    })->toArray();
+
+    DetalleMedioRecorrido::insert($coleccion);
+
+    return $coleccion;
+}
+
 Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (Request $request) {
     $now = Carbon::now()->toDateTimeString();
     $uuid = $request->uuid;
@@ -55,16 +90,66 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
     ]);
 
     $ruta = collect($request->desplazamiento)->map(function ($item, $key) use ($now, $uuid) {
-        $item['fecha_creado'] = $now;
         $item['desplazamiento_id'] = $uuid;
+        $item['fecha_creado'] = $now;
         $item['fecha_actualizado'] = $now;
-        $item['fecha_registro'] = Carbon::parse($item['fecha_registro']);
+        $item['fecha_registro'] = Carbon::createFromTimestampMs($item['fecha_registro']);
         return $item;
     })->toArray();
 
     CoordenadaDesplazamiento::insert($ruta);
 
-    return response()->json(['ruta' => $ruta]);
+    $query = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid);
+
+    $totalRegistros = $query->count();
+
+    $inicioDesplazamiento = $query
+        ->orderBy('fecha_registro', 'asc')
+        ->first();
+
+    $finDesplazamiento = $query
+        ->orderBy('fecha_registro', 'desc')
+        ->first();
+
+    $velocidadMax = $query
+        ->max('velocidad');
+
+    $velocidadMed = $query
+        ->avg('velocidad');
+
+    $elevacionMin = $query
+        ->min('altitud');
+
+    $elevacionMax = $query
+        ->max('altitud');
+
+
+    Desplazamiento::updateOrCreate([
+        'id' => $uuid
+    ], [
+        'id' => $uuid,
+        'velocidad_max' => $velocidadMax,
+        'velocidad_media' => $velocidadMed,
+        'duracion' => Carbon::parse($finDesplazamiento->fecha_registro)->diffInMinutes(Carbon::parse($inicioDesplazamiento->fecha_registro)),
+        'inicio_desplazamiento' => $inicioDesplazamiento->fecha_registro,
+        'fin_desplazamiento' => $finDesplazamiento->fecha_registro,
+        'elevacion_min' => $elevacionMin,
+        'elevacion_max' => $elevacionMax,
+    ]);
+    ray([
+        'id' => $uuid,
+        'velocidad_max' => $velocidadMax,
+        'velocidad_media' => $velocidadMed,
+        'duracion' => Carbon::parse($finDesplazamiento->fecha_registro)->diffInMinutes(Carbon::parse($inicioDesplazamiento->fecha_registro)),
+        'inicio_desplazamiento' => $inicioDesplazamiento->fecha_registro,
+        'fin_desplazamiento' => $finDesplazamiento->fecha_registro,
+        'elevacion_min' => $elevacionMin,
+        'elevacion_max' => $elevacionMax,
+    ]);
+
+    calcularDuracionMediosPorUuid($uuid);
+
+    return response()->json(['registros_insertados' =>  $totalRegistros], Response::HTTP_CREATED);
 });
 
 Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (Request $request) {
@@ -85,8 +170,62 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (R
 });
 
 Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', function (Request $request, Desplazamiento $desplazamiento) {
-    $desplazamiento = CoordenadaDesplazamiento::where('desplazamiento_id', $desplazamiento->id)->orderBy('fecha_registro', 'asc')->get();
-    return response()->json(['desplazamiento' => $desplazamiento]);
+    $coordenadas = CoordenadaDesplazamiento::where('desplazamiento_id', $desplazamiento->id)->orderBy('fecha_registro', 'asc')->get();
+
+    if ($request->query('group') == 'yes') {
+        // const defaultColor = '#37474F';
+        // point.latitud,
+        // point.longitud,
+        // id_medio_desplazamiento
+
+        $id = 1;
+        $idGrupoMedioDesplazamietoInicial = -1;
+        $agrupacion = collect();
+        $chunck = collect();
+
+        $colores = collect([
+            '#B71C1C',
+            '#4A148C',
+            '#311B92',
+            '#00695C',
+            '#AFB42B',
+            '#F9A825'
+        ]);
+
+        foreach ($coordenadas  as $coordenada) {
+            $latitud = $coordenada['latitud'];
+            $longitud = $coordenada['longitud'];
+            $agrupacionMedioDesplazamiento = $coordenada['agrupacion_medio_desplazamiento'];
+
+            if ($coordenadas->first() == $coordenada) {
+                $idGrupoMedioDesplazamietoInicial = $agrupacionMedioDesplazamiento;
+                $chunck->push([$latitud, $longitud]);
+                continue;
+            }
+
+            if ($coordenadas->last() == $coordenada) {
+                $idGrupoMedioDesplazamietoInicial = $agrupacionMedioDesplazamiento;
+                $colorChunk = $colores->get($idGrupoMedioDesplazamietoInicial - 1, '#37474F');
+                $agrupacion->push(['color' => $colorChunk, 'multilinea' => $chunck->toArray()]);
+                continue;
+            }
+
+            if ($agrupacionMedioDesplazamiento != $idGrupoMedioDesplazamietoInicial) {
+                $idGrupoMedioDesplazamietoInicial = $agrupacionMedioDesplazamiento;
+                $colorChunk = $colores->get($idGrupoMedioDesplazamietoInicial - 1, '#37474F');
+                $chunck->push([$latitud, $longitud]);
+                $agrupacion->push(['color' => $colorChunk, 'multilinea' => $chunck->toArray(), 'id' => $id]);
+                $id = $id + 1;
+                $chunck = collect();
+            }
+
+            $chunck->push([$latitud, $longitud]);
+        }
+
+        return response()->json(['segmentos' => $agrupacion->toArray()]);
+    }
+
+    return response()->json(['coordenadas' => $coordenadas]);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -211,6 +350,11 @@ Route::get('/estado-cuenta', function (Request $request) {
     ]);
 });
 
+Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
+    $coleccion = calcularDuracionMediosPorUuid($id);
+    return response()->json(['desplazamiento' => $coleccion]);
+});
+
 Route::middleware('auth:sanctum')->post('/usuario/admin', function (Request $request) {
     $ID_ESTADO_ACTIVA = 1;
 
@@ -272,6 +416,9 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('estados-solicitud', EstadoSolicitudController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('usuarios', UsuarioController::class)->only(['index', 'search', 'show', 'update'])->withSoftDeletes();
     Orion::resource('solicitudes-cuentas', SolicitudCuentaController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('desplazamientos', DesplazamientoController::class)->only(['index', 'search', 'show', 'batchStore'])->withSoftDeletes();
+    Orion::resource('reporte-incidente', ReporteIncidenteController::class)->only(['index', 'search', 'store', 'show', 'batchStore'])->withSoftDeletes();
+    Orion::resource('detalle-medio-recorrido', DetalleMedioRecorridoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
 
     /**
      * TODO
