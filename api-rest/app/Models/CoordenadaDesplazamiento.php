@@ -25,6 +25,11 @@ class CoordenadaDesplazamiento extends Model
 
     protected $dates = ['fecha_registro'];
 
+    public function medio()
+    {
+        return $this->hasOne(MedioDesplazamiento::class, 'id', 'id_medio_desplazamiento');
+    }
+
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';

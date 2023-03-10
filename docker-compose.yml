@@ -2,6 +2,7 @@ version: '3.2'
 
 services:
   mariadb_laravel:
+    restart: always
     image: docker.io/bitnami/mariadb:10.6
     # volumes:
     #   - ./backup:/bitnami/mariadb

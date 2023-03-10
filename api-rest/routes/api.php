@@ -49,7 +49,8 @@ use Illuminate\Support\Str;
 |
 */
 
-function calcularDuracionMediosPorUuid($id){
+function calcularDuracionMediosPorUuid($id)
+{
     $now = Carbon::now()->toDateTimeString();
     // DetalleMedioRecorrido::truncate();
 
@@ -169,9 +170,113 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (R
 });
 
 Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', function (Request $request, Desplazamiento $desplazamiento) {
-    $coordenadas = CoordenadaDesplazamiento::where('desplazamiento_id', $desplazamiento->id)->orderBy('fecha_registro', 'asc')->get();
+    $coordenadas = CoordenadaDesplazamiento::with('medio')
+        ->where('desplazamiento_id', $desplazamiento->id)
+        ->orderBy('fecha_registro', 'asc')
+        ->get();
 
-    if ($request->query('group') == 'yes') {
+    if ($request->query('tipo') == 'geojson') {
+        // const defaultColor = '#37474F';
+        // point.latitud,
+        // point.longitud,
+        // id_medio_desplazamiento
+        // LineString
+        ray($coordenadas->toArray())->red();
+        $id = 1;
+        $idGrupo = -1;
+        $idMedio = -1;
+        $chunck = collect();
+        $agrupacion = collect();
+        $limite = collect();
+
+        // 1,5,2,1
+
+        $colores = collect([
+            '#E40066', // Caminando
+            '#03CEA4', // Autobus
+            '#345995', // Scooter
+            '#EAC435', // Bicicleta
+            '#2C302E', // Taxi
+            '#FB4D3D', // Vehiculo
+            '#37306B', // Motocicleta
+            '#CB1C8D', // Patineta
+        ]);
+
+        foreach ($coordenadas as $coordenada) {
+            $latitud = $coordenada['latitud'];
+            $longitud = $coordenada['longitud'];
+            $nombreMedioDesplazamiento = $coordenada['medio']['nombre'];
+            $grupoActual = $coordenada['agrupacion_medio_desplazamiento'];
+
+            if ($coordenadas->first() == $coordenada) {
+                $limite->push([$latitud, $longitud]);
+                $idMedio = $coordenada['id_medio_desplazamiento'];
+                $idGrupo = $grupoActual;
+                $chunck->push([$longitud, $latitud]);
+
+                continue;
+            }
+
+            if ($coordenadas->last() == $coordenada) {
+                $limite->push([$latitud, $longitud]);
+
+                if ($chunck->isNotEmpty()) {
+                    $colorChunk = $colores->get($idMedio - 1, '#37474F');
+                    $agrupacion->push([
+                        'type' => 'Feature',
+                        'geometry' => [
+                            'type' => 'LineString',
+                            'coordinates' => $chunck->toArray()
+                        ],
+                        'properties' => [
+                            'id' => $id,
+                            'color' => $colorChunk,
+                            'medio' => $nombreMedioDesplazamiento,
+                            'id_medio' => $idMedio,
+                        ],
+                    ]);
+                }
+                continue;
+            }
+
+            if ($idGrupo != $grupoActual) {
+                $idGrupo = $grupoActual;
+                $colorChunk = $colores->get($idMedio - 1, '#37474F');
+                $chunck->push([$longitud, $latitud]);
+                $agrupacion->push([
+                    'type' => 'Feature',
+                    'geometry' => [
+                        'type' => 'LineString',
+                        'coordinates' => $chunck->toArray()
+                    ],
+                    'properties' => [
+                        'id' => $id,
+                        'color' => $colorChunk,
+                        'medio' => $nombreMedioDesplazamiento,
+                        'id_medio' => $idMedio,
+                    ],
+                ]);
+
+                $id = $id + 1;
+                $idMedio = $coordenada['id_medio_desplazamiento'];
+                $chunck = collect();
+            }
+
+            $chunck->push([$longitud, $latitud]);
+        }
+
+        return response()->json([
+            'coleccion' =>
+            [
+                'type' => 'FeatureCollection',
+                'features' => $agrupacion->toArray()
+            ],
+            'limite' => $limite->toArray()
+        ]);
+    }
+
+
+    if ($request->query('tipo') == 'chunck') {
         // const defaultColor = '#37474F';
         // point.latitud,
         // point.longitud,
@@ -184,11 +289,11 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
 
         $colores = collect([
             '#B71C1C',
+            '#F9A825',
             '#4A148C',
-            '#311B92',
             '#00695C',
             '#AFB42B',
-            '#F9A825'
+            '#311B92',
         ]);
 
         foreach ($coordenadas  as $coordenada) {
