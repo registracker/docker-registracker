@@ -48,11 +48,15 @@ class RolPermissionSeeder extends Seeder
             'administracion:usuarios',
             'administracion:roles',
             'administracion:permisos',
-            'administracion:medios_desplazamiento',
+            'administracion:medios-desplazamiento',
             'administracion:incidentes',
             'administracion:marcadores',
-            'administracion:estados_solicitud',
+            'administracion:estados-solicitud',
+            'administracion:clasificacion-vehicular',
+            'administracion:clases-vehiculares',
+            'administracion:vehiculos',
             'desplazamiento:movil',
+            'desplazamiento:detalle',
         ]);
 
         $roleAdministrador = Role::create(['name' => Constant::ROL_ADMINISTRADOR]);

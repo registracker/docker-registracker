@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -58,4 +59,10 @@ class User extends Authenticatable
         return $this->hasOne(SolicitudCuenta::class, 'id_usuario');
     }
 
+    public function getPermisosWeb()
+    {
+        return $this->getAllPermissions()->filter(function ($value) {
+            return Str::startsWith($value['name'], 'web:');
+        })->pluck('name')->toArray();
+    }
 }

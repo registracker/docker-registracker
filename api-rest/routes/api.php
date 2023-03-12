@@ -173,6 +173,7 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (R
 Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', function (Request $request, Desplazamiento $desplazamiento) {
     $coordenadas = CoordenadaDesplazamiento::with('medio')
         ->where('desplazamiento_id', $desplazamiento->id)
+        // ->where('agrupacion_medio_desplazamiento', 1)
         ->orderBy('fecha_registro', 'asc')
         ->get();
 
@@ -213,7 +214,8 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
                 $limite->push([$latitud, $longitud]);
                 $idMedio = $coordenada['id_medio_desplazamiento'];
                 $idGrupo = $grupoActual;
-                $chunck->push([$longitud, $latitud]);
+                // $chunck->push([$longitud, $latitud]);
+                // $chunck->push([$latitud, $longitud]);
 
                 continue;
             }
@@ -243,7 +245,8 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
             if ($idGrupo != $grupoActual) {
                 $idGrupo = $grupoActual;
                 $colorChunk = $colores->get($idMedio - 1, '#37474F');
-                $chunck->push([$longitud, $latitud]);
+                // $chunck->push([$longitud, $latitud]);
+                // $chunck->push([$latitud, $longitud]);
                 $agrupacion->push([
                     'type' => 'Feature',
                     'geometry' => [
@@ -264,6 +267,7 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
             }
 
             $chunck->push([$longitud, $latitud]);
+            // $chunck->push([$latitud, $longitud]);
         }
 
         return response()->json([
@@ -334,7 +338,7 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return response()->json(['usuario' => $request->user(), 'permisos' => $request->user()->getPermisosWeb()]);
 });
 
 Route::post('/sanctum/token', function (Request $request) {
