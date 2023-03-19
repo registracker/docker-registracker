@@ -27,7 +27,7 @@ class CoordenadaDesplazamiento extends Model
 
     public function medio()
     {
-        return $this->hasOne(MedioDesplazamiento::class, 'id', 'id_medio_desplazamiento');
+        return $this->hasOne(MedioDesplazamiento::class, 'id', 'id_medio_desplazamiento')->withTrashed();
     }
 
     const CREATED_AT = 'fecha_creado';
