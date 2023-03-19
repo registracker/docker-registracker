@@ -20,6 +20,7 @@ class DesplazamientoController extends Controller
     {
         return ['detalle_medios_desplazamiento', 'detalle_medios_desplazamiento.medio_desplazamiento'];
     }
+    
     public function sortableBy() : array
     {
          return ['fecha_creado'];
