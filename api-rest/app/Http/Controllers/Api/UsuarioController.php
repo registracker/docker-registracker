@@ -24,7 +24,7 @@ class UsuarioController extends Controller
 
     public function sortableBy() : array
     {
-         return ['id', 'roles.id'];
+         return ['id', 'fecha_creado'];
     }
     /**
      * Fills attributes on the given entity and update it in database.
