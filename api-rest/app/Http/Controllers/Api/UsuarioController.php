@@ -17,6 +17,10 @@ class UsuarioController extends Controller
         return ['solicitud.estado', 'solicitud', 'roles'];
     }
 
+    public function filterableBy() : array
+    {
+        return ['id', 'roles.id'];
+    }
     /**
      * Fills attributes on the given entity and update it in database.
      *
