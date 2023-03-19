@@ -30,4 +30,9 @@ class DesplazamientoController extends Controller
     {
         return ['fecha_creado'];
     }
+    
+    public function searchableBy() : array
+    {
+        return ['id'];
+    }
 }
