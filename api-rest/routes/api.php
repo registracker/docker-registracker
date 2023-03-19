@@ -355,6 +355,14 @@ Route::post('/sanctum/token', function (Request $request) {
         ]);
     }
 
+    $estado = $user->solicitud->estado;
+    
+    if (! $estado->permitir_acceso){
+        throw ValidationException::withMessages([
+            'block' => ['Estado de cuenta: '. $estado->nombre.'.'],
+        ]);
+    }
+
     $token =  $user->createToken($user->getNombreRoles(), [])->plainTextToken;
 
     return response()->json([
