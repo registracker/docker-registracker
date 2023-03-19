@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Orion\Http\Requests\Request;
 use Orion\Http\Controllers\Controller;
+use App\Http\Requests\UsuarioRequest;
+
 
 class UsuarioController extends Controller
 {
     protected $model = User::class;
+
+    protected $request = UsuarioRequest::class;
 
     public function includes(): array
     {
