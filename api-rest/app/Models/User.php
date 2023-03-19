@@ -59,6 +59,11 @@ class User extends Authenticatable
         return $this->hasOne(SolicitudCuenta::class, 'id_usuario');
     }
 
+    public function rol()
+    {
+        return $this->getRoleNames();
+    }
+
     public function getPermisosWeb()
     {
         return $this->getAllPermissions()->filter(function ($value) {

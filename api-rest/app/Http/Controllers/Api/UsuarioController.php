@@ -14,7 +14,7 @@ class UsuarioController extends Controller
 
     public function includes(): array
     {
-        return ['solicitud.estado', 'solicitud'];
+        return ['solicitud.estado', 'solicitud', 'rol'];
     }
 
     /**

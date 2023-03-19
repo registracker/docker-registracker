@@ -80,5 +80,8 @@ class RolPermissionSeeder extends Seeder
                 }
             }
         }
+
+        $roleInvestigador->givePermissionTo($guardWeb."desplazamiento:movil");
+        $roleInvestigador->givePermissionTo($guardWeb."desplazamiento:detalle");
     }
 }

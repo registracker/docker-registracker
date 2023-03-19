@@ -46,3 +46,8 @@ docker-compose exec api_rest_laravel php artisan make:policy PermissionPolicy --
 docker-compose exec api_rest_laravel php artisan config:cache
 
 rsync -a ../seguimiento-web/dist/ ./api-rest/resources/
+
+rsync -a ./dist/js/ ../app-seguimiento-backend/api-rest/resources/js
+rsync -a ./dist/css/ ../app-seguimiento-backend/api-rest/resources/css
+rsync -a ./dist/img/ ../app-seguimiento-backend/api-rest/resources/img
+cp ./dist/index.html ../app-seguimiento-backend/api-rest/resources/views/web.blade.php
