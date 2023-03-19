@@ -35,6 +35,9 @@ class UsuarioController extends Controller
      */
     protected function performUpdate(Request $request, Model $user, array $attributes): void
     {
+        if ($request->rol){
+            $user->syncRoles([$request->rol]);
+        }
         $user->fill(['password' => Hash::make($request->password),]);
         $user->save();
     }
