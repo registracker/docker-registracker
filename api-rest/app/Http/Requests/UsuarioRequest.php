@@ -11,7 +11,7 @@ class UsuarioRequest extends Request
     {
         return [
             'password' => ['string', 'min:8'],
-            'rol' => ['exists:permissions,name', 'max:255'],
+            'rol' => ['exists:roles,name', 'max:255'],
         ];
     }
 
