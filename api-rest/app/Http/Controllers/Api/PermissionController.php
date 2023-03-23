@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\PermissionRequest;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Orion\Http\Controllers\Controller;
 use Orion\Http\Requests\Request;
@@ -45,4 +46,18 @@ class PermissionController extends Controller
             $permission->delete();
         }
     }
+
+    // protected function runUpdateFetchQuery(Request $request, Builder $query, $key): Model
+    // {
+    //     return $query->findOrFail($key);
+    // }
+
+
+    // protected function runDestroyFetchQuery(Request $request,  Builder $query): Model
+    // {
+    //     return $query->select($this->attributes)->findOrFail($key);
+    // }
+
+
+
 }
