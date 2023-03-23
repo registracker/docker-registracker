@@ -24,6 +24,6 @@ class ClasificacionVehicular extends Model
 
     public function clases()
     {
-        return $this->hasMany(ClaseVehicular::class, 'id_clasificacion_vehicular');
+        return $this->hasMany(ClaseVehicular::class, 'id_clasificacion_vehicular')->withTrashed();
     }
 }

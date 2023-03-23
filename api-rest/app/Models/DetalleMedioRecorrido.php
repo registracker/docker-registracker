@@ -22,6 +22,6 @@ class DetalleMedioRecorrido extends Model
 
     public function medio_desplazamiento()
     {
-        return $this->hasOne(MedioDesplazamiento::class, 'id','id_medio_desplazamiento');
+        return $this->hasOne(MedioDesplazamiento::class, 'id','id_medio_desplazamiento')->withTrashed();
     }
 }
