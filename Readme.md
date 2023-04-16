@@ -13,6 +13,7 @@ _Gestiona los permisos y roles del apartado web._
 docker compose up -d
 
 ### Ejecutar la migración
+docker compose exec api_rest_laravel php artisan migrate
 docker-compose exec api_rest_laravel php artisan migrate:refresh --seed
 
 ### Crear politica
