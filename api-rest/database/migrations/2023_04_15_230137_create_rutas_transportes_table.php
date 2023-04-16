@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('rutas_transportes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_departamento')->constrained('departamentos');
+            $table->foreignId('id_tipo_vehiculo_ruta')->constrained('tipos_vehiculos_rutas');
+            $table->foreignId('id_tipo_servicio_ruta')->constrained('tipos_servicios_rutas');
+            $table->foreignId('id_clase_servicio_ruta')->constrained('clases_servicios_rutas');
             $table->string('codigo_ruta', 64);
             $table->string('ruta', 64);
             $table->string('denominacion')->nullable();
