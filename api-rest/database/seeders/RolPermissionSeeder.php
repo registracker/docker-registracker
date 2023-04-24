@@ -62,7 +62,7 @@ class RolPermissionSeeder extends Seeder
             'administracion:tipos-vehiculos-rutas',
             'administracion:tipos-servicios-rutas',
             'administracion:clases-servicios-rutas',
-            'administracion:rutas-transportes',
+            'administracion:rutas-transporte',
             'desplazamiento:movil',
             'desplazamiento:detalle',
         ]);
