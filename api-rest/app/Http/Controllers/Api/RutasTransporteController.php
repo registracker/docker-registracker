@@ -21,6 +21,6 @@ class RutasTransporteController extends Controller
 
     public function filterableBy(): array
     {
-        return ['departamento.id'];
+        return ['codigo_ruta', 'ruta', 'departamento.id'];
     }
 }
