@@ -18,7 +18,7 @@ class TiposServiciosRutasPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->can('api:tipos_servicios_rutas:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class TiposServiciosRutasPolicy
      */
     public function view(User $user, TiposServiciosRutas $tiposServiciosRutas)
     {
-        //
+        return $user->can('api:tipos_servicios_rutas:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class TiposServiciosRutasPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->can('api:tipos_servicios_rutas:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class TiposServiciosRutasPolicy
      */
     public function update(User $user, TiposServiciosRutas $tiposServiciosRutas)
     {
-        //
+        return $user->can('api:tipos_servicios_rutas:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class TiposServiciosRutasPolicy
      */
     public function delete(User $user, TiposServiciosRutas $tiposServiciosRutas)
     {
-        //
+        return $user->can('api:tipos_servicios_rutas:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class TiposServiciosRutasPolicy
      */
     public function restore(User $user, TiposServiciosRutas $tiposServiciosRutas)
     {
-        //
+        return $user->can('api:tipos_servicios_rutas:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class TiposServiciosRutasPolicy
      */
     public function forceDelete(User $user, TiposServiciosRutas $tiposServiciosRutas)
     {
-        //
+        return $user->can('api:tipos_servicios_rutas:eliminar');
     }
 }

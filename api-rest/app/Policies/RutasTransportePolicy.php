@@ -18,7 +18,7 @@ class RutasTransportePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->can('api:rutas_transportes:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class RutasTransportePolicy
      */
     public function view(User $user, RutasTransporte $rutasTransporte)
     {
-        //
+        return $user->can('api:rutas_transportes:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class RutasTransportePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->can('api:rutas_transportes:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class RutasTransportePolicy
      */
     public function update(User $user, RutasTransporte $rutasTransporte)
     {
-        //
+        return $user->can('api:rutas_transportes:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class RutasTransportePolicy
      */
     public function delete(User $user, RutasTransporte $rutasTransporte)
     {
-        //
+        return $user->can('api:rutas_transportes:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class RutasTransportePolicy
      */
     public function restore(User $user, RutasTransporte $rutasTransporte)
     {
-        //
+        return $user->can('api:rutas_transportes:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class RutasTransportePolicy
      */
     public function forceDelete(User $user, RutasTransporte $rutasTransporte)
     {
-        //
+        return $user->can('api:rutas_transportes:eliminar');
     }
 }

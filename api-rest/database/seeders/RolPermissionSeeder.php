@@ -42,21 +42,29 @@ class RolPermissionSeeder extends Seeder
             'solicitud_cuenta',
             'reporte_incidente',
             'detalle_medio_recorrido',
+            'tipos_vehiculos_rutas',
+            'tipos_servicios_rutas',
+            'clases_servicios_rutas',
+            'rutas_transportes',
         ]);
 
         $sitios = collect([
             'administracion:usuarios',
             'administracion:roles',
             'administracion:permisos',
-            'administracion:medios-desplazamiento',
+            'administracion:medios_desplazamiento',
             'administracion:incidentes',
             'administracion:marcadores',
-            'administracion:estados-solicitud',
-            'administracion:clasificacion-vehicular',
-            'administracion:clases-vehiculares',
+            'administracion:estados_solicitud',
+            'administracion:clasificacion_vehicular',
+            'administracion:clases_vehiculares',
             'administracion:vehiculos',
             'desplazamiento:movil',
             'desplazamiento:detalle',
+            'desplazamiento:tipos_vehiculos_rutas',
+            'desplazamiento:tipos_servicios_rutas',
+            'desplazamiento:clases_servicios_rutas',
+            'desplazamiento:rutas_transportes',
         ]);
 
         $roleAdministrador = Role::create(['name' => Constant::ROL_ADMINISTRADOR]);
@@ -81,7 +89,7 @@ class RolPermissionSeeder extends Seeder
             }
         }
 
-        $roleInvestigador->givePermissionTo($guardWeb.":desplazamiento:movil");
-        $roleInvestigador->givePermissionTo($guardWeb.":desplazamiento:detalle");
+        $roleInvestigador->givePermissionTo($guardWeb . ":desplazamiento:movil");
+        $roleInvestigador->givePermissionTo($guardWeb . ":desplazamiento:detalle");
     }
 }

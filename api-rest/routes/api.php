@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ClasesServiciosRutasController;
 use App\Http\Controllers\Api\ZonaController;
 use App\Http\Controllers\Api\DepartamentoController;
 use App\Http\Controllers\Api\MunicipioController;
@@ -19,11 +20,13 @@ use App\Http\Controllers\Api\DetalleMedioRecorridoController;
 use App\Http\Controllers\Api\EstadoSolicitudController;
 use App\Http\Controllers\Api\SolicitudCuentaController;
 use App\Http\Controllers\Api\ReporteIncidenteController;
+use App\Http\Controllers\Api\RutasTransporteController;
+use App\Http\Controllers\Api\TiposServiciosRutasController;
+use App\Http\Controllers\Api\TiposVehiculosRutasController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
-use App\Models\MedioDesplazamiento;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
 
@@ -536,6 +539,10 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('desplazamientos', DesplazamientoController::class)->only(['index', 'search', 'show', 'batchStore'])->withSoftDeletes();
     Orion::resource('reporte-incidente', ReporteIncidenteController::class)->only(['index', 'search', 'store', 'show', 'batchStore'])->withSoftDeletes();
     Orion::resource('detalle-medio-recorrido', DetalleMedioRecorridoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
+    Orion::resource('tipos-vehiculos-rutas', TiposVehiculosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('tipos-servicios-rutas', TiposServiciosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('clases-servicios-rutas', ClasesServiciosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('rutas-transportes', RutasTransporteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
 
     /**
      * TODO
