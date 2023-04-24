@@ -8,4 +8,14 @@ use Orion\Http\Controllers\Controller;
 class RutasTransporteController extends Controller
 {
     protected $model = RutasTransporte::class;
+
+    /**
+     * The relations that are allowed to be included together with a resource.
+     *
+     * @return array
+     */
+    public function includes(): array
+    {
+        return ['departamento', 'vehiculo', 'servicio', 'clase'];
+    }
 }

@@ -27,8 +27,23 @@ class RutasTransporte extends Model
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
 
-    public function rutas_transporte()
+    public function departamento()
     {
-        return $this->hasMany(RutasTransporte::class, 'id_tipo_servicio_ruta');
+        return $this->belongsTo(Departamento::class, 'id_departamento');
+    }
+
+    public function vehiculo()
+    {
+        return $this->belongsTo(TiposVehiculosRutas::class, 'id_tipo_vehiculo_ruta');
+    }
+
+    public function servicio()
+    {
+        return $this->belongsTo(TiposServiciosRutas::class, 'id_tipo_servicio_ruta');
+    }
+
+    public function clase()
+    {
+        return $this->belongsTo(ClasesServiciosRutas::class, 'id_clase_servicio_ruta');
     }
 }
