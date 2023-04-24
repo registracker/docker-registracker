@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('reportes_marcadores', function (Blueprint $table) {
+        Schema::create('reporte_marcadores', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_usuario')->constrained('users');
             $table->foreignId('id_levantamiento')->constrained('levantamientos');
+            $table->foreignId('id_marcador')->constrained('marcadores');
             $table->double('latitud', 10, 8);
             $table->double('longitud', 11, 8);
             $table->double('altitud')->nullable();
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reportes_marcadores');
+        Schema::dropIfExists('reporte_marcadores');
     }
 };
