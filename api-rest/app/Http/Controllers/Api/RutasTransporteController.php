@@ -18,4 +18,9 @@ class RutasTransporteController extends Controller
     {
         return ['departamento', 'vehiculo', 'servicio', 'clase'];
     }
+
+    public function filterableBy(): array
+    {
+        return ['departamento.id'];
+    }
 }
