@@ -359,7 +359,7 @@ Route::post('/sanctum/token', function (Request $request) {
     }
 
     $estado = $user->solicitud->estado;
-    
+
     if (! $estado->permitir_acceso){
         throw ValidationException::withMessages([
             'block' => ['Estado de cuenta: '. $estado->nombre.'.'],
@@ -542,7 +542,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('tipos-vehiculos-rutas', TiposVehiculosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('tipos-servicios-rutas', TiposServiciosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('clases-servicios-rutas', ClasesServiciosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('rutas-transportes', RutasTransporteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('rutas-transporte', RutasTransporteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
 
     /**
      * TODO
