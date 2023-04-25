@@ -18,12 +18,14 @@ use App\Http\Controllers\Api\ClasificacionVehicularController;
 use App\Http\Controllers\Api\DesplazamientoController;
 use App\Http\Controllers\Api\DetalleMedioRecorridoController;
 use App\Http\Controllers\Api\EstadoSolicitudController;
+use App\Http\Controllers\Api\LevantamientoController;
 use App\Http\Controllers\Api\SolicitudCuentaController;
 use App\Http\Controllers\Api\ReporteIncidenteController;
 use App\Http\Controllers\Api\RutasTransporteController;
 use App\Http\Controllers\Api\TiposServiciosRutasController;
 use App\Http\Controllers\Api\TiposVehiculosRutasController;
 use App\Http\Controllers\Api\UsuarioController;
+use App\Http\Controllers\Api\ReporteMarcadoresController;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
@@ -543,6 +545,8 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('tipos-servicios-rutas', TiposServiciosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('clases-servicios-rutas', ClasesServiciosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('rutas-transporte', RutasTransporteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('levantamientos', LevantamientoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('reporte-marcadores', ReporteMarcadoresController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
 
     /**
      * TODO

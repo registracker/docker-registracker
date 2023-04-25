@@ -21,7 +21,7 @@ return new class extends Migration
             $table->double('latitud', 10, 8);
             $table->double('longitud', 11, 8);
             $table->double('altitud')->nullable();
-            $table->string('comentario', 127)->nullable();
+            $table->string('comentario', 128)->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();

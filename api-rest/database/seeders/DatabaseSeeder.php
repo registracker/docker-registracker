@@ -39,6 +39,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             EstadoCuentaSeeder::class,
             RutasTransporteSeeder::class,
+            LevantamientosSeeder::class,
+            ReporteMarcadoresSeeder::class,
         ]);
         // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

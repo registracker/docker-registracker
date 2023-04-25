@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\ReportesMarcadores--seed;
+use App\Models\Levantamiento;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ReportesMarcadoresPolicy
+class LevantamientoPolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class ReportesMarcadoresPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->can('api:levantamiento:listar');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportesMarcadores--seed  $reportesMarcadoresSeed
+     * @param  \App\Models\Levantamiento  $levantamientos
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, ReportesMarcadores--seed $reportesMarcadoresSeed)
+    public function view(User $user, Levantamiento $levantamiento)
     {
-        //
+        return $user->can('api:levantamiento:listar');
     }
 
     /**
@@ -41,54 +41,54 @@ class ReportesMarcadoresPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->can('api:levantamiento:listar');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportesMarcadores--seed  $reportesMarcadoresSeed
+     * @param  \App\Models\Levantamiento  $levantamiento
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, ReportesMarcadores--seed $reportesMarcadoresSeed)
+    public function update(User $user, Levantamiento $levantamiento)
     {
-        //
+        return $user->can('api:levantamiento:actualizar');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportesMarcadores--seed  $reportesMarcadoresSeed
+     * @param  \App\Models\Levantamiento  $levantamiento
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, ReportesMarcadores--seed $reportesMarcadoresSeed)
+    public function delete(User $user, Levantamiento $levantamiento)
     {
-        //
+        return $user->can('api:levantamiento:eliminar');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportesMarcadores--seed  $reportesMarcadoresSeed
+     * @param  \App\Models\Levantamiento  $levantamientos
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, ReportesMarcadores--seed $reportesMarcadoresSeed)
+    public function restore(User $user, Levantamiento $levantamiento)
     {
-        //
+        return $user->can('api:levantamiento:actualizar');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportesMarcadores--seed  $reportesMarcadoresSeed
+     * @param  \App\Models\Levantamiento  $levantamiento
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, ReportesMarcadores--seed $reportesMarcadoresSeed)
+    public function forceDelete(User $user, Levantamiento $levantamiento)
     {
-        //
+        return $user->can('api:levantamiento:eliminar');
     }
 }

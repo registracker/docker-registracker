@@ -46,6 +46,8 @@ class RolPermissionSeeder extends Seeder
             'tipos_servicios_rutas',
             'clases_servicios_rutas',
             'rutas_transportes',
+            'levantamiento',
+            'reporte_marcadores'
         ]);
 
         $sitios = collect([
@@ -63,8 +65,11 @@ class RolPermissionSeeder extends Seeder
             'administracion:tipos-servicios-rutas',
             'administracion:clases-servicios-rutas',
             'administracion:rutas-transporte',
+            'administracion:levantamiento',
             'desplazamiento:movil',
             'desplazamiento:detalle',
+            'levantamiento:marcador',
+            'levantamiento:detalle-marcador',
         ]);
 
         $roleAdministrador = Role::create(['name' => Constant::ROL_ADMINISTRADOR]);

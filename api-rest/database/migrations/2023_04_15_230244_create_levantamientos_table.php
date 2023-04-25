@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('levantamientos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_usuario')->constrained('users');
-            $table->string('codigo', 128)->nullable();
-            $table->date('fecha_vencimiento');
+            $table->string('codigo', 128);
+            $table->date('fecha_vencimiento')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();
