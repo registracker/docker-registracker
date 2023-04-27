@@ -11,6 +11,15 @@ use Illuminate\Support\Str;
 class LevantamientoController extends Controller
 {
     protected $model = Levantamiento::class;
+    /**
+     * The name of the field used to fetch a resource from the database.
+     *
+     * @return string
+     */
+    protected function keyName(): string
+    {
+        return 'codigo';
+    }
 
     public function limit(): int
     {
