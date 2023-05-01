@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('detalle_medios_recorrido', function (Blueprint $table) {
-            $table->double('costo', 5, 2);
+            $table->double('costo', 5, 2)->nullable();
         });
     }
 
