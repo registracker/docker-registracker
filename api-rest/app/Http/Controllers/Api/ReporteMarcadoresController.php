@@ -30,7 +30,7 @@ class ReporteMarcadoresController extends Controller
         $data = collect($attributes)->only(['latitud', 'longitud', 'altitud', 'comentario', 'id_marcador'])->toArray();
         $reporteMarcador->fill(array_merge($data, [
             'id_usuario' => $this->resolveUser()->id,
-            'id_levantamiento' => Levantamiento::where('codigo', '=', $attributes['codigo'])->first()->id,
+            'id_levantamiento' => Levantamiento::where('codigo', $attributes['codigo'])->first()->id,
         ]));
         $reporteMarcador->save();
     }

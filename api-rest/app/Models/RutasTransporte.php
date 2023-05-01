@@ -29,21 +29,21 @@ class RutasTransporte extends Model
 
     public function departamento()
     {
-        return $this->belongsTo(Departamento::class, 'id_departamento');
+        return $this->belongsTo(Departamento::class, 'id_departamento')->withTrashed();
     }
 
     public function vehiculo()
     {
-        return $this->belongsTo(TiposVehiculosRutas::class, 'id_tipo_vehiculo_ruta');
+        return $this->belongsTo(TiposVehiculosRutas::class, 'id_tipo_vehiculo_ruta')->withTrashed();
     }
 
     public function servicio()
     {
-        return $this->belongsTo(TiposServiciosRutas::class, 'id_tipo_servicio_ruta');
+        return $this->belongsTo(TiposServiciosRutas::class, 'id_tipo_servicio_ruta')->withTrashed();
     }
 
     public function clase()
     {
-        return $this->belongsTo(ClasesServiciosRutas::class, 'id_clase_servicio_ruta');
+        return $this->belongsTo(ClasesServiciosRutas::class, 'id_clase_servicio_ruta')->withTrashed();
     }
 }

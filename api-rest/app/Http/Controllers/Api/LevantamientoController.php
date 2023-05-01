@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Levantamiento;
-use Orion\Http\Controllers\Controller;
-use Orion\Http\Requests\Request;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Models\Levantamiento;
+use Database\Seeders\Constant;
+use Orion\Http\Requests\Request;
+use Orion\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class LevantamientoController extends Controller
 {
     protected $model = Levantamiento::class;
-    /**
-     * The name of the field used to fetch a resource from the database.
-     *
-     * @return string
-     */
+
     protected function keyName(): string
     {
         return 'codigo';
@@ -30,20 +28,26 @@ class LevantamientoController extends Controller
     {
         return ['codigo', 'fecha_vencimiento'];
     }
+
     public function sortableBy(): array
     {
         return ['codigo', 'fecha_vencimiento'];
     }
 
-    /**
-     * The relations that are allowed to be included together with a resource.
-     *
-     * @return array
-     */
     public function includes(): array
     {
         return ['usuario'];
     }
+
+    protected function buildIndexFetchQuery(Request $request, array $requestedRelations): Builder
+    {
+        $query = parent::buildIndexFetchQuery($request, $requestedRelations);
+        if (!$this->resolveUser()->hasRole(Constant::ROL_ADMINISTRADOR)) {
+            $query->where('id_usuario', $this->resolveUser()->id);
+        }
+        return $query;
+    }
+
     protected function performStore(Request $request, Model $levantaminto, array $attributes): void
     {
         $levantaminto->fill(array_merge($attributes, [
