@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('tipos_vehiculos_rutas', function (Blueprint $table) {
             $table->id();
-            $table->string('tipo', 64)->nullable();
+            $table->string('tipo', 64);
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();

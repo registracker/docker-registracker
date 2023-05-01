@@ -11,6 +11,7 @@ use Carbon\Carbon;
 class ReporteIncidenteController extends Controller
 {
     protected $model = ReporteIncidente::class;
+
     protected function performStore(Request $request, Model $reporteIncidente, array $attributes): void
     {
         $attributes['fecha_reporte'] = Carbon::createFromTimestampMs($attributes['fecha_reporte']);
