@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BitacoraTablaController;
 use App\Http\Controllers\Api\ClasesServiciosRutasController;
 use App\Http\Controllers\Api\ZonaController;
 use App\Http\Controllers\Api\DepartamentoController;
@@ -547,6 +548,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('rutas-transporte', RutasTransporteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('levantamientos', LevantamientoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
     Orion::resource('reporte-marcadores', ReporteMarcadoresController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('bitacora-tablas', BitacoraTablaController::class)->only(['index', 'search', 'show'])->withSoftDeletes();
 
     /**
      * TODO

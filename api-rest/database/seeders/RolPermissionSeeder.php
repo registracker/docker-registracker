@@ -47,7 +47,8 @@ class RolPermissionSeeder extends Seeder
             'clases_servicios_rutas',
             'rutas_transportes',
             'levantamiento',
-            'reporte_marcadores'
+            'reporte_marcadores',
+            'bitacora-tablas'
         ]);
 
         $sitios = collect([

@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tabla_syncs', function (Blueprint $table) {
+        Schema::create('bitacora_tablas', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo', 64);
             $table->string('nombre_tabla', 64);
+            $table->dateTime('actualizado');
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tabla_syncs');
+        Schema::dropIfExists('bitacora_tablas');
     }
 };
