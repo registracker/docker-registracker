@@ -63,3 +63,13 @@ services:
       - 8400:80
     depends_on:
       - postgis
+  nginx:
+    image: docker.io/bitnami/nginx:1.23
+    ports:
+      - 8443:443
+    volumes:
+      - ./block/:/opt/bitnami/nginx/conf/server_blocks/
+      - ../certs:/certs
+      # - ./api-rest:/app
+    depends_on:
+      - api_rest_laravel
