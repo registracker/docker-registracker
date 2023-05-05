@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('desplazamientos', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('id_usuario')->constrained('users')->nullable();
+            $table->foreignId('id_usuario')->nullable()->constrained('users');
             $table->integer('incidentes_reportados')->nullable();
             //TODO hacer triger que actualice el total
             //Averiguar calcular distancia entre coordenadas geo

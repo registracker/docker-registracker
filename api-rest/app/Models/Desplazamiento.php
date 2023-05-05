@@ -14,6 +14,7 @@ class Desplazamiento extends Model
 
     protected $fillable = [
         'id',
+        'id_usuario',
         'incidentes_reportados',
         'distancia',
         'velocidad_max',

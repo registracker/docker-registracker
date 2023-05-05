@@ -134,17 +134,7 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
     Desplazamiento::updateOrCreate([
         'id' => $uuid
     ], [
-        'id' => $uuid,
-        'velocidad_max' => $velocidadMax,
-        'velocidad_media' => $velocidadMed,
-        'duracion' => Carbon::parse($finDesplazamiento->fecha_registro)->diffInMinutes(Carbon::parse($inicioDesplazamiento->fecha_registro)),
-        'inicio_desplazamiento' => $inicioDesplazamiento->fecha_registro,
-        'fin_desplazamiento' => $finDesplazamiento->fecha_registro,
-        'elevacion_min' => $elevacionMin,
-        'elevacion_max' => $elevacionMax,
-    ]);
-    ray([
-        'id' => $uuid,
+        'id_usuario' => $request->user()->id,
         'velocidad_max' => $velocidadMax,
         'velocidad_media' => $velocidadMed,
         'duracion' => Carbon::parse($finDesplazamiento->fecha_registro)->diffInMinutes(Carbon::parse($inicioDesplazamiento->fecha_registro)),
