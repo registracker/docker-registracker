@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\BitacoraTabla;
+use App\Models\ReporteContador;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class BitacoraTablaPolicy
+class ReporteContadorPolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class BitacoraTablaPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('api:bitacora_tablas:listar');
+        //
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\BitacoraTabla  $bitacoraTabla
+     * @param  \App\Models\ReporteContador  $reporteContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, BitacoraTabla $bitacoraTabla)
+    public function view(User $user, ReporteContador $reporteContador)
     {
-        return $user->can('api:bitacora_tablas:listar');
+        //
     }
 
     /**
@@ -41,54 +41,54 @@ class BitacoraTablaPolicy
      */
     public function create(User $user)
     {
-        return $user->can('api:bitacora_tablas:crear');
+        //
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\BitacoraTabla  $bitacoraTabla
+     * @param  \App\Models\ReporteContador  $reporteContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, BitacoraTabla $bitacoraTabla)
+    public function update(User $user, ReporteContador $reporteContador)
     {
-        return $user->can('api:bitacora_tablas:actualizar');
+        //
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\BitacoraTabla  $bitacoraTabla
+     * @param  \App\Models\ReporteContador  $reporteContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, BitacoraTabla $bitacoraTabla)
+    public function delete(User $user, ReporteContador $reporteContador)
     {
-        return $user->can('api:bitacora_tablas:eliminar');
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\BitacoraTabla  $bitacoraTabla
+     * @param  \App\Models\ReporteContador  $reporteContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, BitacoraTabla $bitacoraTabla)
+    public function restore(User $user, ReporteContador $reporteContador)
     {
-        return $user->can('api:bitacora_tablas:actualizar');
+        //
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\BitacoraTabla  $bitacoraTabla
+     * @param  \App\Models\ReporteContador  $reporteContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, BitacoraTabla $bitacoraTabla)
+    public function forceDelete(User $user, ReporteContador $reporteContador)
     {
-        return $user->can('api:bitacora_tablas:eliminar');
+        //
     }
 }

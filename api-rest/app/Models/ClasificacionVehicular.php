@@ -10,20 +10,19 @@ class ClasificacionVehicular extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'clasificaciones_vehicular';
+    protected $table = 'clasificacion_vehicular';
 
     protected $fillable = [
-        'id',
         'nombre',
-        'version',
+        'descripcion',
     ];
 
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
 
-    public function clases()
+    public function vehiculos()
     {
-        return $this->hasMany(ClaseVehicular::class, 'id_clasificacion_vehicular')->withTrashed();
+        return $this->hasMany(Vehiculo::class, 'id_clase')->withTrashed();
     }
 }

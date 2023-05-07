@@ -13,12 +13,9 @@ class Vehiculo extends Model
     protected $table = 'vehiculos';
 
     protected $fillable = [
-        'id_clase',
+        'id_clasificacion_vehicular',
         'nombre',
         'nomenclatura',
-        'cantidad_ejes',
-        'peso_maximo',
-        'longitud_maxima',
         'descripcion',
     ];
 

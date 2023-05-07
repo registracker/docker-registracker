@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('vehiculos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('id_clasificacion_vehicular')->constrained('clasificacion_vehicular');
+        Schema::create('clasificacion_vehicular', function (Blueprint $table) {
+            $table->id();        
             $table->string('nombre', 64);
-            $table->string('nomenclatura', 64)->nullable();
             $table->string('descripcion', 255)->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vehiculos');
+        Schema::dropIfExists('clasificacion_vehicular');
     }
 };

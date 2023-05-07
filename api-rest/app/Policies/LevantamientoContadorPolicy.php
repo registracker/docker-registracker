@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\ClaseVehicular;
+use App\Models\LevantamientoContador;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ClaseVehicularPolicy
+class LevantamientoContadorPolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class ClaseVehicularPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('api:clase_vehicular:listar');
+        return $user->can('api:levantamiento_contador:listar');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ClaseVehicular  $ClaseVehicular
+     * @param  \App\Models\LevantamientoContador  $levantamientoContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, ClaseVehicular $ClaseVehicular)
+    public function view(User $user, LevantamientoContador $levantamientoContador)
     {
-        return $user->can('api:clase_vehicular:listar');
+        return $user->can('api:levantamiento_contador:listar');
     }
 
     /**
@@ -41,54 +41,54 @@ class ClaseVehicularPolicy
      */
     public function create(User $user)
     {
-        return $user->can('api:clase_vehicular:crear');
+        return $user->can('api:levantamiento_contador:crear');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ClaseVehicular  $ClaseVehicular
+     * @param  \App\Models\LevantamientoContador  $levantamientoContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, ClaseVehicular $ClaseVehicular)
+    public function update(User $user, LevantamientoContador $levantamientoContador)
     {
-        return $user->can('api:clase_vehicular:actualizar');
+        return $user->can('api:levantamiento_contador:actualizar');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ClaseVehicular  $ClaseVehicular
+     * @param  \App\Models\LevantamientoContador  $levantamientoContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, ClaseVehicular $ClaseVehicular)
+    public function delete(User $user, LevantamientoContador $levantamientoContador)
     {
-        return $user->can('api:clase_vehicular:eliminar');
+        return $user->can('api:levantamiento_contador:eliminar');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ClaseVehicular  $ClaseVehicular
+     * @param  \App\Models\LevantamientoContador  $levantamientoContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, ClaseVehicular $ClaseVehicular)
+    public function restore(User $user, LevantamientoContador $levantamientoContador)
     {
-        return $user->can('api:clase_vehicular:actualizar');
+        return $user->can('api:levantamiento_contador:actualizar');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ClaseVehicular  $ClaseVehicular
+     * @param  \App\Models\LevantamientoContador  $levantamientoContador
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, ClaseVehicular $ClaseVehicular)
+    public function forceDelete(User $user, LevantamientoContador $levantamientoContador)
     {
-        return $user->can('api:clase_vehicular:eliminar');
+        return $user->can('api:levantamiento_contador:eliminar');
     }
 }

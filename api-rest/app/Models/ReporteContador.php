@@ -6,25 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ClaseVehicular extends Model
+class ReporteContador extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'clases_vehicular';
+    protected $table = 'reporte_contador';
 
-    protected $fillable = [
-        'id',
-        'id_clasificacion_vehicular',
-        'nombre',
-        'descripcion',
-    ];
+    protected $fillable = ['id_levantamiento_contador', 'id_vehiculo', 'registrado'];
 
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
-
-    public function vehiculos()
-    {
-        return $this->hasMany(Vehiculo::class, 'id_clase')->withTrashed();
-    }
 }

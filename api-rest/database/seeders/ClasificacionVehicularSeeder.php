@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ClasificacionVehicular;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,9 @@ class ClasificacionVehicularSeeder extends Seeder
      */
     public function run()
     {
-        //
+        ClasificacionVehicular::create([
+            'nombre' => 'Clasificación corta VMT',
+            'descripcion' => null
+        ]);
     }
 }

@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\ClasificacionVehicular;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,7 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $this->call([
             ZonaSeeder::class,
             DepartamentoSeeder::class,
@@ -27,12 +28,6 @@ class DatabaseSeeder extends Seeder
             MedioDesplazamientoSeeder::class,
             EstadoSolicitudSeeder::class,
             /**
-             * Estas pueden hacerse una sola
-             */
-            ClasificacionVehicularSeeder::class,
-            ClasesVehicularSeeder::class,
-            VehiculoSeeder::class,
-            /**
              * UserSeeder debe ir luego de RolPermissionSeeder
              * EstadoCuentaSeeder debe ir luego de UserSeeder
              */
@@ -41,7 +36,14 @@ class DatabaseSeeder extends Seeder
             RutasTransporteSeeder::class,
             LevantamientosSeeder::class,
             ReporteMarcadoresSeeder::class,
+
+            /**
+             * Conteo Vehicular
+             */
+            ClasificacionVehicularSeeder::class,
+            VehiculoSeeder::class,
+            LevantamientoContadorSeeder::class,
+            ReporteContadorSeeder::class,
         ]);
-        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

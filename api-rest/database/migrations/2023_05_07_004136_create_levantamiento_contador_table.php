@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('clases_vehicular', function (Blueprint $table) {
+        Schema::create('levantamiento_contador', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_clasificacion_vehicular')->unique()->constrained('clasificaciones_vehicular');
-            $table->string('nombre', 64);
-            $table->string('descripcion', 255)->nullable();
+            $table->foreignId('id_usuario')->constrained('users');
+            $table->string('codigo', 128);
+            $table->string('punto_aforo');
+            $table->timestamp('periodo_inicio')->nullable();
+            $table->timestamp('periodo_fin')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clases_vehicular');
+        Schema::dropIfExists('levantamiento_contadors');
     }
 };
