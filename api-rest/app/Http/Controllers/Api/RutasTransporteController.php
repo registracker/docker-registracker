@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\RutasTransporte;
+use Orion\Concerns\DisablePagination;
 use Orion\Http\Controllers\Controller;
 
 class RutasTransporteController extends Controller
 {
+    use DisablePagination;
     protected $model = RutasTransporte::class;
 
     /**
