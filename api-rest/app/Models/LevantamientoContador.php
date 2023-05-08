@@ -12,12 +12,22 @@ class LevantamientoContador extends Model
 
     protected $table = 'levantamiento_contador';
 
-    protected $fillable = ['id_usuario', 'codigo', 'punto_aforo', 'periodo_inicio', 'periodo_fin'];
+    protected $fillable = [
+        'id_usuario',
+        'codigo',
+        // 'punto_aforo',
+        'nombre_via',
+        'periodo_inicio',
+        'periodo_fin',
+        'identificacion_via',
+        'categoria_via',
+        'numero_carriles',
+    ];
 
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
-    
+
     protected $casts = [
         'periodo_inicio'  => 'date:d-m-Y',
         'periodo_fin'  => 'date:d-m-Y',
@@ -27,5 +37,4 @@ class LevantamientoContador extends Model
     {
         return $this->belongsTo(User::class, 'id_usuario');
     }
-    
 }

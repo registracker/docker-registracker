@@ -17,9 +17,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_usuario')->constrained('users');
             $table->string('codigo', 128);
-            $table->string('punto_aforo');
-            $table->timestamp('periodo_inicio')->nullable();
-            $table->timestamp('periodo_fin')->nullable();
+            // $table->string('punto_aforo');
+            $table->string('nombre_via');
+            $table->string('identificacion_via');
+            $table->string('categoria_via');
+            $table->string('numero_carriles');
+            $table->date('periodo_inicio')->nullable();
+            $table->date('periodo_fin')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();

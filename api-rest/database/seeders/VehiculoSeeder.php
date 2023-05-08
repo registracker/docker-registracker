@@ -52,6 +52,13 @@ class VehiculoSeeder extends Seeder
 
         Vehiculo::create([
             'id_clasificacion_vehicular' => 1,
+            'nombre' => 'Microbus Grande',
+            'nomenclatura' => null,
+            'descripcion' => null
+        ]);
+
+        Vehiculo::create([
+            'id_clasificacion_vehicular' => 1,
             'nombre' => 'Bus',
             'nomenclatura' => null,
             'descripcion' => null

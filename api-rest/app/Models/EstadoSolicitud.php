@@ -19,7 +19,9 @@ class EstadoSolicitud extends Model
         'permitir_acceso'
     ];
 
-    protected $casts = ['permitir_acceso' => 'boolean'];
+    protected $casts = [
+        'permitir_acceso' => 'boolean'
+    ];
 
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';

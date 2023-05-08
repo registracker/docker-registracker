@@ -9,6 +9,7 @@ use Orion\Http\Controllers\Controller;
 class RutasTransporteController extends Controller
 {
     use DisablePagination;
+    
     protected $model = RutasTransporte::class;
 
     /**
@@ -24,5 +25,10 @@ class RutasTransporteController extends Controller
     public function filterableBy(): array
     {
         return ['codigo_ruta', 'ruta', 'departamento.id'];
+    }
+
+    public function searchableBy(): array
+    {
+        return ['codigo_ruta', 'ruta', 'departamento.nombre', 'departamento.capital'];
     }
 }

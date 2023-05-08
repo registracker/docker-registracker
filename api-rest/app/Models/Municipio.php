@@ -11,6 +11,7 @@ class Municipio extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'municipios';
+    
     protected $fillable = ['nombre', 'id', 'icono'];
 
     const CREATED_AT = 'fecha_creado';
