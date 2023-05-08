@@ -74,11 +74,13 @@ function calcularDuracionMediosPorUuid($id)
         $desplazamiento['duracion'] = $duracion;
         $desplazamiento['fecha_creado'] = $now;
         $desplazamiento['fecha_actualizado'] = $now;
+        //COSTO QUE TE ENVIE EN LA REQUEST detalle_medios_recorrido
+        $desplazamiento['costo'] = 10;
     }
 
     $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
         return collect($item)
-            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado'])
+            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado','costo'])
             ->toArray();
     })->toArray();
 
