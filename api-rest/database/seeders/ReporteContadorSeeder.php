@@ -28,5 +28,3 @@ class ReporteContadorSeeder extends Seeder
         }
     }
 }
-
-[{id_medios_ruta_transporte:1, costo: null, agrupacion_medio_desplazamiento:1},{id_ruta_medios_transporte:null, costo: 0.30, agrupacion_medio_desplazamiento:2}]

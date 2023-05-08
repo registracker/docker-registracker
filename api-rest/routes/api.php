@@ -152,22 +152,22 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
     return response()->json(['registros_insertados' =>  $totalRegistros], Response::HTTP_CREATED);
 });
 
-Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (Request $request) {
-    $uuid = $request->uuid;
-    Desplazamiento::findOrFail($uuid);
-    $fechaInicio = CoordenadaDesplazamiento::where('desplazamiento_id', $uuid)->orderBy('fecha_registro', 'asc')->first();
-    $fechaFin = CoordenadaDesplazamiento::where('desplazamiento_id', $uuid)->orderBy('fecha_registro', 'desc')->first();;
+// Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (Request $request) {
+//     $uuid = $request->uuid;
+//     Desplazamiento::findOrFail($uuid);
+//     $fechaInicio = CoordenadaDesplazamiento::where('desplazamiento_id', $uuid)->orderBy('fecha_registro', 'asc')->first();
+//     $fechaFin = CoordenadaDesplazamiento::where('desplazamiento_id', $uuid)->orderBy('fecha_registro', 'desc')->first();;
 
-    $desplazamiento = Desplazamiento::updateOrCreate([
-        'id' => $uuid
-    ], [
-        'id' => $uuid,
-        'inicio_desplazamiento' => $fechaInicio->fecha_registro,
-        'fin_desplazamiento' => $fechaFin->fecha_registro,
-    ]);
+//     $desplazamiento = Desplazamiento::updateOrCreate([
+//         'id' => $uuid
+//     ], [
+//         'id' => $uuid,
+//         'inicio_desplazamiento' => $fechaInicio->fecha_registro,
+//         'fin_desplazamiento' => $fechaFin->fecha_registro,
+//     ]);
 
-    return response()->json(['ruta' => $desplazamiento]);
-});
+//     return response()->json(['ruta' => $desplazamiento]);
+// });
 
 Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', function (Request $request, Desplazamiento $desplazamiento) {
     $coordenadas = CoordenadaDesplazamiento::with('medio')
@@ -369,23 +369,23 @@ Route::post('/sanctum/token', function (Request $request) {
     ]);
 });
 
-Route::post('/roless', function (Request $request) {
-    $request->validate([
-        'nombre_rol' => ['required', 'unique:roles,name', 'max:255'],
-        'permisos' => ['required', 'exists:permissions,name', 'distinct:strict'],
-    ], [
-        'nombre_rol.required' => 'El nombre del rol es requerido.',
-        'nombre_rol.unique' => 'El nombre del rol ya existe.',
-        'nombre_rol.max' => 'La longitud no debe superar los 255 caracteres.',
-        'permisos.required' => 'Debe agregar al menos un permiso.',
-        'permisos.exists' => 'El permiso no existe.',
-        'permisos.distinct' => 'Los permisos deben ser distintos.',
-    ]);
+// Route::post('/roless', function (Request $request) {
+//     $request->validate([
+//         'nombre_rol' => ['required', 'unique:roles,name', 'max:255'],
+//         'permisos' => ['required', 'exists:permissions,name', 'distinct:strict'],
+//     ], [
+//         'nombre_rol.required' => 'El nombre del rol es requerido.',
+//         'nombre_rol.unique' => 'El nombre del rol ya existe.',
+//         'nombre_rol.max' => 'La longitud no debe superar los 255 caracteres.',
+//         'permisos.required' => 'Debe agregar al menos un permiso.',
+//         'permisos.exists' => 'El permiso no existe.',
+//         'permisos.distinct' => 'Los permisos deben ser distintos.',
+//     ]);
 
-    return response()->json([
-        'request' =>  $request->all()
-    ]);
-});
+//     return response()->json([
+//         'request' =>  $request->all()
+//     ]);
+// });
 
 Route::middleware('auth:sanctum')->post('/token/permisos', function (Request $request) {
     return response()->json([
@@ -466,52 +466,52 @@ Route::get('/estado-cuenta', function (Request $request) {
     ]);
 });
 
-Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
-    $coleccion = calcularDuracionMediosPorUuid($id);
-    return response()->json(['desplazamiento' => $coleccion]);
-});
+// Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
+//     $coleccion = calcularDuracionMediosPorUuid($id);
+//     return response()->json(['desplazamiento' => $coleccion]);
+// });
 
-Route::middleware('auth:sanctum')->post('/usuario/admin', function (Request $request) {
-    $ID_ESTADO_ACTIVA = 1;
+// Route::middleware('auth:sanctum')->post('/usuario/admin', function (Request $request) {
+//     $ID_ESTADO_ACTIVA = 1;
 
-    $request->validate([
-        'email' => ['required', 'email', 'unique:users,email', 'max:255'],
-        'password' => ['required'],
-        'nombre_usuario' => ['nullable'],
-        'rol' => ['required', 'exists:roles,id'],
-    ], [
-        'email' => 'El correo es requerido y debe ser único.',
-        'password' => 'Debe agregar password.',
-        'rol' => 'El rol es inválido.'
-    ]);
+//     $request->validate([
+//         'email' => ['required', 'email', 'unique:users,email', 'max:255'],
+//         'password' => ['required'],
+//         'nombre_usuario' => ['nullable'],
+//         'rol' => ['required', 'exists:roles,id'],
+//     ], [
+//         'email' => 'El correo es requerido y debe ser único.',
+//         'password' => 'Debe agregar password.',
+//         'rol' => 'El rol es inválido.'
+//     ]);
 
-    DB::beginTransaction();
-    try {
-        $usuario = User::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'name' => $request->nombre_usuario ?? '',
-        ]);
+//     DB::beginTransaction();
+//     try {
+//         $usuario = User::create([
+//             'email' => $request->email,
+//             'password' => Hash::make($request->password),
+//             'name' => $request->nombre_usuario ?? '',
+//         ]);
 
-        $rol = Role::findOrFail($request->rol);
-        $usuario->assignRole($rol->name);
-        DB::commit();
+//         $rol = Role::findOrFail($request->rol);
+//         $usuario->assignRole($rol->name);
+//         DB::commit();
 
-        SolicitudCuenta::create([
-            'id_usuario' => $usuario->id,
-            'id_estado_solicitud' => $ID_ESTADO_ACTIVA,
-        ]);
+//         SolicitudCuenta::create([
+//             'id_usuario' => $usuario->id,
+//             'id_estado_solicitud' => $ID_ESTADO_ACTIVA,
+//         ]);
 
-        return response()->json([
-            'usuario' =>  $usuario,
-            'estado_cuenta' =>  $usuario->solicitud->estado->nombre,
-        ]);
-    } catch (\Throwable $th) {
-        //throw $th;
-        DB::rollBack();
-        return response($th);
-    }
-});
+//         return response()->json([
+//             'usuario' =>  $usuario,
+//             'estado_cuenta' =>  $usuario->solicitud->estado->nombre,
+//         ]);
+//     } catch (\Throwable $th) {
+//         //throw $th;
+//         DB::rollBack();
+//         return response($th);
+//     }
+// });
 
 
 Route::group(['as' => 'api.'], function () {
