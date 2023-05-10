@@ -17,13 +17,13 @@ class ReporteContadorSeeder extends Seeder
      */
     public function run()
     {
-        $fecha = Carbon::create(2022, 05, 01, 6);
+        $fecha = Carbon::create(2023, 05, 01, 6);
         $vehiculos = Vehiculo::all();
-        for ($i = 0; $i < 256; $i++) {
+        for ($i = 0; $i < 1024; $i++) {
             ReporteContador::create([
                 'id_levantamiento_contador' => 1,
                 'id_vehiculo' => $vehiculos->random(1)->first()->id,
-                'registrado' => $fecha->addSeconds(random_int(1, 60*5))
+                'registrado' => $fecha->addSeconds(random_int(1, 60))
             ]);
         }
     }
