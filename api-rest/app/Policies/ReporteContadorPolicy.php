@@ -18,7 +18,7 @@ class ReporteContadorPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->can('api:reporte_contador:listar');
     }
 
     /**
@@ -30,7 +30,7 @@ class ReporteContadorPolicy
      */
     public function view(User $user, ReporteContador $reporteContador)
     {
-        //
+        return $user->can('api:reporte_contador:listar');
     }
 
     /**
@@ -41,7 +41,7 @@ class ReporteContadorPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->can('api:reporte_contador:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class ReporteContadorPolicy
      */
     public function update(User $user, ReporteContador $reporteContador)
     {
-        //
+        return $user->can('api:reporte_contador:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class ReporteContadorPolicy
      */
     public function delete(User $user, ReporteContador $reporteContador)
     {
-        //
+        return $user->can('api:reporte_contador:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class ReporteContadorPolicy
      */
     public function restore(User $user, ReporteContador $reporteContador)
     {
-        //
+        return $user->can('api:reporte_contador:actualizar');
     }
 
     /**
@@ -89,6 +89,6 @@ class ReporteContadorPolicy
      */
     public function forceDelete(User $user, ReporteContador $reporteContador)
     {
-        //
+        return $user->can('api:reporte_contador:eliminar');
     }
 }

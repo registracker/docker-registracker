@@ -494,7 +494,7 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
     }
     $fechasAgrupadas->push((new Carbon($periodoInicio))->addDay());
 
-    $fechasAgrupadas = $fechasAgrupadas->chunk(2)->slice(24)->toArray();
+    $fechasAgrupadas = $fechasAgrupadas->chunk(2)->toArray();
 
     foreach ($fechasAgrupadas as $rangoFecha) {
         $conteoVehicular = Vehiculo::withCount(['reporte' => function (Builder $query) use ($rangoFecha) {
@@ -511,15 +511,17 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
             })
             ->toArray());
 
-        //Agrega suma al final del array
-        $conteoVehicular->push($conteoVehicular->sum());
-        //Agrega rango horario al inicio del array
-        $conteoVehicular->prepend($rangoFecha);
-        $conteoVehicular = $conteoVehicular->toArray();
+        /**
+         * Agrega suma al final del array
+         * Agrega rango horario al inicio del array
+         */
+        $conteoVehicular
+            ->push($conteoVehicular->sum())
+            ->prepend($rangoFecha);
 
-        array_push($datosTabla, $conteoVehicular);
+
+        array_push($datosTabla, $conteoVehicular->toArray());
     }
-
 
     return response()->json([
         'reporte' =>  $datosTabla,
