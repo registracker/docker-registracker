@@ -19,6 +19,11 @@ class Vehiculo extends Model
         'descripcion',
     ];
 
+    public function reporte()
+    {
+        return $this->hasMany(ReporteContador::class, 'id_vehiculo');
+    }
+
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';

@@ -37,4 +37,9 @@ class LevantamientoContador extends Model
     {
         return $this->belongsTo(User::class, 'id_usuario');
     }
+
+    public function levantamiento()
+    {
+        return $this->hasMany(ReporteContador::class, 'id_levantamiento_contador');
+    }
 }

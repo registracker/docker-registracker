@@ -14,13 +14,13 @@ use App\Http\Controllers\Api\MedioDesplazamientoController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleDisableAuthorizationController;
 use App\Http\Controllers\Api\VehiculoController;
-use App\Http\Controllers\Api\ClaseVehicularController;
 use App\Http\Controllers\Api\ClasificacionVehicularController;
 use App\Http\Controllers\Api\DesplazamientoController;
 use App\Http\Controllers\Api\DetalleMedioRecorridoController;
 use App\Http\Controllers\Api\EstadoSolicitudController;
 use App\Http\Controllers\Api\LevantamientoContadorController;
 use App\Http\Controllers\Api\LevantamientoController;
+use App\Http\Controllers\Api\ReporteContadorController;
 use App\Http\Controllers\Api\SolicitudCuentaController;
 use App\Http\Controllers\Api\ReporteIncidenteController;
 use App\Http\Controllers\Api\RutasTransporteController;
@@ -31,10 +31,12 @@ use App\Http\Controllers\Api\ReporteMarcadoresController;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
+use App\Models\LevantamientoContador;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
-
+use App\Models\Vehiculo;
 use Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -359,9 +361,9 @@ Route::post('/sanctum/token', function (Request $request) {
 
     $estado = $user->solicitud->estado;
 
-    if (! $estado->permitir_acceso){
+    if (!$estado->permitir_acceso) {
         throw ValidationException::withMessages([
-            'block' => ['Estado de cuenta: '. $estado->nombre.'.'],
+            'block' => ['Estado de cuenta: ' . $estado->nombre . '.'],
         ]);
     }
 
@@ -469,6 +471,66 @@ Route::get('/estado-cuenta', function (Request $request) {
     ]);
 });
 
+Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
+    $minutosEnUnDia = 1440;
+    $minutosAgrupacion = 15;
+    $bloquesEnUnDia = $minutosEnUnDia / $minutosAgrupacion;
+
+    $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
+    $periodoInicio = $levantamientoContador->periodo_inicio;
+    $fechasAgrupadas = collect([]);
+    $datosTabla = array();
+
+    $vehiculos = Vehiculo::orderBy('id')->get();
+    $cabecera = $vehiculos->pluck('nombre')
+        ->prepend('Horario')
+        ->push('Total')
+        ->toArray();
+
+    array_push($datosTabla, $cabecera);
+
+    $fechasAgrupadas->push((new Carbon($periodoInicio)));
+    for ($i = 1; $i < $bloquesEnUnDia; $i++) {
+        $minutos = $minutosAgrupacion * $i;
+        $fechasAgrupadas->push((new Carbon($periodoInicio))->addMinutes($minutos)->subSecond());
+        $fechasAgrupadas->push((new Carbon($periodoInicio))->addMinutes($minutos));
+    }
+    $fechasAgrupadas->push((new Carbon($periodoInicio))->addDay());
+
+    $fechasAgrupadas = $fechasAgrupadas->chunk(2)->toArray();
+
+    foreach ($fechasAgrupadas as $rangoFecha) {
+        $conteoVehicular = Vehiculo::withCount(['reporte' => function (Builder $query) use ($rangoFecha) {
+            $query->whereBetween('registrado', $rangoFecha);
+        }])
+            ->orderBy('id')
+            ->get()
+            ->pluck('reporte_count');
+
+
+        $rangoFecha = implode(" - ", collect($rangoFecha)
+            ->map(function ($fecha) {
+                return $fecha->format('g:i:s A');
+            })
+            ->toArray());
+
+        /**
+         * Agrega suma al final del array
+         * Agrega rango horario al inicio del array
+         */
+        $conteoVehicular
+            ->push($conteoVehicular->sum())
+            ->prepend($rangoFecha);
+
+
+        array_push($datosTabla, $conteoVehicular->toArray());
+    }
+
+    return response()->json([
+        'reporte' =>  $datosTabla,
+    ]);
+});
+
 // Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
 //     $coleccion = calcularDuracionMediosPorUuid($id);
 //     return response()->json(['desplazamiento' => $coleccion]);
@@ -518,33 +580,117 @@ Route::get('/estado-cuenta', function (Request $request) {
 
 
 Route::group(['as' => 'api.'], function () {
-    Orion::resource('zonas', ZonaController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('departamentos', DepartamentoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('municipios', MunicipioController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('generos', GeneroController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('universidades', UniversidadController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('roles', RoleController::class)->only(['search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('roles', RoleDisableAuthorizationController::class)->only(['index'])->withSoftDeletes();
-    Orion::resource('permisos', PermissionController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('medios-desplazamiento', MedioDesplazamientoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('incidentes', IncidenteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('marcadores', MarcadorController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('vehiculos', VehiculoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
-    Orion::resource('estados-solicitud', EstadoSolicitudController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('usuarios', UsuarioController::class)->only(['index', 'search', 'show', 'update'])->withSoftDeletes();
-    Orion::resource('solicitudes-cuentas', SolicitudCuentaController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('desplazamientos', DesplazamientoController::class)->only(['index', 'search', 'show', 'batchStore'])->withSoftDeletes();
-    Orion::resource('reporte-incidente', ReporteIncidenteController::class)->only(['index', 'search', 'store', 'show', 'batchStore'])->withSoftDeletes();
-    Orion::resource('detalle-medio-recorrido', DetalleMedioRecorridoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])->withSoftDeletes();
-    Orion::resource('tipos-vehiculos-rutas', TiposVehiculosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('tipos-servicios-rutas', TiposServiciosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('clases-servicios-rutas', ClasesServiciosRutasController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('rutas-transporte', RutasTransporteController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('levantamientos', LevantamientoController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('reporte-marcadores', ReporteMarcadoresController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
-    Orion::resource('bitacora-tablas', BitacoraTablaController::class)->only(['index', 'search', 'show'])->withSoftDeletes();
-    Orion::resource('conteo-vehicular', LevantamientoContadorController::class)->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])->withSoftDeletes();
+    Orion::resource('zonas', ZonaController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('departamentos', DepartamentoController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('municipios', MunicipioController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('generos', GeneroController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('universidades', UniversidadController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('roles', RoleController::class)
+        ->only(['search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('roles', RoleDisableAuthorizationController::class)
+        ->only(['index'])
+        ->withSoftDeletes();
+
+    Orion::resource('permisos', PermissionController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('medios-desplazamiento', MedioDesplazamientoController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('incidentes', IncidenteController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('marcadores', MarcadorController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('vehiculos', VehiculoController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
+        ->withSoftDeletes();
+
+    Orion::resource('estados-solicitud', EstadoSolicitudController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('usuarios', UsuarioController::class)
+        ->only(['index', 'search', 'show', 'update'])
+        ->withSoftDeletes();
+
+    Orion::resource('solicitudes-cuentas', SolicitudCuentaController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('desplazamientos', DesplazamientoController::class)
+        ->only(['index', 'search', 'show', 'batchStore'])
+        ->withSoftDeletes();
+
+    Orion::resource('reporte-incidente', ReporteIncidenteController::class)
+        ->only(['index', 'search', 'store', 'show', 'batchStore'])
+        ->withSoftDeletes();
+
+    Orion::resource('detalle-medio-recorrido', DetalleMedioRecorridoController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
+        ->withSoftDeletes();
+
+    Orion::resource('tipos-vehiculos-rutas', TiposVehiculosRutasController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('tipos-servicios-rutas', TiposServiciosRutasController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('clases-servicios-rutas', ClasesServiciosRutasController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('rutas-transporte', RutasTransporteController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('levantamientos', LevantamientoController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('reporte-marcadores', ReporteMarcadoresController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('bitacora-tablas', BitacoraTablaController::class)
+        ->only(['index', 'search', 'show'])
+        ->withSoftDeletes();
+
+    Orion::resource('conteo-vehicular', LevantamientoContadorController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
+
+    Orion::resource('reporte-contador', ReporteContadorController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
+        ->withSoftDeletes();
 
     /**
      * TODO

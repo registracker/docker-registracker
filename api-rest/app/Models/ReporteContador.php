@@ -17,4 +17,11 @@ class ReporteContador extends Model
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
+    
+    protected $dates = ['registrado'];
+
+    public function levantamiento()
+    {
+        return $this->belongsTo(LevantamientoContador::class, 'id_levantamiento_contador');
+    }
 }
