@@ -59,12 +59,12 @@ use Illuminate\Support\Str;
 |
 */
 
-function calcularDuracionMediosPorUuid($id,$costos)
+function calcularDuracionMediosPorUuid($id, $costos)
 {
     $now = Carbon::now()->toDateTimeString();
     // DetalleMedioRecorrido::truncate();
 
-    $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento','agrupacion_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
+    $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento', 'agrupacion_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
         ->where('desplazamiento_id', $id)
         ->groupBy('agrupacion_medio_desplazamiento')
         ->orderBy('fecha_registro', 'asc')
@@ -78,13 +78,13 @@ function calcularDuracionMediosPorUuid($id,$costos)
         $desplazamiento['fecha_creado'] = $now;
         $desplazamiento['fecha_actualizado'] = $now;
         //COSTO QUE TE ENVIE EN LA REQUEST detalle_medios_recorrido
-        $desplazamiento['costo'] = $costos[ $clave ]['costo'];
+        $desplazamiento['costo'] = $costos[$clave]['costo'];
         $desplazamiento['ruta'] = null;
     }
-   
+
     $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
         return collect($item)
-            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado','costo','ruta'])
+            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado', 'costo', 'ruta'])
             ->toArray();
     })->toArray();
 
@@ -152,7 +152,7 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
         'elevacion_max' => $elevacionMax,
     ]);
 
-    calcularDuracionMediosPorUuid($uuid,$costos);
+    calcularDuracionMediosPorUuid($uuid, $costos);
 
     return response()->json(['registros_insertados' =>  $totalRegistros], Response::HTTP_CREATED);
 });
@@ -472,6 +472,16 @@ Route::get('/estado-cuenta', function (Request $request) {
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
+    if ($request->query('total_vehiculos', null) == 'yes') {
+        $totalElementos = Vehiculo::withCount(['reporte'])
+            ->orderBy('id')
+            ->get();
+
+        return response()->json([
+            'data' =>  $totalElementos,
+            'total' => $totalElementos->pluck('reporte_count')->sum(),
+        ]);
+    }
     $minutosEnUnDia = 1440;
     $minutosAgrupacion = 15;
     $bloquesEnUnDia = $minutosEnUnDia / $minutosAgrupacion;
@@ -526,8 +536,18 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
         array_push($datosTabla, $conteoVehicular->toArray());
     }
 
+    $totalElementos = Vehiculo::withCount(['reporte'])
+        ->orderBy('id')
+        ->get()
+        ->pluck('reporte_count')
+        ->toArray();
+
+    array_push($totalElementos, collect($totalElementos)->sum());
+    array_unshift($totalElementos, 'Total registros');
+    array_push($datosTabla, $totalElementos);
+
     return response()->json([
-        'reporte' =>  $datosTabla,
+        'data' =>  $datosTabla,
     ]);
 });
 
