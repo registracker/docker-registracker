@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignUuid('desplazamiento_id')->constrained('desplazamientos');
             $table->foreignId('id_medio_desplazamiento')->constrained('medios_desplazamiento');
             $table->time('duracion');
+            $table->string('ruta')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();

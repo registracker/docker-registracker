@@ -59,30 +59,32 @@ use Illuminate\Support\Str;
 |
 */
 
-function calcularDuracionMediosPorUuid($id)
+function calcularDuracionMediosPorUuid($id,$costos)
 {
     $now = Carbon::now()->toDateTimeString();
     // DetalleMedioRecorrido::truncate();
 
-    $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
+    $desplazamientosAgrupado = CoordenadaDesplazamiento::select('id', 'desplazamiento_id', 'id_medio_desplazamiento','agrupacion_medio_desplazamiento', DB::raw('MIN(fecha_registro) as fecha_inicio'), DB::raw('MAX(fecha_registro) as fecha_fin'))
         ->where('desplazamiento_id', $id)
         ->groupBy('agrupacion_medio_desplazamiento')
         ->orderBy('fecha_registro', 'asc')
         ->get();
+    //dd($desplazamientosAgrupado);die;
 
-    foreach ($desplazamientosAgrupado  as $desplazamiento) {
+    foreach ($desplazamientosAgrupado  as $clave => $desplazamiento) {
         $fecha = Carbon::parse($desplazamiento['fecha_fin'])->diffAsCarbonInterval(Carbon::parse($desplazamiento['fecha_inicio']));
         $duracion =  Arr::join([Str::padLeft($fecha->h, 2, '0'), Str::padLeft($fecha->i, 2, '0'), Str::padLeft($fecha->s, 2, '0')], ':');
         $desplazamiento['duracion'] = $duracion;
         $desplazamiento['fecha_creado'] = $now;
         $desplazamiento['fecha_actualizado'] = $now;
         //COSTO QUE TE ENVIE EN LA REQUEST detalle_medios_recorrido
-        $desplazamiento['costo'] = 10;
+        $desplazamiento['costo'] = $costos[ $clave ]['costo'];
+        $desplazamiento['ruta'] = null;
     }
-
+   
     $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
         return collect($item)
-            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado', 'costo'])
+            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado','costo','ruta'])
             ->toArray();
     })->toArray();
 
@@ -94,7 +96,8 @@ function calcularDuracionMediosPorUuid($id)
 Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (Request $request) {
     $now = Carbon::now()->toDateTimeString();
     $uuid = $request->uuid;
-
+    $costos = $request->costos;
+    //dd($costos);die;
     Desplazamiento::updateOrCreate([
         'id' => $uuid
     ], [
@@ -149,7 +152,7 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
         'elevacion_max' => $elevacionMax,
     ]);
 
-    calcularDuracionMediosPorUuid($uuid);
+    calcularDuracionMediosPorUuid($uuid,$costos);
 
     return response()->json(['registros_insertados' =>  $totalRegistros], Response::HTTP_CREATED);
 });
