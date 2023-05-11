@@ -523,8 +523,18 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
         array_push($datosTabla, $conteoVehicular->toArray());
     }
 
+    $totalElementos = Vehiculo::withCount(['reporte'])
+        ->orderBy('id')
+        ->get()
+        ->pluck('reporte_count')
+        ->toArray();
+
+    array_push($totalElementos, collect($totalElementos)->sum());
+    array_unshift($totalElementos, 'Total registros');
+    array_push($datosTabla, $totalElementos);
+
     return response()->json([
-        'reporte' =>  $datosTabla,
+        'data' =>  $datosTabla,
     ]);
 });
 
