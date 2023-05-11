@@ -14,7 +14,6 @@ use App\Http\Controllers\Api\MedioDesplazamientoController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleDisableAuthorizationController;
 use App\Http\Controllers\Api\VehiculoController;
-use App\Http\Controllers\Api\ClasificacionVehicularController;
 use App\Http\Controllers\Api\DesplazamientoController;
 use App\Http\Controllers\Api\DetalleMedioRecorridoController;
 use App\Http\Controllers\Api\EstadoSolicitudController;
@@ -644,9 +643,9 @@ Route::group(['as' => 'api.'], function () {
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
         ->withSoftDeletes();
 
-    Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-        ->withSoftDeletes();
+    //Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)
+       //->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        //->withSoftDeletes();
 
     Orion::resource('vehiculos', VehiculoController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])

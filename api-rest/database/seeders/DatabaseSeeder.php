@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\ClasificacionVehicular;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -40,7 +39,7 @@ class DatabaseSeeder extends Seeder
             /**
              * Conteo Vehicular
              */
-            ClasificacionVehicularSeeder::class,
+            //ClasificacionVehicularSeeder::class,
             VehiculoSeeder::class,
             LevantamientoContadorSeeder::class,
             ReporteContadorSeeder::class,

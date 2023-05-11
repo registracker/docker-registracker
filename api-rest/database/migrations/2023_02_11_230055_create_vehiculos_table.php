@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('vehiculos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_clasificacion_vehicular')->constrained('clasificacion_vehicular');
             $table->string('nombre', 64);
             $table->string('nomenclatura', 64)->nullable();
             $table->string('descripcion', 255)->nullable();
