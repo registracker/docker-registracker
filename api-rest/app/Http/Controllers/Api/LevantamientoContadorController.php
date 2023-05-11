@@ -41,4 +41,14 @@ class LevantamientoContadorController extends Controller
         ]));
         $levantaminto->save();
     }
+
+    public function searchableBy(): array
+    {
+        return ['nombre_via'];
+    }
+
+    public function filterableBy(): array
+    {
+        return ['nombre_via'];
+    }
 }
