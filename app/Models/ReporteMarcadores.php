@@ -14,10 +14,11 @@ class ReporteMarcadores extends Model
         'id_usuario',
         'id_levantamiento',
         'id_marcador',
-        'latitud',
-        'longitud',
+        'posicion',
         'altitud',
-        'comentario'
+        'comentario',
+        // 'latitud',
+        // 'longitud',
     ];
 
     protected $table = 'reporte_marcadores';
