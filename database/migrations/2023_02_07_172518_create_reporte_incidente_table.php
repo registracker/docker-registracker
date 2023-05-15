@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('reportes_incidentes', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('desplazamiento_id')->nullable();
             $table->foreignId('id_incidente')->constrained('incidentes');
             $table->timestamp('fecha_reporte');
-            $table->double('latitud', 10, 8);
-            $table->double('longitud', 11, 8);
+            // $table->foreignUuid('desplazamiento_id')->nullable();
+            // $table->double('latitud', 10, 8);
+            // $table->double('longitud', 11, 8);
+            $table->point('posicion');	
             $table->double('altitud')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();

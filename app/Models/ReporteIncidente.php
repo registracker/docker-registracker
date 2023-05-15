@@ -16,5 +16,5 @@ class ReporteIncidente extends Model
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
 
-    protected $fillable = ['desplazamiento_id', 'id_incidente', 'fecha_reporte', 'latitud', 'longitud', 'altitud'];
+    protected $fillable = ['id_incidente', 'fecha_reporte', 'altitud', 'posicion'];
 }

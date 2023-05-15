@@ -18,8 +18,9 @@ return new class extends Migration
             $table->foreignId('id_usuario')->constrained('users');
             $table->foreignId('id_levantamiento')->constrained('levantamientos');
             $table->foreignId('id_marcador')->constrained('marcadores');
-            $table->double('latitud', 10, 8);
-            $table->double('longitud', 11, 8);
+            // $table->double('latitud', 10, 8);
+            // $table->double('longitud', 11, 8);
+            $table->point('posicion');
             $table->double('altitud')->nullable();
             $table->string('comentario', 128)->nullable();
             $table->timestamp('fecha_creado')->nullable();
