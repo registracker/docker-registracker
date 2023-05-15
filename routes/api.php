@@ -96,7 +96,7 @@ function calcularDuracionMediosPorUuid($id, $costos)
     })->toArray();
 
     DetalleMedioRecorrido::insert($coleccion);
-    
+
     return $coleccion;
 }
 
@@ -104,7 +104,7 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
     $now = Carbon::now()->toDateTimeString();
     $uuid = $request->uuid;
     $costos = $request->costos;
-    //dd($costos);die;
+
     Desplazamiento::updateOrCreate([
         'id' => $uuid
     ], [
@@ -118,6 +118,7 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
         $item['fecha_registro'] = Carbon::createFromTimestampMs($item['fecha_registro']);
         $longitud = $item['longitud'];
         $latitud = $item['latitud'];
+        unset($item['longitud'], $item['latitud']);
         $item['posicion'] = DB::raw("ST_SetSRID(ST_Point($longitud, $latitud), 4326)");
         return $item;
     })->toArray();
@@ -161,7 +162,6 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
         'elevacion_min' => $elevacionMin,
         'elevacion_max' => $elevacionMax,
     ]);
-
 
     calcularDuracionMediosPorUuid($uuid, $costos);
 

@@ -18,12 +18,12 @@ return new class extends Migration
             $table->foreignUuid('desplazamiento_id');
             $table->foreignId('id_medio_desplazamiento')->constrained('medios_desplazamiento');
             $table->integer('agrupacion_medio_desplazamiento');
-            $table->double('latitud', 10, 8);
-            $table->double('longitud', 11, 8);
             $table->double('altitud')->nullable();
             $table->point('posicion');
             $table->double('velocidad')->nullable();
             $table->timestamp('fecha_registro')->nullable();
+            // $table->double('latitud', 10, 8);
+            // $table->double('longitud', 11, 8);
             // $table->double('precision')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();

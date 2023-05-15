@@ -15,12 +15,13 @@ class CoordenadaDesplazamiento extends Model
     protected $fillable = [
         'desplazamiento_id',
         'id_medio_desplazamiento',
-        'latitud',
-        'longitud',
         'fecha_registro',
         'latitud',
         'velocidad',
+        'posicion',
         'agrupacion_medio_desplazamiento',
+        // 'latitud',
+        // 'longitud',
     ];
 
     // protected $postgisFields = [
