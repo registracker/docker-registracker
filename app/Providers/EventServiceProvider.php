@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Models\Incidente;
 use App\Models\Marcador;
 use App\Models\MedioDesplazamiento;
+use App\Models\Vehiculo;
 use App\Observers\IncidenteObserver;
 use App\Observers\MarcadorObserver;
 use App\Observers\MedioDesplazamientoObserver;
+use App\Observers\VehiculoObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -36,6 +38,7 @@ class EventServiceProvider extends ServiceProvider
         MedioDesplazamiento::observe(MedioDesplazamientoObserver::class);
         Marcador::observe(MarcadorObserver::class);
         Incidente::observe(IncidenteObserver::class);
+        Vehiculo::observe(VehiculoObserver::class);
     }
 
     /**

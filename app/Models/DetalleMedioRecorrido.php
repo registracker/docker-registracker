@@ -15,7 +15,9 @@ class DetalleMedioRecorrido extends Model
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_actualizado';
     const DELETED_AT = 'fecha_eliminado';
+    
     protected $fillable = ['ruta'];
+
     protected $casts = [
         'duracion'  => 'date:H:i:s',
     ];
