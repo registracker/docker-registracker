@@ -27,7 +27,7 @@ class LevantamientoContadorController extends Controller
     protected function buildIndexFetchQuery(Request $request, array $requestedRelations): Builder
     {
         $query = parent::buildIndexFetchQuery($request, $requestedRelations);
-        if (!$this->resolveUser()->hasRole(Constant::ROL_ADMINISTRADOR)) {
+        if (!$this->resolveUser()->hasAnyRole([Constant::ROL_ADMINISTRADOR, Constant::ROL_INVESTIGADOR])) {
             $query->where('id_usuario', $this->resolveUser()->id);
         }
         return $query;

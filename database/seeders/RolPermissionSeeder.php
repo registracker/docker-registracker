@@ -75,6 +75,7 @@ class RolPermissionSeeder extends Seeder
             'levantamiento:levantamiento-contador',
             'conteo-vehicular:lista',
             'conteo-vehicular:detalle',
+            'desplazamiento:geojson',
         ]);
 
         $roleAdministrador = Role::create(['name' => Constant::ROL_ADMINISTRADOR]);

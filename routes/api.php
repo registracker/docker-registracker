@@ -64,18 +64,16 @@ function calcularDuracionMediosPorUuid($id, $costos)
     $now = Carbon::now()->toDateTimeString();
 
     $desplazamientosAgrupado = CoordenadaDesplazamiento::select(
-        'id',
-        'desplazamiento_id',
-        'id_medio_desplazamiento',
         'agrupacion_medio_desplazamiento',
-        DB::raw('MIN(fecha_registro) as fecha_inicio'),
-        DB::raw('MAX(fecha_registro) as fecha_fin')
+        'id_medio_desplazamiento',
+        DB::raw('MIN(fecha_registro) AS fecha_inicio'),
+        DB::raw('MAX(fecha_registro) AS fecha_fin')
     )
         ->where('desplazamiento_id', $id)
-        ->groupBy('id')
-        ->groupBy('agrupacion_medio_desplazamiento')
-        ->orderBy('fecha_registro', 'asc')
+        ->groupBy('agrupacion_medio_desplazamiento', 'id_medio_desplazamiento')
+        ->orderBy('fecha_inicio', 'ASC')
         ->get();
+
     // dd($desplazamientosAgrupado);
 
     foreach ($desplazamientosAgrupado  as $clave => $desplazamiento) {
@@ -84,6 +82,7 @@ function calcularDuracionMediosPorUuid($id, $costos)
         $desplazamiento['duracion'] = $duracion;
         $desplazamiento['fecha_creado'] = $now;
         $desplazamiento['fecha_actualizado'] = $now;
+        $desplazamiento['desplazamiento_id'] = $id;
         //COSTO QUE TE ENVIE EN LA REQUEST detalle_medios_recorrido
         // $desplazamiento['costo'] = isset($costos[$clave]['costo']) ? $costos[$clave]['costo'] : null;
         // $desplazamiento['ruta'] = null;
@@ -186,170 +185,71 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
 // });
 
 Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', function (Request $request, Desplazamiento $desplazamiento) {
-    $coordenadas = CoordenadaDesplazamiento::with('medio')
-        ->where('desplazamiento_id', $desplazamiento->id)
-        // ->where('agrupacion_medio_desplazamiento', 1)
-        ->orderBy('fecha_registro', 'asc')
-        ->get();
+    $queryLineString = "SELECT jsonb_build_object(
+            'type', 'FeatureCollection',
+            'features', jsonb_agg(feature)
+        ) AS geojson
+        FROM (
+            SELECT jsonb_build_object(
+                'type', 'Feature',
+                'geometry', ST_AsGeoJSON(ST_MakeLine(cd.posicion::geometry))::jsonb,
+                'properties', jsonb_build_object(
+                    'agrupacion_medio_desplazamiento', cd.agrupacion_medio_desplazamiento,
+                    'medios_desplazamiento', jsonb_build_object(
+                        'id', md.id,
+                        'nombre', md.nombre
+                    )
+                )
+            ) AS feature
+            FROM coordenadas_desplazamiento cd
+            JOIN medios_desplazamiento md ON cd.id_medio_desplazamiento = md.id
+            WHERE cd.posicion IS NOT NULL
+            AND cd.desplazamiento_id = :desplazamiento_id 
+            GROUP BY cd.agrupacion_medio_desplazamiento, md.id, md.nombre
+        ) subconsulta;";
 
-    if ($request->query('tipo') == 'geojson') {
-        // const defaultColor = '#37474F';
-        // point.latitud,
-        // point.longitud,
-        // id_medio_desplazamiento
-        // LineString
-        ray($coordenadas->toArray())->red();
-        $id = 1;
-        $idGrupo = -1;
-        $idMedio = -1;
-        $chunck = collect();
-        $agrupacion = collect();
-        $limite = collect();
+    $query = "SELECT json_build_object(
+        'type', 'FeatureCollection',
+        'features', json_agg(
+            json_build_object(
+                'type', 'Feature',
+                'geometry', ST_AsGeoJSON(posicion)::json,
+                'properties', json_build_object(
+                    'fecha_registro', fecha_registro,
+                    'inicio_recorrido', CASE WHEN tipo = 'Inicio' THEN true ELSE false END,
+                    'fin_recorrido', CASE WHEN tipo = 'Fin' THEN true ELSE false END,
+                    'fecha_registro', fecha_registro
+                )
+            )
+        )
+    ) AS geojson
+    FROM (
+        SELECT
+            CASE
+                WHEN fecha_registro = primer_fecha THEN 'Inicio'
+                WHEN fecha_registro = ultima_fecha THEN 'Fin'
+            END AS tipo,
+            posicion,
+            fecha_registro
+        FROM (
+            SELECT
+                posicion,
+                fecha_registro,
+                (SELECT MIN(fecha_registro) FROM coordenadas_desplazamiento WHERE desplazamiento_id = :desplazamiento_id) AS primer_fecha,
+                (SELECT MAX(fecha_registro) FROM coordenadas_desplazamiento WHERE desplazamiento_id = :desplazamiento_id) AS ultima_fecha
+            FROM coordenadas_desplazamiento
+            WHERE desplazamiento_id = :desplazamiento_id
+        ) AS subquery
+    ) AS subquery2
+    WHERE tipo IS NOT NULL;";
 
-        // 1,5,2,1
+    $resultadoGeoJSON = DB::select($queryLineString, ['desplazamiento_id' => $desplazamiento->id]);
+    $resultado = DB::select($query, ['desplazamiento_id' => $desplazamiento->id]);
 
-        $colores = collect([
-            '#E40066', // Caminando
-            '#03CEA4', // Autobus
-            '#345995', // Scooter
-            '#EAC435', // Bicicleta
-            '#2C302E', // Taxi
-            '#FB4D3D', // Vehiculo
-            '#37306B', // Motocicleta
-            '#CB1C8D', // Patineta
-        ]);
-
-        foreach ($coordenadas as $coordenada) {
-            $latitud = $coordenada['latitud'];
-            $longitud = $coordenada['longitud'];
-            $nombreMedioDesplazamiento = $coordenada['medio']['nombre'];
-            $grupoActual = $coordenada['agrupacion_medio_desplazamiento'];
-
-            if ($coordenadas->first() == $coordenada) {
-                $limite->push([$latitud, $longitud]);
-                $idMedio = $coordenada['id_medio_desplazamiento'];
-                $idGrupo = $grupoActual;
-                // $chunck->push([$longitud, $latitud]);
-                // $chunck->push([$latitud, $longitud]);
-
-                continue;
-            }
-
-            if ($coordenadas->last() == $coordenada) {
-                $limite->push([$latitud, $longitud]);
-
-                if ($chunck->isNotEmpty()) {
-                    $colorChunk = $colores->get($idMedio - 1, '#37474F');
-                    $agrupacion->push([
-                        'type' => 'Feature',
-                        'geometry' => [
-                            'type' => 'LineString',
-                            'coordinates' => $chunck->toArray()
-                        ],
-                        'properties' => [
-                            'id' => $id,
-                            'color' => $colorChunk,
-                            'medio' => $nombreMedioDesplazamiento,
-                            'id_medio' => $idMedio,
-                        ],
-                    ]);
-                }
-                continue;
-            }
-
-            if ($idGrupo != $grupoActual) {
-                $idGrupo = $grupoActual;
-                $colorChunk = $colores->get($idMedio - 1, '#37474F');
-                // $chunck->push([$longitud, $latitud]);
-                // $chunck->push([$latitud, $longitud]);
-                $agrupacion->push([
-                    'type' => 'Feature',
-                    'geometry' => [
-                        'type' => 'LineString',
-                        'coordinates' => $chunck->toArray()
-                    ],
-                    'properties' => [
-                        'id' => $id,
-                        'color' => $colorChunk,
-                        'medio' => $nombreMedioDesplazamiento,
-                        'id_medio' => $idMedio,
-                    ],
-                ]);
-
-                $id = $id + 1;
-                $idMedio = $coordenada['id_medio_desplazamiento'];
-                $chunck = collect();
-            }
-
-            $chunck->push([$longitud, $latitud]);
-            // $chunck->push([$latitud, $longitud]);
-        }
-
-        return response()->json([
-            'coleccion' =>
-            [
-                'type' => 'FeatureCollection',
-                'features' => $agrupacion->toArray()
-            ],
-            'limite' => $limite->toArray()
-        ]);
-    }
-
-
-    if ($request->query('tipo') == 'chunck') {
-        // const defaultColor = '#37474F';
-        // point.latitud,
-        // point.longitud,
-        // id_medio_desplazamiento
-
-        $id = 1;
-        $idGrupoMedioDesplazamietoInicial = -1;
-        $agrupacion = collect();
-        $chunck = collect();
-
-        $colores = collect([
-            '#B71C1C',
-            '#F9A825',
-            '#4A148C',
-            '#00695C',
-            '#AFB42B',
-            '#311B92',
-        ]);
-
-        foreach ($coordenadas  as $coordenada) {
-            $latitud = $coordenada['latitud'];
-            $longitud = $coordenada['longitud'];
-            $agrupacionMedioDesplazamiento = $coordenada['agrupacion_medio_desplazamiento'];
-
-            if ($coordenadas->first() == $coordenada) {
-                $idGrupoMedioDesplazamietoInicial = $agrupacionMedioDesplazamiento;
-                $chunck->push([$latitud, $longitud]);
-                continue;
-            }
-
-            if ($coordenadas->last() == $coordenada) {
-                $idGrupoMedioDesplazamietoInicial = $agrupacionMedioDesplazamiento;
-                $colorChunk = $colores->get($idGrupoMedioDesplazamietoInicial - 1, '#37474F');
-                $agrupacion->push(['color' => $colorChunk, 'multilinea' => $chunck->toArray()]);
-                continue;
-            }
-
-            if ($agrupacionMedioDesplazamiento != $idGrupoMedioDesplazamietoInicial) {
-                $idGrupoMedioDesplazamietoInicial = $agrupacionMedioDesplazamiento;
-                $colorChunk = $colores->get($idGrupoMedioDesplazamietoInicial - 1, '#37474F');
-                $chunck->push([$latitud, $longitud]);
-                $agrupacion->push(['color' => $colorChunk, 'multilinea' => $chunck->toArray(), 'id' => $id]);
-                $id = $id + 1;
-                $chunck = collect();
-            }
-
-            $chunck->push([$latitud, $longitud]);
-        }
-
-        return response()->json(['segmentos' => $agrupacion->toArray()]);
-    }
-
-    return response()->json(['coordenadas' => $coordenadas]);
+    return response()->json([
+        'coleccion' => json_decode($resultadoGeoJSON[0]->geojson),
+        'limite' => json_decode($resultado[0]->geojson)
+    ]);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
