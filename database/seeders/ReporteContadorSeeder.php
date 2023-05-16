@@ -17,7 +17,7 @@ class ReporteContadorSeeder extends Seeder
      */
     public function run()
     {
-        $fecha = Carbon::create(2023, 05, 01, 6);
+        $fecha = Carbon::create(2023, 05, 16, 6);
         $vehiculos = Vehiculo::all();
         for ($i = 0; $i < 1024; $i++) {
             ReporteContador::create([
