@@ -124,30 +124,27 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
 
     CoordenadaDesplazamiento::insert($ruta);
 
-    $query = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid);
+    $totalRegistros = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid)->count();
 
-    $totalRegistros = $query->count();
-
-    $inicioDesplazamiento = $query
+    $inicioDesplazamiento = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid)
         ->orderBy('fecha_registro', 'asc')
         ->first();
 
-    $finDesplazamiento = $query
+    $finDesplazamiento = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid)
         ->orderBy('fecha_registro', 'desc')
         ->first();
 
-    $velocidadMax = $query
+    $velocidadMax = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid)
         ->max('velocidad');
 
-    $velocidadMed = $query
+    $velocidadMed = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid)
         ->avg('velocidad');
 
-    $elevacionMin = $query
+    $elevacionMin = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid)
         ->min('altitud');
 
-    $elevacionMax = $query
+    $elevacionMax = CoordenadaDesplazamiento::where('desplazamiento_id', $request->uuid)
         ->max('altitud');
-
 
     Desplazamiento::updateOrCreate([
         'id' => $uuid
@@ -249,6 +246,37 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
     return response()->json([
         'coleccion' => json_decode($resultadoGeoJSON[0]->geojson),
         'limite' => json_decode($resultado[0]->geojson)
+    ]);
+});
+
+Route::middleware('auth:sanctum')->get('/recorrido/geojson/filtro', function (Request $request, Desplazamiento $desplazamiento) {
+    $queryLineString = "SELECT jsonb_build_object(
+            'type', 'FeatureCollection',
+            'features', jsonb_agg(feature)
+        ) AS geojson
+        FROM (
+            SELECT jsonb_build_object(
+                'type', 'Feature',
+                'geometry', ST_AsGeoJSON(ST_MakeLine(cd.posicion::geometry))::jsonb,
+                'properties', jsonb_build_object(
+                    'agrupacion_medio_desplazamiento', cd.agrupacion_medio_desplazamiento,
+                    'medios_desplazamiento', jsonb_build_object(
+                        'id', md.id,
+                        'nombre', md.nombre
+                    )
+                )
+            ) AS feature
+            FROM coordenadas_desplazamiento cd
+            JOIN medios_desplazamiento md ON cd.id_medio_desplazamiento = md.id
+            WHERE cd.posicion IS NOT NULL
+            AND cd.desplazamiento_id = :desplazamiento_id 
+            GROUP BY cd.agrupacion_medio_desplazamiento, md.id, md.nombre
+        ) subconsulta;";
+
+    $resultadoGeoJSON = DB::select($queryLineString, ['desplazamiento_id' => $desplazamiento->id]);
+
+    return response()->json([
+        'coleccion' => json_decode($resultadoGeoJSON[0]->geojson)
     ]);
 });
 
