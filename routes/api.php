@@ -250,30 +250,40 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
 });
 
 Route::middleware('auth:sanctum')->get('/recorrido/geojson/filtro', function (Request $request, Desplazamiento $desplazamiento) {
-    $queryLineString = "SELECT jsonb_build_object(
-            'type', 'FeatureCollection',
-            'features', jsonb_agg(feature)
-        ) AS geojson
-        FROM (
-            SELECT jsonb_build_object(
-                'type', 'Feature',
-                'geometry', ST_AsGeoJSON(ST_MakeLine(cd.posicion::geometry))::jsonb,
-                'properties', jsonb_build_object(
-                    'agrupacion_medio_desplazamiento', cd.agrupacion_medio_desplazamiento,
-                    'medios_desplazamiento', jsonb_build_object(
-                        'id', md.id,
-                        'nombre', md.nombre
-                    )
-                )
-            ) AS feature
-            FROM coordenadas_desplazamiento cd
-            JOIN medios_desplazamiento md ON cd.id_medio_desplazamiento = md.id
-            WHERE cd.posicion IS NOT NULL
-            AND cd.desplazamiento_id = :desplazamiento_id 
-            GROUP BY cd.agrupacion_medio_desplazamiento, md.id, md.nombre
-        ) subconsulta;";
+    $request->validate([
+        'fecha_inicio' => ['date_format:Y-m-d'],
+        'fecha_fin' => ['date_format:Y-m-d'],
+    ]);
+    
+    $fechaInicio = $request->query('fecha_inicio', (new Carbon())->format('Y-m-d'));
+    $fechaFin = $request->query('fecha_fin', (new Carbon())->addDay()->format('Y-m-d'));
+    $fechas = [new Carbon($fechaInicio), new Carbon($fechaFin)];
+    usort($fechas, function ($a, $b) {
+        return $a->timestamp - $b->timestamp;
+    });
 
-    $resultadoGeoJSON = DB::select($queryLineString, ['desplazamiento_id' => $desplazamiento->id]);
+    $queryLineString = "SELECT jsonb_build_object(
+        'type', 'FeatureCollection',
+        'features', jsonb_agg(
+            jsonb_build_object(
+                'type', 'Feature',
+                'geometry', ST_AsGeoJSON(linestring)::jsonb,
+                'properties', jsonb_build_object(
+                    'desplazamiento', to_jsonb(d)
+                )
+            )
+        )
+    ) AS geojson
+    FROM (
+        SELECT c.desplazamiento_id, ST_MakeLine(ST_Transform(c.posicion::geometry, 4326) ORDER BY c.fecha_registro) AS linestring
+        FROM desplazamientos d
+        JOIN coordenadas_desplazamiento c ON d.id = c.desplazamiento_id
+        WHERE d.fecha_creado BETWEEN ? AND ?
+        GROUP BY c.desplazamiento_id
+    ) AS subquery
+    JOIN desplazamientos d ON subquery.desplazamiento_id = d.id;";
+
+    $resultadoGeoJSON = DB::select($queryLineString, $fechas);
 
     return response()->json([
         'coleccion' => json_decode($resultadoGeoJSON[0]->geojson)
