@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\ReporteMarcadoresController;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
+use App\Models\Levantamiento;
 use App\Models\LevantamientoContador;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
@@ -84,8 +85,8 @@ function calcularDuracionMediosPorUuid($id, $costos)
         $desplazamiento['fecha_actualizado'] = $now;
         $desplazamiento['desplazamiento_id'] = $id;
         //COSTO QUE TE ENVIE EN LA REQUEST detalle_medios_recorrido
-        // $desplazamiento['costo'] = isset($costos[$clave]['costo']) ? $costos[$clave]['costo'] : null;
-        // $desplazamiento['ruta'] = null;
+        $desplazamiento['costo'] = isset($costos[$clave]['costo']) ? $costos[$clave]['costo'] : null;
+        $desplazamiento['ruta'] = null;
     }
 
     $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
@@ -164,23 +165,6 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
     return response()->json(['registros_insertados' =>  $totalRegistros], Response::HTTP_CREATED);
 });
 
-// Route::middleware('auth:sanctum')->post('/desplazamiento/finalizar', function (Request $request) {
-//     $uuid = $request->uuid;
-//     Desplazamiento::findOrFail($uuid);
-//     $fechaInicio = CoordenadaDesplazamiento::where('desplazamiento_id', $uuid)->orderBy('fecha_registro', 'asc')->first();
-//     $fechaFin = CoordenadaDesplazamiento::where('desplazamiento_id', $uuid)->orderBy('fecha_registro', 'desc')->first();;
-
-//     $desplazamiento = Desplazamiento::updateOrCreate([
-//         'id' => $uuid
-//     ], [
-//         'id' => $uuid,
-//         'inicio_desplazamiento' => $fechaInicio->fecha_registro,
-//         'fin_desplazamiento' => $fechaFin->fecha_registro,
-//     ]);
-
-//     return response()->json(['ruta' => $desplazamiento]);
-// });
-
 Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', function (Request $request, Desplazamiento $desplazamiento) {
     $queryLineString = "SELECT jsonb_build_object(
             'type', 'FeatureCollection',
@@ -249,12 +233,12 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
     ]);
 });
 
-Route::middleware('auth:sanctum')->get('/recorrido/geojson/filtro', function (Request $request, Desplazamiento $desplazamiento) {
+Route::middleware('auth:sanctum')->get('/recorrido/geojson/filtro', function (Request $request) {
     $request->validate([
         'fecha_inicio' => ['date_format:Y-m-d'],
         'fecha_fin' => ['date_format:Y-m-d'],
     ]);
-    
+
     $fechaInicio = $request->query('fecha_inicio', (new Carbon())->format('Y-m-d'));
     $fechaFin = $request->query('fecha_fin', (new Carbon())->addDay()->format('Y-m-d'));
     $fechas = [new Carbon($fechaInicio), new Carbon($fechaFin)];
@@ -290,6 +274,40 @@ Route::middleware('auth:sanctum')->get('/recorrido/geojson/filtro', function (Re
     ]);
 });
 
+Route::middleware('auth:sanctum')->get('/reporte-marcadores/{codigo}/geojson', function (Request $request, $codigo) {
+    $levantamiento = Levantamiento::where('codigo', $codigo)->firstOrFail();
+
+    $queryLineString = "SELECT json_build_object(
+        'type', 'FeatureCollection',
+        'features', json_agg(feature)
+    ) AS geojson
+    FROM (
+        SELECT json_build_object(
+            'type', 'Feature',
+            'geometry', ST_AsGeoJSON(r.posicion)::json,
+            'properties', json_build_object(
+                'altitud', r.altitud,
+                'comentario', r.comentario,
+                'id_marcador', r.id_marcador,
+                'marcador', json_build_object(
+                    'id', m.id,
+                    'nombre', m.nombre,
+                    'icono', m.icono
+                )
+            )
+        ) AS feature
+        FROM reporte_marcadores r
+        INNER JOIN marcadores m ON r.id_marcador = m.id
+        WHERE r.id_levantamiento = ?
+    ) AS features;";
+
+    $resultadoGeoJSON = DB::select($queryLineString, [$levantamiento->id]);
+
+    return response()->json([
+        'data' => json_decode($resultadoGeoJSON[0]->geojson)
+    ]);
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json(['usuario' => $request->user(), 'permisos' => $request->user()->getPermisosWeb()]);
 });
@@ -322,24 +340,6 @@ Route::post('/sanctum/token', function (Request $request) {
         'token' =>  $token
     ]);
 });
-
-// Route::post('/roless', function (Request $request) {
-//     $request->validate([
-//         'nombre_rol' => ['required', 'unique:roles,name', 'max:255'],
-//         'permisos' => ['required', 'exists:permissions,name', 'distinct:strict'],
-//     ], [
-//         'nombre_rol.required' => 'El nombre del rol es requerido.',
-//         'nombre_rol.unique' => 'El nombre del rol ya existe.',
-//         'nombre_rol.max' => 'La longitud no debe superar los 255 caracteres.',
-//         'permisos.required' => 'Debe agregar al menos un permiso.',
-//         'permisos.exists' => 'El permiso no existe.',
-//         'permisos.distinct' => 'Los permisos deben ser distintos.',
-//     ]);
-
-//     return response()->json([
-//         'request' =>  $request->all()
-//     ]);
-// });
 
 Route::middleware('auth:sanctum')->post('/token/permisos', function (Request $request) {
     return response()->json([
@@ -505,53 +505,6 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
         'data' =>  $datosTabla,
     ]);
 });
-
-// Route::get('/detalle-fechas/{id}', function (Request $request, string $id) {
-//     $coleccion = calcularDuracionMediosPorUuid($id);
-//     return response()->json(['desplazamiento' => $coleccion]);
-// });
-
-// Route::middleware('auth:sanctum')->post('/usuario/admin', function (Request $request) {
-//     $ID_ESTADO_ACTIVA = 1;
-
-//     $request->validate([
-//         'email' => ['required', 'email', 'unique:users,email', 'max:255'],
-//         'password' => ['required'],
-//         'nombre_usuario' => ['nullable'],
-//         'rol' => ['required', 'exists:roles,id'],
-//     ], [
-//         'email' => 'El correo es requerido y debe ser único.',
-//         'password' => 'Debe agregar password.',
-//         'rol' => 'El rol es inválido.'
-//     ]);
-
-//     DB::beginTransaction();
-//     try {
-//         $usuario = User::create([
-//             'email' => $request->email,
-//             'password' => Hash::make($request->password),
-//             'name' => $request->nombre_usuario ?? '',
-//         ]);
-
-//         $rol = Role::findOrFail($request->rol);
-//         $usuario->assignRole($rol->name);
-//         DB::commit();
-
-//         SolicitudCuenta::create([
-//             'id_usuario' => $usuario->id,
-//             'id_estado_solicitud' => $ID_ESTADO_ACTIVA,
-//         ]);
-
-//         return response()->json([
-//             'usuario' =>  $usuario,
-//             'estado_cuenta' =>  $usuario->solicitud->estado->nombre,
-//         ]);
-//     } catch (\Throwable $th) {
-//         //throw $th;
-//         DB::rollBack();
-//         return response($th);
-//     }
-// });
 
 
 Route::group(['as' => 'api.'], function () {
