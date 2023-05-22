@@ -1,0 +1,13 @@
+
+version: '3.2'
+
+services:
+  nginx:
+    image: docker.io/bitnami/nginx:1.23
+    ports:
+      - 8080:443
+      - 80:80
+    volumes:
+      - ./block/:/opt/bitnami/nginx/conf/server_blocks/
+      - ../certs:/certs
+      - ./dist:/app
