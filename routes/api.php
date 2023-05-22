@@ -239,7 +239,7 @@ Route::middleware('auth:sanctum')->get('/recorrido/geojson/filtro', function (Re
         'fecha_fin' => ['date_format:Y-m-d'],
     ]);
 
-    $fechaInicio = $request->query('fecha_inicio', (new Carbon(2023))->format('Y-m-d'));
+    $fechaInicio = $request->query('fecha_inicio', (new Carbon())->format('Y-m-d'));
     $fechaFin = $request->query('fecha_fin', (new Carbon())->addDay()->format('Y-m-d'));
     $fechas = [new Carbon($fechaInicio), new Carbon($fechaFin)];
     usort($fechas, function ($a, $b) {
