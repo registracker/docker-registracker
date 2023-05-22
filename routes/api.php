@@ -239,7 +239,7 @@ Route::middleware('auth:sanctum')->get('/recorrido/geojson/filtro', function (Re
         'fecha_fin' => ['date_format:Y-m-d'],
     ]);
 
-    $fechaInicio = $request->query('fecha_inicio', (new Carbon())->format('Y-m-d'));
+    $fechaInicio = $request->query('fecha_inicio', (new Carbon(2023))->format('Y-m-d'));
     $fechaFin = $request->query('fecha_fin', (new Carbon())->addDay()->format('Y-m-d'));
     $fechas = [new Carbon($fechaInicio), new Carbon($fechaFin)];
     usort($fechas, function ($a, $b) {
@@ -421,6 +421,14 @@ Route::get('/estado-cuenta', function (Request $request) {
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
+
+//     SELECT DATE(fecha_hora) AS fecha, COUNT(*) AS cantidad_registros
+// FROM coordenadas_desplazamiento
+// WHERE TIME(fecha_hora) >= '06:00:00' 
+//   AND TIME(fecha_hora) <= '06:15:00' 
+//   AND DATE(fecha_hora) >= '2023-01-01' 
+//   AND DATE(fecha_hora) <= '2023-02-20'
+// GROUP BY DATE(fecha_hora);
     if ($request->query('total_vehiculos', null) == 'yes') {
         $totalElementos = Vehiculo::withCount(['reporte'])
             ->orderBy('id')

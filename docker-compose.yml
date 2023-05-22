@@ -10,7 +10,7 @@ services:
     proxy:
         image: nginx:latest
         ports:
-            - "8085:80"
+            - 8085:80
         volumes:
             - ./:/var/www/app
             - ./docker/nginx/nginx-site.conf:/etc/nginx/conf.d/default.conf
@@ -68,11 +68,13 @@ services:
     #         - backend
     # geoserver:
     #     image: kartoza/geoserver:2.22.0
+    #     ports:
+    #         - 8081:8080
     #     volumes:
-    #         - geoserver-data:/opt/geoserver/data_dir
+    #         - ./docker-data/geoserver:/opt/geoserver/data_dir
     #     environment:
     #         - GEOSERVER_DATA_DIR=/opt/geoserver/data_dir
     #         - GEOSERVER_ADMIN_USER=admin
     #         - GEOSERVER_ADMIN_PASSWORD=geoserver
-    #     networks:
-    #         - backend
+    #     depends_on:
+    #         - postgres
