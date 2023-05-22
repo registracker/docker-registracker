@@ -1,0 +1,2 @@
+Es necerario crear el certificado chained
+cat www.example.com.crt bundle.crt > www.example.com.chained.crt
