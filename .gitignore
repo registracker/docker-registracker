@@ -15,3 +15,6 @@ yarn-error.log
 /.idea
 /.vscode
 /docker-data
+/docker/certs/*.key
+/docker/certs/*.crt
+/docker/certs/*.ca-bundle
