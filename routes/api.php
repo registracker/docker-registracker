@@ -473,14 +473,16 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
     $fechasAgrupadas = $fechasAgrupadas->chunk(2);
 
     foreach ($fechasAgrupadas as $rangoFecha) {
-        $conteoVehicular = Vehiculo::withCount(['reporte' => function (Builder $query) 
+        $conteoVehicular = Vehiculo::withCount(['reporte' => function (Builder $query)
         use ($rangoFecha, $levantamientoContador) {
             // $query->whereBetween('registrado', $rangoFecha);
+            // dd($levantamientoContador);
             $query
-                ->whereTime('registrado','>=', $rangoFecha->first())
-                ->whereTime('registrado','<=', $rangoFecha->last())
-                ->whereDate('registrado','<=', $levantamientoContador->periodo_inicio)
-                ->whereDate('registrado','<=', $levantamientoContador->periodo_fin);
+                ->where('id_levantamiento_contador', $levantamientoContador->id)
+                ->whereTime('registrado', '>=', $rangoFecha->first())
+                ->whereTime('registrado', '<=', $rangoFecha->last())
+                ->whereDate('registrado', '<=', $levantamientoContador->periodo_inicio)
+                ->whereDate('registrado', '<=', $levantamientoContador->periodo_fin);
         }])
             ->orderBy('id')
             ->get()
@@ -505,7 +507,12 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
         array_push($datosTabla, $conteoVehicular->toArray());
     }
 
-    $totalElementos = Vehiculo::withCount(['reporte'])
+    $totalElementos = Vehiculo::withCount(['reporte' => function (Builder $query) use ($levantamientoContador) {
+        $query
+            ->where('id_levantamiento_contador', $levantamientoContador->id)
+            ->whereDate('registrado', '<=', $levantamientoContador->periodo_inicio)
+            ->whereDate('registrado', '<=', $levantamientoContador->periodo_fin);
+    }])
         ->orderBy('id')
         ->get()
         ->pluck('reporte_count')

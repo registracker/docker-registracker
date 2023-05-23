@@ -39,16 +39,16 @@ services:
             POSTGRES_DB: laravelgis
             PGDATA: /var/lib/postgresql/data
 
-    # pgadmin:
-    #     image: dpage/pgadmin4:latest
-    #     restart: always
-    #     environment:
-    #     - PGADMIN_DEFAULT_EMAIL=postgis@gmail.com
-    #     - PGADMIN_DEFAULT_PASSWORD=postgis
-    #     ports:
-    #     - 8086:80
-    #     depends_on:
-    #     - postgres
+    pgadmin:
+        image: dpage/pgadmin4:latest
+        restart: always
+        environment:
+        - PGADMIN_DEFAULT_EMAIL=postgis@gmail.com
+        - PGADMIN_DEFAULT_PASSWORD=postgis
+        ports:
+        - 8086:80
+        depends_on:
+        - postgres
 
         # networks:
         #     - backend
