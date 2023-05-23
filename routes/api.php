@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\ReporteContadorExport;
 use App\Http\Controllers\Api\BitacoraTablaController;
 use App\Http\Controllers\Api\ClasesServiciosRutasController;
 use App\Http\Controllers\Api\ZonaController;
@@ -47,7 +48,7 @@ use Illuminate\Validation\ValidationException;
 use Orion\Facades\Orion;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
-use MStaack\LaravelPostgis\Geometries\Point;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -422,12 +423,7 @@ Route::get('/estado-cuenta', function (Request $request) {
 
 Route::post('/reporte-contador/{codigo}/csv', function (Request $request,$codigo) {
     $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
-    $usuario = User::where('email', $request->email)->firstOrFail();
-    // $usuarios = User::with(['solicitud.estado'])->get();
-    return response()->json([
-        'estado' =>  $usuario->solicitud->estado,
-        // 'usuarios' =>  $usuarios,
-    ]);
+    return Excel::download(new ReporteContadorExport, 'reporte-contador.xlsx');
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
