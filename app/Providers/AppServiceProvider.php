@@ -23,9 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('geography', 'string');
+        DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('geometry', 'string');
         DB::listen(function ($query) {
             ray($query->sql)->purple();
         });
-
     }
 }
