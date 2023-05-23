@@ -25,7 +25,7 @@ return [
             'version' => '1.0.0',
         ],
         'servers' => [
-            ['url' => env('APP_URL'), 'description' => 'Default Environment'],
+            ['url' => env('SWAGGER_URL','https://registracker.me'), 'description' => 'Default Environment'],
         ],
         'tags' => [],
     ],

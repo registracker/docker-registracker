@@ -13,4 +13,9 @@ class BitacoraTablaController extends Controller
     {
         return 'nombre_tabla';
     }
+
+    public function sortableBy(): array
+    {
+        return ['id'];
+    }
 }

@@ -470,11 +470,17 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
     }
     $fechasAgrupadas->push((new Carbon($periodoInicio))->addDay());
 
-    $fechasAgrupadas = $fechasAgrupadas->chunk(2)->toArray();
+    $fechasAgrupadas = $fechasAgrupadas->chunk(2);
 
     foreach ($fechasAgrupadas as $rangoFecha) {
-        $conteoVehicular = Vehiculo::withCount(['reporte' => function (Builder $query) use ($rangoFecha) {
-            $query->whereBetween('registrado', $rangoFecha);
+        $conteoVehicular = Vehiculo::withCount(['reporte' => function (Builder $query) 
+        use ($rangoFecha, $levantamientoContador) {
+            // $query->whereBetween('registrado', $rangoFecha);
+            $query
+                ->whereTime('registrado','>=', $rangoFecha->first())
+                ->whereTime('registrado','<=', $rangoFecha->last())
+                ->whereDate('registrado','<=', $levantamientoContador->periodo_inicio)
+                ->whereDate('registrado','<=', $levantamientoContador->periodo_fin);
         }])
             ->orderBy('id')
             ->get()
