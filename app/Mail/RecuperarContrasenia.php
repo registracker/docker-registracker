@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class MyTestEmail extends Mailable
+class RecuperarContrasenia extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +18,7 @@ class MyTestEmail extends Mailable
      *
      * @return void
      */
-    public function __construct(private $name)
+    public function __construct(private $email, private $name)
     {
         //
     }
@@ -32,12 +31,19 @@ class MyTestEmail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'My Test Email',
-            replyTo: [
-                new Address('siliezer.marcelo@gmail.com', 'Marcelo S.')
-            ],
-
+            subject: 'Recuperación de contraseña - Registracker',
         );
+    }
+
+    public function build()
+    {
+    return $this->to($this->email)
+                   ->subject('¡Recuperación de contraseña - Registracker!')
+                   ->markdown('mail.recuperacion-email')
+                   ->with([
+                     'name' => $this->name,
+                     'link' => 'https://registracker.me/' //link para restablecer contraseña del usuario CAMBIAR
+                   ]);
     }
 
     /**
@@ -48,8 +54,17 @@ class MyTestEmail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'mail.test-email',
-            with: ['name' => $this->name],
+            view: 'view.name',
         );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array
+     */
+    public function attachments()
+    {
+        return [];
     }
 }

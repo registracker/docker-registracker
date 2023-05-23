@@ -61,7 +61,6 @@ class JustTesting extends Mailable
     {
     return $this->from('soporte@registracker.me')
 		        ->to('sh15001@ues.edu.sv')
-                ->cc('oo15004@ues.edu.sv')
                    ->subject('¡Bienvenido!')
                    ->markdown('mail.exmpl')
                    ->with([
