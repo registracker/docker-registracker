@@ -14,7 +14,7 @@ RUN apt-get update \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install intl pdo pdo_pgsql pgsql zip bcmath pcntl exif php_zip php_xml php_gd2 php_iconv php_simplexml php_xmlreader php_zlib\
+    && docker-php-ext-install intl pdo pdo_pgsql pgsql zip bcmath pcntl exif \
     && php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
         && npm install -g npm \
         && apt-get -y autoremove \
