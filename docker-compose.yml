@@ -13,7 +13,6 @@ services:
             - ./docker/certs/:/etc/certs
         depends_on:
             - php
-            # - swaggerui
 
     php:
         build:
@@ -40,15 +39,6 @@ services:
             POSTGRES_DB: laravelgis
             PGDATA: /var/lib/postgresql/data
 
-    # swaggerui:
-    #     image: swaggerapi/swagger-ui:latest
-    #     # volumes:
-    #     #     - postgres-data:/var/lib/postgresql/data
-    #     ports:
-    #         - 8086:8080
-    #     environment:
-    #         SWAGGER_JSON_URL: https://registracker.me/storage/specs/specs.json
-
     # pgadmin:
     #     image: dpage/pgadmin4:latest
     #     restart: always
@@ -62,6 +52,7 @@ services:
 
         # networks:
         #     - backend
+
     # redis:
     #     image: redis:7
     #     sysctls:
@@ -72,6 +63,7 @@ services:
     #         - redis-data:/data
     #     networks:
     #         - backend
+    
     # geoserver:
     #     image: kartoza/geoserver:2.22.0
     #     ports:
