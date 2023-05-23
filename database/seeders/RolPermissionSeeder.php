@@ -52,30 +52,30 @@ class RolPermissionSeeder extends Seeder
         ]);
 
         $sitios = collect([
-            'administracion:usuarios',
-            'administracion:roles',
-            'administracion:permisos',
-            'administracion:medios-desplazamiento',
-            'administracion:incidentes',
-            'administracion:marcadores',
-            'administracion:estados-solicitud',
-            'administracion:clases-vehiculares',
-            'administracion:vehiculos',
-            'administracion:tipos-vehiculos-rutas',
-            'administracion:tipos-servicios-rutas',
-            'administracion:clases-servicios-rutas',
-            'administracion:rutas-transporte',
-            'administracion:levantamiento',
-            'administracion:conteo-vehicular',
-            
-            'desplazamiento:movil',
-            'desplazamiento:detalle',
-            'levantamiento:marcador',
-            'levantamiento:detalle-marcador',
-            'levantamiento:levantamiento-contador',
-            'conteo-vehicular:lista',
-            'conteo-vehicular:detalle',
-            'desplazamiento:geojson',
+            'web:administracion:usuarios',
+            'web:administracion:roles',
+            'web:administracion:permisos',
+            'web:administracion:medios-desplazamiento',
+            'web:administracion:incidentes',
+            'web:administracion:marcadores',
+            'web:administracion:estados-solicitud',
+            'web:administracion:clases-vehiculares',
+            'web:administracion:vehiculos',
+            'web:administracion:tipos-vehiculos-rutas',
+            'web:administracion:tipos-servicios-rutas',
+            'web:administracion:clases-servicios-rutas',
+            'web:administracion:rutas-transporte',
+            'web:administracion:levantamiento',
+            'web:administracion:conteo-vehicular',
+            // Usuarios
+            'web:desplazamiento:movil',
+            'web:desplazamiento:detalle',
+            'web:levantamiento:marcador',
+            'web:levantamiento:detalle-marcador',
+            'web:levantamiento:levantamiento-contador',
+            'web:conteo-vehicular:lista',
+            'web:conteo-vehicular:detalle',
+            'web:desplazamiento:geojson',
         ]);
 
         $roleAdministrador = Role::create(['name' => Constant::ROL_ADMINISTRADOR]);
@@ -83,13 +83,19 @@ class RolPermissionSeeder extends Seeder
         $roleInvestigador = Role::create(['name' => Constant::ROL_INVESTIGADOR]);
 
         foreach ($sitios as $sitio) {
-            $permission = Permission::create(['name' => $guardWeb . $separador . $sitio, 'guard_name' => 'web']);
+            $permission = Permission::create([
+                'name' => $sitio,
+                'guard_name' => 'web'
+            ]);
             $roleAdministrador->givePermissionTo($permission);
         }
 
         foreach ($modelos as $modelo) {
             foreach ($accionesDisponibles as $accion) {
-                $permission = Permission::create(['name' => $guardApi . $separador . $modelo . $separador . $accion, 'guard_name' => 'web']);
+                $permission = Permission::create([
+                    'name' => $guardApi . $separador . $modelo . $separador . $accion,
+                    'guard_name' => 'web'
+                ]);
 
                 $roleAdministrador->givePermissionTo($permission);
 

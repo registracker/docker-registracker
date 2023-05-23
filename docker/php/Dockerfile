@@ -11,10 +11,11 @@ RUN apt-get update \
         libzip-dev \
         nodejs \
         postgresql-client-15 \
+        libpng-dev \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install intl pdo pdo_pgsql pgsql zip bcmath pcntl exif \
+    && docker-php-ext-install intl pdo pdo_pgsql pgsql zip bcmath pcntl exif gd \
     && php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
         && npm install -g npm \
         && apt-get -y autoremove \

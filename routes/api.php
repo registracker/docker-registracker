@@ -420,6 +420,16 @@ Route::get('/estado-cuenta', function (Request $request) {
     ]);
 });
 
+Route::post('/reporte-contador/{codigo}/csv', function (Request $request,$codigo) {
+    $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
+    $usuario = User::where('email', $request->email)->firstOrFail();
+    // $usuarios = User::with(['solicitud.estado'])->get();
+    return response()->json([
+        'estado' =>  $usuario->solicitud->estado,
+        // 'usuarios' =>  $usuarios,
+    ]);
+});
+
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
 
     // SELECT DATE(fecha_hora) AS fecha, COUNT(*) AS cantidad_registros
