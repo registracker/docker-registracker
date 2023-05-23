@@ -1,0 +1,13 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "Registracker",
+            "Group": "Registracker",
+            "Port": 5432,
+            "Username": "laravelgis",
+            "Host": "registracker.me",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "laravelgis"
+        }
+    }
+}

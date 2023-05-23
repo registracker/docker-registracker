@@ -43,36 +43,37 @@ services:
         image: dpage/pgadmin4:latest
         restart: always
         environment:
-        - PGADMIN_DEFAULT_EMAIL=postgis@gmail.com
-        - PGADMIN_DEFAULT_PASSWORD=postgis
+            - PGADMIN_DEFAULT_EMAIL=postgis@gmail.com
+            - PGADMIN_DEFAULT_PASSWORD=postgis
         ports:
-        - 8086:80
+            - 8086:80
+        volumes:
+            - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
         depends_on:
-        - postgres
+            - postgres
+            # networks:
+            #     - backend
 
-        # networks:
-        #     - backend
+            # redis:
+            #     image: redis:7
+            #     sysctls:
+            #         - net.core.somaxconn=511
+            #     ports:
+            #         - "6379:6379"
+            #     volumes:
+            #         - redis-data:/data
+            #     networks:
+            #         - backend
 
-    # redis:
-    #     image: redis:7
-    #     sysctls:
-    #         - net.core.somaxconn=511
-    #     ports:
-    #         - "6379:6379"
-    #     volumes:
-    #         - redis-data:/data
-    #     networks:
-    #         - backend
-    
-    # geoserver:
-    #     image: kartoza/geoserver:2.22.0
-    #     ports:
-    #         - 8081:8080
-    #     volumes:
-    #         - ./docker-data/geoserver:/opt/geoserver/data_dir
-    #     environment:
-    #         - GEOSERVER_DATA_DIR=/opt/geoserver/data_dir
-    #         - GEOSERVER_ADMIN_USER=admin
-    #         - GEOSERVER_ADMIN_PASSWORD=geoserver
-    #     depends_on:
-    #         - postgres
+            # geoserver:
+            #     image: kartoza/geoserver:2.22.0
+            #     ports:
+            #         - 8081:8080
+            #     volumes:
+            #         - ./docker-data/geoserver:/opt/geoserver/data_dir
+            #     environment:
+            #         - GEOSERVER_DATA_DIR=/opt/geoserver/data_dir
+            #         - GEOSERVER_ADMIN_USER=admin
+            #         - GEOSERVER_ADMIN_PASSWORD=geoserver
+            #     depends_on:
+            #         - postgres

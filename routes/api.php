@@ -430,7 +430,13 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
     //   AND DATE(fecha_hora) <= '2023-02-20'
     // GROUP BY DATE(fecha_hora);
     if ($request->query('total_vehiculos', null) == 'yes') {
-        $totalElementos = Vehiculo::withCount(['reporte'])
+        $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
+        $totalElementos = Vehiculo::withCount(['reporte' => function (Builder $query) use ($levantamientoContador) {
+            $query
+                ->where('id_levantamiento_contador', $levantamientoContador->id)
+                ->whereDate('registrado', '<=', $levantamientoContador->periodo_inicio)
+                ->whereDate('registrado', '<=', $levantamientoContador->periodo_fin);
+        }])
             ->orderBy('id')
             ->get();
 
@@ -502,7 +508,6 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
         $conteoVehicular
             ->push($conteoVehicular->sum())
             ->prepend($rangoFecha);
-
 
         array_push($datosTabla, $conteoVehicular->toArray());
     }
