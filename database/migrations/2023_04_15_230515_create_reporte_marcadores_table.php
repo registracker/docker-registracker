@@ -23,6 +23,7 @@ return new class extends Migration
             $table->point('posicion');
             $table->double('altitud')->nullable();
             $table->string('comentario', 128)->nullable();
+            $table->timestamp('fecha_reporte')->nullable();
             $table->timestamp('fecha_creado')->nullable();
             $table->timestamp('fecha_actualizado')->nullable();
             $table->timestamp('fecha_eliminado')->nullable();

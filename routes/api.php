@@ -35,6 +35,7 @@ use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
 use App\Models\Levantamiento;
 use App\Models\LevantamientoContador;
+use App\Models\ReporteMarcadores;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
 use App\Models\Vehiculo;
@@ -422,6 +423,11 @@ Route::get('/estado-cuenta', function (Request $request) {
         'estado' =>  $usuario->solicitud->estado,
         // 'usuarios' =>  $usuarios,
     ]);
+});
+
+Route::post('/reporte-marcador/{codigo}/csv', function (Request $request, $codigo) {
+    $levantamientoContador = ReporteMarcadores::where('codigo', $codigo)->firstOrFail();
+    return Excel::download(new ReporteContadorExport($levantamientoContador), 'reporte-marcador.csv', ExcelFormat::CSV);
 });
 
 Route::post('/reporte-contador/{codigo}/csv', function (Request $request, $codigo) {
