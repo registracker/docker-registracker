@@ -79,15 +79,42 @@ class RolPermissionSeeder extends Seeder
         ]);
 
         $roleAdministrador = Role::create(['name' => Constant::ROL_ADMINISTRADOR]);
-        $roleParticipante = Role::create(['name' => Constant::ROL_PARTICIPANTE]);
         $roleInvestigador = Role::create(['name' => Constant::ROL_INVESTIGADOR]);
+        $roleParticipante = Role::create(['name' => Constant::ROL_PARTICIPANTE]);
 
         foreach ($sitios as $sitio) {
             $permission = Permission::create([
                 'name' => $sitio,
                 'guard_name' => 'web'
             ]);
+
             $roleAdministrador->givePermissionTo($permission);
+
+            $sitiosInvestigador = [
+                'web:desplazamiento:movil',
+                'web:desplazamiento:detalle',
+                'web:levantamiento:marcador',
+                'web:levantamiento:detalle-marcador',
+                'web:levantamiento:levantamiento-contador',
+                'web:conteo-vehicular:lista',
+                'web:web:conteo-vehicular:detalle',
+                'web:desplazamiento:geojson',
+                'web:administracion:levantamiento',
+                'web:administracion:conteo-vehicular',
+            ];
+
+            if (in_array($sitio, $sitiosInvestigador)) {
+                $roleInvestigador->givePermissionTo($permission);
+            }
+
+            $sitiosParticipante = [
+                'web:desplazamiento:movil',
+                'web:desplazamiento:detalle',
+            ];
+
+            if (in_array($sitio, $sitiosParticipante)) {
+                $roleParticipante->givePermissionTo($permission);
+            }
         }
 
         foreach ($modelos as $modelo) {
@@ -105,8 +132,5 @@ class RolPermissionSeeder extends Seeder
                 }
             }
         }
-
-        $roleInvestigador->givePermissionTo($guardWeb . ":desplazamiento:movil");
-        $roleInvestigador->givePermissionTo($guardWeb . ":desplazamiento:detalle");
     }
 }
