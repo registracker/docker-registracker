@@ -241,13 +241,13 @@ const items = [
     title: 'Reportes',
     icon: 'mdi-folder-outline',
     children: [
-      {
-        title: 'Incidentes',
-        icon: 'mdi-map-search-outline',
-        path: {
-          name: 'web:levantamiento:marcador',
-        },
-      },
+      // {
+      //   title: 'Incidentes',
+      //   icon: 'mdi-map-search-outline',
+      //   path: {
+      //     name: 'web:levantamiento:marcador',
+      //   },
+      // },
       {
         title: 'Marcadores',
         icon: 'mdi-map-search-outline',
