@@ -13,6 +13,13 @@
     </v-card-title>
     <v-card-subtitle>
       Cantidad de registros: {{ features ? features : '0' }}
+      <v-btn
+        @click="downloadDesplazamientos()"
+        color="success"
+        size="small"
+      >
+        Descargar
+      </v-btn>
     </v-card-subtitle>
     <v-card-text>
       <v-img height="72vh" width="100vw">
@@ -149,6 +156,38 @@ export default {
         this.$toast.error('Error al cargar los datos.');
         console.log(error);
       }
+    },
+    async downloadDesplazamientos() {
+      // await this.axios.get('/download-desplazamientos/csv', { responseType: 'blob' });
+      await this.axios({
+        url: '/download-desplazamientos/csv',
+        responseType: 'arraybuffer',
+        responseEncoding: 'binary',
+        headers: {
+          'content-type': 'application/vnd.ms-excel',
+        },
+      })
+        .then((response) => {
+          const reporteName = 'desplazamientos.xlsx';
+          // programmatically 'click'.
+          const link = document.createElement('a');
+
+          // Tell the browser to associate the response data to
+          // the URL of the link we created above.
+          link.href = window.URL.createObjectURL(new Blob([response.data]));
+
+          // Tell the browser to download, not render, the file.
+          link.setAttribute('download', reporteName);
+
+          // Place the link in the DOM.
+          document.body.appendChild(link);
+          // cerrar modal
+          // Make the magic happen!
+          link.click();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

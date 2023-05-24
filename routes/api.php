@@ -1,6 +1,7 @@
 <?php
 
 use App\Exports\ReporteContadorExport;
+use App\Exports\DetalleMedioRecorridoExport;
 use App\Http\Controllers\Api\BitacoraTablaController;
 use App\Http\Controllers\Api\ClasesServiciosRutasController;
 use App\Http\Controllers\Api\ZonaController;
@@ -424,6 +425,11 @@ Route::get('/estado-cuenta', function (Request $request) {
 Route::post('/reporte-contador/{codigo}/csv', function (Request $request,$codigo) {
     $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     return Excel::download(new ReporteContadorExport, 'reporte-contador.xlsx');
+});
+
+Route::get('/download-desplazamientos/csv', function (Request $request) {
+    //$levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
+    return Excel::download(new DetalleMedioRecorridoExport, 'desplazamientos.xlsx');
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
