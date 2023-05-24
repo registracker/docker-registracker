@@ -109,8 +109,6 @@
                             ></v-text-field>
                           </template>
                           <v-date-picker
-                            :max="(new Date(Date.now() - (new Date()).getTimezoneOffset()
-                            * 60000)).toISOString().substr(0, 10)"
                             locale="es"
                             v-model="dateRange"
                             range
