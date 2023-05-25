@@ -204,8 +204,9 @@ export default {
       },
     },
     dateRangeRules() {
-      return () => this.dateRange[1] > this.dateRange[0]
-        || 'Error en las fechas';
+      return () => (new Date(this.dateRange[1]).getTime() >= new Date(this.dateRange[0]).getTime()
+      || this.dateRange[0] === this.dateRange[1])
+      || 'Error en las fechas';
     },
   },
 
