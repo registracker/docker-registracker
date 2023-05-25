@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Levantamiento;
 use App\Models\Marcador;
 use App\Models\ReporteMarcadores;
 use Illuminate\Support\Facades\DB;
@@ -11,11 +12,11 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class ReporteMarcadoresExport implements FromCollection, WithHeadings, WithMapping
 {
-    private $marcador;
+    private $levantamiento;
 
-    public function __construct(Marcador $marcador)
+    public function __construct(Levantamiento $levantamiento)
     {
-        $this->marcador = $marcador;
+        $this->levantamiento = $levantamiento;
         return $this;
     }
 
@@ -29,8 +30,8 @@ class ReporteMarcadoresExport implements FromCollection, WithHeadings, WithMappi
                 'comentario',
                 'fecha_reporte',
             )
-            ->where('id_levantamiento', $this->marcador->id)
-            ->orderBy('registrado', 'asc')
+            ->where('id_levantamiento', $this->levantamiento->id)
+            ->orderBy('fecha_reporte', 'asc')
             ->get();
     }
 
