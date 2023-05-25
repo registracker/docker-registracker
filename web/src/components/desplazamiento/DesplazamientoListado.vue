@@ -210,15 +210,15 @@ export default {
     },
 
     descargar(desplazamiento) {
-      const { codigo } = desplazamiento;
+      const { id } = desplazamiento;
       this.axios
-        .post(`reporte-contador/${codigo}/csv`, {
+        .post(`reporte-desplazamiento/${id}/csv`, {
           responseType: 'arraybuffer',
         })
         .then((response) => {
           const csvData = response.data;
           const blob = new Blob([csvData], { type: 'text/plain' });
-          const fileName = `reporte-levantamiento-${codigo}.csv`;
+          const fileName = `reporte-desplazamiento-${id}.csv`;
           saveAs(blob, fileName);
         })
         .catch((error) => {

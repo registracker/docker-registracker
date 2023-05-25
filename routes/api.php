@@ -2,6 +2,7 @@
 
 use App\Exports\ReporteContadorExport;
 use App\Exports\DetalleMedioRecorridoExport;
+use App\Exports\DetalleMedioRecorridoMultipleExport;
 use App\Exports\ReporteContadorAgrupadoExport;
 use App\Exports\ReporteMarcadoresExport;
 use App\Http\Controllers\Api\BitacoraTablaController;
@@ -445,10 +446,7 @@ Route::post('/reporte-contador/{codigo}/csv', function (Request $request, $codig
 });
 
 Route::post('/reporte-desplazamiento/{codigo}/csv', function (Request $request, $codigo) {
-
-    // dd($codigo);
     $desplazamiento = Desplazamiento::findOrFail($codigo);
-    // dd($desplazamiento);
     return Excel::download(new DetalleMedioRecorridoExport($desplazamiento), 'reporte-desplazamiento.csv', ExcelFormat::CSV);
 });
 
@@ -461,7 +459,7 @@ Route::get('/download-desplazamientos/csv', function (Request $request) {
     //$levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     $fecha_inicio = $request->fecha_inicio;
     $fecha_fin = $request->fecha_fin;
-    return Excel::download(new DetalleMedioRecorridoExport($fecha_inicio,$fecha_fin), 'desplazamientos.xlsx');
+    return Excel::download(new DetalleMedioRecorridoMultipleExport($fecha_inicio,$fecha_fin), 'desplazamientos.xlsx');
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {

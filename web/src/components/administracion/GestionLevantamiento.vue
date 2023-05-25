@@ -77,6 +77,7 @@
                           <v-date-picker
                             v-model="editedItem.fecha_vencimiento"
                             @input="menuDatePicker = false"
+                            locale="es-SV"
                           ></v-date-picker>
                         </v-menu>
                       </v-col>
@@ -307,7 +308,7 @@ export default {
           id: undefined,
         });
         console.log(response);
-        this.$toast.success(`Código creado: ${response.codigo}`);
+        this.$toast.success(`Código creado: ${response.data.data.codigo}`);
       } catch (error) {
         console.log(error);
         this.$toast.error('Error al crear el registro.');
