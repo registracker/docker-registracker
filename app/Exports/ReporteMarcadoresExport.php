@@ -41,7 +41,7 @@ class ReporteMarcadoresExport implements FromCollection, WithHeadings, WithMappi
             'Marcador',
             'LatLng',
             'Altitud',
-            'Comenario',
+            'Comentario',
             'Registrado',
         ];
     }

@@ -96,7 +96,7 @@ function calcularDuracionMediosPorUuid($id, $costos)
 
     $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
         return collect($item)
-            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado'])
+            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado', 'costo'])
             ->toArray();
     })->toArray();
 
