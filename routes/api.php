@@ -437,13 +437,9 @@ Route::post('/reporte-contador/{codigo}/csv', function (Request $request, $codig
 
 Route::get('/download-desplazamientos/csv', function (Request $request) {
     //$levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
-<<<<<<< HEAD
     $fecha_inicio = $request->fecha_inicio;
     $fecha_fin = $request->fecha_fin;
     return Excel::download(new DetalleMedioRecorridoExport($fecha_inicio,$fecha_fin), 'desplazamientos.xlsx');
-=======
-    return Excel::download(new DetalleMedioRecorridoExport, 'desplazamientos.csv', ExcelFormat::CSV);
->>>>>>> 06949251db958eb5fd7a55e7eb3aeaf18672464f
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
