@@ -1,102 +1,109 @@
 <template>
-  <v-card>
-    <v-card-title>
-      <v-btn
-        text
-        class="mb-1 pb-1 pt-0 mt-0"
-        color="red darken-2"
-        @click="$router.go(-1)"
-      >
-        Regresar
-      </v-btn>
-      <br>
-    </v-card-title>
-    <v-card-subtitle>
-      <v-row>
-        <v-col>
-          <v-menu
-            ref="menu"
-            v-model="menu"
-            :close-on-content-click="false"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                label="Periodo"
-                ref="fechas"
-                v-model="dateRangeText"
-                placeholder="DD / MM / YYYY -- DD / MM / YYYY"
-                prepend-inner-icon="mdi-calendar-month-outline"
-                v-bind="attrs"
-                v-on="on"
-                readonly
-                outlined
-                @click:clear="dateRange = []"
-                clearable
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              locale="es"
-              v-model="dateRange"
-              range
-              @change="save"
-            ></v-date-picker>
-          </v-menu>
-        </v-col>
-        <v-col>
-          <v-btn color="red darken-2" @click="fetchCoordenadas()">Buscar</v-btn>
-        </v-col>
-      </v-row>
-    </v-card-subtitle>
-    <v-card-subtitle>
-      <v-btn
-        @click="downloadDesplazamientos()"
-        color="success"
-        size="small"
-        :disabled = "dateRangeText ? false : true "
-      >
-        Descargar
-      </v-btn>
-      <br><br>
-      Cantidad de registros: {{ features ? features : '0' }}
-    </v-card-subtitle>
-    <v-card-text>
-      <v-img height="72vh" width="100vw">
-        <l-map
-          v-if="!false"
-          :style="{ position: 'absolute', height: '100%', width: '100%' }"
-          :zoom="config.zoom"
-          :center="config.center"
-          ref="map"
-          @ready="ready"
+  <v-form ref="formFiltro">
+    <v-card>
+      <v-card-title>
+        <v-btn
+          text
+          class="mb-1 pb-1 pt-0 mt-0"
+          color="red darken-2"
+          @click="$router.go(-1)"
         >
-          <l-control-layers position="topright"></l-control-layers>
-          <l-tile-layer
-            v-for="tileProvider in tileProviders"
-            :key="tileProvider.name"
-            :name="tileProvider.name"
-            :visible="tileProvider.visible"
-            :url="tileProvider.url"
-            :attribution="tileProvider.attribution"
-            layer-type="base"
-          />
-          <l-geo-json
-            v-if="geojson"
-            :geojson="geojson"
-            :options="geojsonOptions"
+          Regresar
+        </v-btn>
+        <br>
+      </v-card-title>
+      <v-card-subtitle>
+        <v-row class="">
+          <v-col cols="12" sm="12" md="6" class="">
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  :rules="[fieldRule,dateRangeRules]"
+                  label="Periodo"
+                  ref="fechas"
+                  v-model="dateRangeText"
+                  placeholder="DD / MM / YYYY -- DD / MM / YYYY"
+                  prepend-inner-icon="mdi-calendar-month-outline"
+                  v-bind="attrs"
+                  v-on="on"
+                  readonly
+                  outlined
+                  @click:clear="dateRange = []"
+                  clearable
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                locale="es"
+                v-model="dateRange"
+                range
+                @change="save"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="12" sm="12" md="2" class="">
+            <v-btn x-large dark color="red darken-2" @click="buscar()">Buscar</v-btn>
+          </v-col>
+        </v-row>
+      </v-card-subtitle>
+      <v-card-subtitle>
+        <v-btn
+          @click="downloadDesplazamientos()"
+          outlined
+          color="success"
+          size="small"
+          :disabled = "dateRangeText ? false : true "
+        >
+          Descargar
+        </v-btn>
+        <br><br>
+        Cantidad de registros: {{ features ? features : '0' }}
+      </v-card-subtitle>
+      <v-card-text>
+        <v-img height="72vh" width="100vw">
+          <l-map
+            v-if="!false"
+            :style="{ position: 'absolute', height: '100%', width: '100%' }"
+            :zoom="config.zoom"
+            :center="config.center"
+            ref="map"
+            @ready="ready"
           >
-          </l-geo-json>
-        </l-map>
-      </v-img>
-    </v-card-text>
-  </v-card>
+            <l-control-layers position="topright"></l-control-layers>
+            <l-tile-layer
+              v-for="tileProvider in tileProviders"
+              :key="tileProvider.name"
+              :name="tileProvider.name"
+              :visible="tileProvider.visible"
+              :url="tileProvider.url"
+              :attribution="tileProvider.attribution"
+              layer-type="base"
+            />
+            <l-geo-json
+              v-if="geojson"
+              :geojson="geojson"
+              :options="geojsonOptions"
+            >
+            </l-geo-json>
+          </l-map>
+        </v-img>
+      </v-card-text>
+    </v-card>
+  </v-form>
 </template>
 <script>
 import {
   LMap, LTileLayer, LGeoJson, LControlLayers,
 } from 'vue2-leaflet';
+import {
+  string,
+} from '../../http/Validation';
 
 const color = {
   1: 'rgba(255, 99, 132)',
@@ -196,9 +203,14 @@ export default {
         return '';
       },
     },
+    dateRangeRules() {
+      return () => this.dateRange[1] > this.dateRange[0]
+        || 'Error en las fechas';
+    },
   },
 
   methods: {
+    fieldRule: string('Debe completar el campo.'),
     ready(mapa) {
       this.mapa = mapa;
       this.fetchCoordenadas();
@@ -213,7 +225,7 @@ export default {
         const {
           data: { coleccion },
         } = await this.axios.get('recorrido/geojson/filtro', {
-          params: { fecha_inicio: this.dateRange[0], fecha_fin: this.dateRange[1] },
+          params: { fecha_inicio: this.dateRange.at[0], fecha_fin: this.dateRange.at[1] },
         });
 
         this.geojson = coleccion;
@@ -223,6 +235,11 @@ export default {
         console.log(error);
       }
     },
+    async buscar() {
+      if (!this.$refs.formFiltro.validate()) return;
+      this.fetchCoordenadas();
+    },
+
     async downloadDesplazamientos() {
       // await this.axios.get('/download-desplazamientos/csv', { responseType: 'blob' });
       await this.axios({

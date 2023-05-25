@@ -96,7 +96,7 @@ function calcularDuracionMediosPorUuid($id, $costos)
 
     $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
         return collect($item)
-            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado'])
+            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado','costo'])
             ->toArray();
     })->toArray();
 
@@ -431,6 +431,11 @@ Route::post('/reporte-marcador/{codigo}/csv', function (Request $request, $codig
 });
 
 Route::post('/reporte-contador/{codigo}/csv', function (Request $request, $codigo) {
+    $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
+    return Excel::download(new ReporteContadorExport($levantamientoContador), 'reporte-contador.csv', ExcelFormat::CSV);
+});
+
+Route::post('/download-desplazamiento-individual/{codigo}/csv', function (Request $request, $codigo) {
     $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     return Excel::download(new ReporteContadorExport($levantamientoContador), 'reporte-contador.csv', ExcelFormat::CSV);
 });

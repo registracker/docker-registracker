@@ -118,17 +118,25 @@
               </v-list-item>
             </v-list>
           </v-card-text>
-          <v-card-actions class="mt-0 pt-0">
-            <v-row>
+          <v-card-actions>
+            <v-row class="mb-1 mr-1" align="center" justify="end">
               <v-col>
                 <span class="font-weight-bold mr-2"> Identificador: </span>
                 {{ desplazamiento.id }}
               </v-col>
-              <v-col>
+              <v-col class="d-flex justify-end">
+                <v-btn
+                class="mr-2"
+                outlined
+                @click="descargar(desplazamiento)"
+                color="green darken-2"
+              >
+                <v-icon>mdi-file-delimited-outline</v-icon>
+                Descargar
+              </v-btn>
                 <v-btn
                   dark
                   outlined
-                  block
                   @click="visualizar(desplazamiento)"
                   color="red darken-2"
                 >
@@ -143,6 +151,8 @@
   </div>
 </template>
 <script>
+import { saveAs } from 'file-saver';
+
 export default {
   name: 'DesplazamientoListado',
 
@@ -199,6 +209,22 @@ export default {
       this.loading = false;
     },
 
+    descargar(desplazamiento) {
+      const { codigo } = desplazamiento;
+      this.axios
+        .post(`reporte-contador/${codigo}/csv`, {
+          responseType: 'arraybuffer',
+        })
+        .then((response) => {
+          const csvData = response.data;
+          const blob = new Blob([csvData], { type: 'text/plain' });
+          const fileName = `reporte-levantamiento-${codigo}.csv`;
+          saveAs(blob, fileName);
+        })
+        .catch((error) => {
+          console.error('Error en la solicitud:', error);
+        });
+    },
     search() {
       this.loading = true;
       this.paginaActiva = 1;
