@@ -69,9 +69,9 @@ export default {
         },
 
         onEachFeature(feature, layer) {
-          const data = feature?.properties?.marcador?.nombre;
+          const data = [feature?.properties?.marcador?.nombre, feature?.properties?.comentario];
           if (data) {
-            layer.bindPopup(data);
+            layer.bindPopup(data.filter(Boolean).join(': '));
           }
         },
       },
