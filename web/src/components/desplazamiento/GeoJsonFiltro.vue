@@ -225,7 +225,7 @@ export default {
         const {
           data: { coleccion },
         } = await this.axios.get('recorrido/geojson/filtro', {
-          params: { fecha_inicio: this.dateRange.at[0], fecha_fin: this.dateRange.at[1] },
+          params: { fecha_inicio: this.dateRange[0], fecha_fin: this.dateRange[1] },
         });
 
         this.geojson = coleccion;
