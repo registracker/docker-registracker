@@ -39,7 +39,7 @@ class CoordenadaDesplazamiento extends Model
 
     public function medio()
     {
-        return $this->hasOne(MedioDesplazamiento::class, 'id', 'id_medio_desplazamiento');
+        return $this->belongsTo(MedioDesplazamiento::class, 'id_medio_desplazamiento', 'id');
     }
 
     const CREATED_AT = 'fecha_creado';

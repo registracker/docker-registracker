@@ -444,6 +444,14 @@ Route::post('/reporte-contador/{codigo}/csv', function (Request $request, $codig
     return Excel::download(new ReporteContadorExport($levantamientoContador), 'reporte-contador.csv', ExcelFormat::CSV);
 });
 
+Route::post('/reporte-desplazamiento/{codigo}/csv', function (Request $request, $codigo) {
+
+    // dd($codigo);
+    $desplazamiento = Desplazamiento::findOrFail($codigo);
+    // dd($desplazamiento);
+    return Excel::download(new DetalleMedioRecorridoExport($desplazamiento), 'reporte-desplazamiento.csv', ExcelFormat::CSV);
+});
+
 Route::post('/download-desplazamiento-individual/{codigo}/csv', function (Request $request, $codigo) {
     $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     return Excel::download(new ReporteContadorExport($levantamientoContador), 'reporte-contador.csv', ExcelFormat::CSV);
