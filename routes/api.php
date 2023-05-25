@@ -615,7 +615,7 @@ Route::group(['as' => 'api.'], function () {
         ->withSoftDeletes();
 
     Orion::resource('desplazamientos', DesplazamientoController::class)
-        ->only(['index', 'search', 'show', 'batchStore'])
+        ->only(['index', 'search', 'show'])
         ->withSoftDeletes();
 
     Orion::resource('reporte-incidente', ReporteIncidenteController::class)
@@ -623,7 +623,7 @@ Route::group(['as' => 'api.'], function () {
         ->withSoftDeletes();
 
     Orion::resource('detalle-medio-recorrido', DetalleMedioRecorridoController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
         ->withSoftDeletes();
 
     Orion::resource('tipos-vehiculos-rutas', TiposVehiculosRutasController::class)
@@ -647,7 +647,7 @@ Route::group(['as' => 'api.'], function () {
         ->withSoftDeletes();
 
     Orion::resource('reporte-marcadores', ReporteMarcadoresController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
         ->withSoftDeletes();
 
     Orion::resource('bitacora-tablas', BitacoraTablaController::class)
