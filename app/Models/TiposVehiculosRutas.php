@@ -20,6 +20,6 @@ class TiposVehiculosRutas extends Model
 
     public function rutas_transporte()
     {
-        return $this->hasMany(RutasTransporte::class, 'id_tipo_vehiculo_ruta')->withTrashed();
+        return $this->hasMany(RutasTransporte::class, 'id_tipo_vehiculo_ruta');
     }
 }

@@ -18,6 +18,6 @@ class Departamento extends Model
 
     public function municipios()
     {
-        return $this->hasMany(Municipio::class, 'id_departamento')->withTrashed();
+        return $this->hasMany(Municipio::class, 'id_departamento');
     }
 }

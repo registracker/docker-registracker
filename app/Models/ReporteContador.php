@@ -22,11 +22,11 @@ class ReporteContador extends Model
 
     public function levantamiento()
     {
-        return $this->belongsTo(LevantamientoContador::class, 'id_levantamiento_contador')->withTrashed();
+        return $this->belongsTo(LevantamientoContador::class, 'id_levantamiento_contador');
     }
 
     public function vehiculo()
     {
-        return $this->belongsTo(Vehiculo::class, 'id_vehiculo')->withTrashed();
+        return $this->belongsTo(Vehiculo::class, 'id_vehiculo');
     }
 }

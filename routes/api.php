@@ -129,8 +129,9 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
         $item['fecha_creado'] = $now;
         $item['fecha_actualizado'] = $now;
         $item['fecha_registro'] = Carbon::createFromTimestampMs($item['fecha_registro']);
-        $longitud = $item['longitud'];
-        $latitud = $item['latitud'];
+        $item['velocidad'] = number_format($item['velocidad'], 6);
+        $longitud = number_format($item['longitud'], 6);
+        $latitud = number_format($item['latitud'], 6);
         unset($item['longitud'], $item['latitud']);
         $item['posicion'] = DB::raw("ST_SetSRID(ST_Point($longitud, $latitud), 4326)");
         return $item;

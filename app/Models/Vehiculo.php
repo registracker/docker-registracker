@@ -20,7 +20,7 @@ class Vehiculo extends Model
 
     public function reporte()
     {
-        return $this->hasMany(ReporteContador::class, 'id_vehiculo')->withTrashed();
+        return $this->hasMany(ReporteContador::class, 'id_vehiculo');
     }
 
     const CREATED_AT = 'fecha_creado';

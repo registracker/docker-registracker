@@ -24,6 +24,6 @@ class Levantamiento extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(User::class, 'id_usuario')->withTrashed();
+        return $this->belongsTo(User::class, 'id_usuario');
     }
 }

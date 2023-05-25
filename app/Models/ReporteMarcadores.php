@@ -30,16 +30,16 @@ class ReporteMarcadores extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(User::class, 'id_usuario')->withTrashed();
+        return $this->belongsTo(User::class, 'id_usuario');
     }
 
     public function levantamiento()
     {
-        return $this->belongsTo(Levantamiento::class, 'id_levantamiento')->withTrashed();
+        return $this->belongsTo(Levantamiento::class, 'id_levantamiento');
     }
 
     public function marcador()
     {
-        return $this->belongsTo(Marcador::class, 'id_marcador')->withTrashed();
+        return $this->belongsTo(Marcador::class, 'id_marcador');
     }
 }

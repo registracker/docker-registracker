@@ -22,6 +22,6 @@ class Zona extends Model
 
     public function departamentos()
     {
-        return $this->hasMany(Departamento::class, 'id_zona')->withTrashed();
+        return $this->hasMany(Departamento::class, 'id_zona');
     }
 }
