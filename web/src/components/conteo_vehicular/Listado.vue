@@ -40,15 +40,25 @@
             {{ conteo.periodo_inicio }} - {{ conteo.periodo_fin }}
           </v-card-subtitle>
           <v-card-actions class="mt-0 pt-0">
-            <v-btn
-              dark
-              outlined
-              block
-              @click="visualizar(conteo)"
-              color="red darken-2"
-            >
-              Visualizar
-            </v-btn>
+            <v-row class="mb-1 mr-1" align="center" justify="end">
+              <v-btn
+                class="mr-2"
+                outlined
+                @click="descargar(conteo)"
+                color="green darken-2"
+              >
+                <v-icon>mdi-file-delimited-outline</v-icon>
+                Descargar
+              </v-btn>
+              <v-btn
+                dark
+                outlined
+                @click="visualizar(conteo)"
+                color="red darken-2"
+              >
+                Visualizar
+              </v-btn>
+            </v-row>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -56,6 +66,8 @@
   </div>
 </template>
 <script>
+import { saveAs } from 'file-saver';
+
 export default {
   name: 'ConteoVehicularListado',
 
@@ -78,7 +90,11 @@ export default {
       const filters = [];
 
       if (this.form.codigo) {
-        filters.push({ field: 'codigo', operator: 'like', value: `%${this.codigo}%` });
+        filters.push({
+          field: 'codigo',
+          operator: 'like',
+          value: `%${this.codigo}%`,
+        });
       }
 
       try {
@@ -111,6 +127,23 @@ export default {
       this.loading = true;
       this.paginaActiva = 1;
       this.fetchLevantamientos();
+    },
+
+    descargar(levantamiento) {
+      const { codigo } = levantamiento;
+      this.axios
+        .post(`reporte-contador/${codigo}/csv`, {
+          responseType: 'arraybuffer',
+        })
+        .then((response) => {
+          const csvData = response.data;
+          const blob = new Blob([csvData], { type: 'text/plain' });
+          const fileName = `reporte-levantamiento-${codigo}.csv`;
+          saveAs(blob, fileName);
+        })
+        .catch((error) => {
+          console.error('Error en la solicitud:', error);
+        });
     },
 
     visualizar(levantamiento) {

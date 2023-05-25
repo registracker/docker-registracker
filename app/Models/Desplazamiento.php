@@ -37,6 +37,6 @@ class Desplazamiento extends Model
 
     public function detalle_medios_desplazamiento()
     {
-        return $this->hasMany(DetalleMedioRecorrido::class, 'desplazamiento_id')->withTrashed();
+        return $this->hasMany(DetalleMedioRecorrido::class, 'desplazamiento_id');
     }
 }

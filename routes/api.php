@@ -3,6 +3,7 @@
 use App\Exports\ReporteContadorExport;
 use App\Exports\DetalleMedioRecorridoExport;
 use App\Exports\ReporteContadorAgrupadoExport;
+use App\Exports\ReporteMarcadoresExport;
 use App\Http\Controllers\Api\BitacoraTablaController;
 use App\Http\Controllers\Api\ClasesServiciosRutasController;
 use App\Http\Controllers\Api\ZonaController;
@@ -30,12 +31,12 @@ use App\Http\Controllers\Api\TiposServiciosRutasController;
 use App\Http\Controllers\Api\TiposVehiculosRutasController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\Api\ReporteMarcadoresController;
+use App\Mail\JustTesting;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
 use App\Models\Levantamiento;
 use App\Models\LevantamientoContador;
-use App\Models\ReporteMarcadores;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
 use App\Models\Vehiculo;
@@ -46,6 +47,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Orion\Facades\Orion;
@@ -64,6 +66,12 @@ use Maatwebsite\Excel\Facades\Excel;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
+Route::get('/email', function (Request $request) {
+    Mail::send(new JustTesting());
+    return 'OK';
+});
 
 function calcularDuracionMediosPorUuid($id, $costos)
 {
@@ -96,7 +104,11 @@ function calcularDuracionMediosPorUuid($id, $costos)
 
     $coleccion = collect($desplazamientosAgrupado)->map(function ($item) {
         return collect($item)
+<<<<<<< HEAD
             ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado','costo'])
+=======
+            ->only(['desplazamiento_id', 'id_medio_desplazamiento', 'duracion', 'fecha_creado', 'fecha_actualizado', 'costo'])
+>>>>>>> 06a4d91f188eceedf909af9afe9f58e1a77ca988
             ->toArray();
     })->toArray();
 
@@ -121,8 +133,9 @@ Route::middleware('auth:sanctum')->post('/desplazamiento/registrar', function (R
         $item['fecha_creado'] = $now;
         $item['fecha_actualizado'] = $now;
         $item['fecha_registro'] = Carbon::createFromTimestampMs($item['fecha_registro']);
-        $longitud = $item['longitud'];
-        $latitud = $item['latitud'];
+        $item['velocidad'] = number_format($item['velocidad'], 6);
+        $longitud = number_format($item['longitud'], 6);
+        $latitud = number_format($item['latitud'], 6);
         unset($item['longitud'], $item['latitud']);
         $item['posicion'] = DB::raw("ST_SetSRID(ST_Point($longitud, $latitud), 4326)");
         return $item;
@@ -426,8 +439,8 @@ Route::get('/estado-cuenta', function (Request $request) {
 });
 
 Route::post('/reporte-marcador/{codigo}/csv', function (Request $request, $codigo) {
-    $levantamientoContador = ReporteMarcadores::where('codigo', $codigo)->firstOrFail();
-    return Excel::download(new ReporteContadorExport($levantamientoContador), 'reporte-marcador.csv', ExcelFormat::CSV);
+    $levantamiento = Levantamiento::where('codigo', $codigo)->firstOrFail();
+    return Excel::download(new ReporteMarcadoresExport($levantamiento), 'reporte-marcador.csv', ExcelFormat::CSV);
 });
 
 Route::post('/reporte-contador/{codigo}/csv', function (Request $request, $codigo) {
@@ -448,12 +461,12 @@ Route::get('/download-desplazamientos/csv', function (Request $request) {
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
+    $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     if ($request->query('total_vehiculos', null) == 'yes') {
-        $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
         $totalElementos = Vehiculo::withCount(['reporte' => function (Builder $query) use ($levantamientoContador) {
             $query
                 ->where('id_levantamiento_contador', $levantamientoContador->id)
-                ->whereDate('registrado', '<=', $levantamientoContador->periodo_inicio)
+                ->whereDate('registrado', '>=', $levantamientoContador->periodo_inicio)
                 ->whereDate('registrado', '<=', $levantamientoContador->periodo_fin);
         }])
             ->orderBy('id')
@@ -474,7 +487,7 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
 
     $bloquesEnUnDia = $minutosEnUnDia / $agrupacionMinutos;
 
-    $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
+    // $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     $periodoInicio = $levantamientoContador->periodo_inicio;
     $fechasAgrupadas = collect([]);
     $datosTabla = array();
@@ -506,7 +519,7 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
                 ->where('id_levantamiento_contador', $levantamientoContador->id)
                 ->whereTime('registrado', '>=', $rangoFecha->first())
                 ->whereTime('registrado', '<=', $rangoFecha->last())
-                ->whereDate('registrado', '<=', $levantamientoContador->periodo_inicio)
+                ->whereDate('registrado', '>=', $levantamientoContador->periodo_inicio)
                 ->whereDate('registrado', '<=', $levantamientoContador->periodo_fin);
         }])
             ->orderBy('id')
@@ -534,7 +547,7 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
     $totalElementos = Vehiculo::withCount(['reporte' => function (Builder $query) use ($levantamientoContador) {
         $query
             ->where('id_levantamiento_contador', $levantamientoContador->id)
-            ->whereDate('registrado', '<=', $levantamientoContador->periodo_inicio)
+            ->whereDate('registrado', '>=', $levantamientoContador->periodo_inicio)
             ->whereDate('registrado', '<=', $levantamientoContador->periodo_fin);
     }])
         ->orderBy('id')
@@ -622,7 +635,7 @@ Route::group(['as' => 'api.'], function () {
         ->withSoftDeletes();
 
     Orion::resource('desplazamientos', DesplazamientoController::class)
-        ->only(['index', 'search', 'show', 'batchStore'])
+        ->only(['index', 'search', 'show'])
         ->withSoftDeletes();
 
     Orion::resource('reporte-incidente', ReporteIncidenteController::class)
@@ -630,7 +643,7 @@ Route::group(['as' => 'api.'], function () {
         ->withSoftDeletes();
 
     Orion::resource('detalle-medio-recorrido', DetalleMedioRecorridoController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
         ->withSoftDeletes();
 
     Orion::resource('tipos-vehiculos-rutas', TiposVehiculosRutasController::class)
@@ -654,7 +667,7 @@ Route::group(['as' => 'api.'], function () {
         ->withSoftDeletes();
 
     Orion::resource('reporte-marcadores', ReporteMarcadoresController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
         ->withSoftDeletes();
 
     Orion::resource('bitacora-tablas', BitacoraTablaController::class)

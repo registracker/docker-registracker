@@ -132,7 +132,7 @@ export default {
     descargar(levantamiento) {
       const { codigo } = levantamiento;
       this.axios
-        .post(`reporte-contador/${codigo}/csv`, {
+        .post(`reporte-marcador/${codigo}/csv`, {
           responseType: 'arraybuffer',
         })
         .then((response) => {

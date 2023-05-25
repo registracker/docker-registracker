@@ -20,6 +20,6 @@ class SolicitudCuenta extends Model
 
     public function estado()
     {
-        return $this->hasOne(EstadoSolicitud::class, 'id' ,'id_estado_solicitud')->withTrashed();
+        return $this->hasOne(EstadoSolicitud::class, 'id' ,'id_estado_solicitud');
     }
 }

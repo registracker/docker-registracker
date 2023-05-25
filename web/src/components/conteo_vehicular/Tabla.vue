@@ -30,6 +30,14 @@
         >
         </v-slider>
         <v-data-table :headers="headers" :items="reporte" hide-default-header>
+          <template v-slot:top>
+            <v-row class="my-3 mr-1" align="center" justify="end">
+              <v-btn outlined @click="descargar" color="green darken-2">
+                <v-icon>mdi-file-delimited-outline</v-icon>
+                Descargar
+              </v-btn>
+            </v-row>
+          </template>
           <template v-slot:header="{ props: { headers } }">
             <thead class="v-data-table-header">
               <tr>
@@ -78,6 +86,7 @@
   </div>
 </template>
 <script>
+import { saveAs } from 'file-saver';
 import { Bar } from 'vue-chartjs/legacy';
 
 import {
@@ -101,6 +110,7 @@ ChartJS.register(
   LinearScale,
 );
 
+const agrupacion = [15, 30, 60];
 export default {
   name: 'ConteoVehicularTabla',
   components: {
@@ -176,9 +186,29 @@ export default {
       }
     },
 
+    descargar() {
+      const { codigo } = this.$route.params;
+      this.axios
+        .get(`reporte-contador/${codigo}/agrupado`, {
+          responseType: 'arraybuffer',
+          params: {
+            csv: 'yes',
+            agrupacion_minutos: agrupacion.at(this.tick) || 15,
+          },
+        })
+        .then((response) => {
+          const csvData = response.data;
+          const blob = new Blob([csvData], { type: 'text/plain' });
+          const fileName = `reporte_contador_agrupado_${codigo}.csv`;
+          saveAs(blob, fileName);
+        })
+        .catch((error) => {
+          console.error('Error en la solicitud:', error);
+        });
+    },
+
     async fetchAgrupacion() {
       try {
-        const agrupacion = [15, 30, 60];
         const { codigo } = this.$route.params;
         const response = await this.axios.get(
           `reporte-contador/${codigo}/agrupado`,
@@ -199,6 +229,7 @@ export default {
       );
     },
   },
+
   watch: {
     tick() {
       this.fetchAgrupacion();

@@ -58,62 +58,62 @@ class VehiculoSeeder extends Seeder
         ]);
 
         Vehiculo::create([
-            'nombre' => 'C2',
-            'nomenclatura' => null,
+            'nombre' => 'Camión rígido C2',
+            'nomenclatura' => 'C2',
             'descripcion' => null
         ]);
 
         Vehiculo::create([
-            'nombre' => 'C3',
-            'nomenclatura' => null,
+            'nombre' => 'Camión rígido C3',
+            'nomenclatura' => 'C3',
             'descripcion' => null
         ]);
 
         Vehiculo::create([
-            'nombre' => 'C2-S1',
-            'nomenclatura' => null,
+            'nombre' => 'Camión rígido C2-S1',
+            'nomenclatura' => 'S1',
             'descripcion' => null
         ]);
 
         Vehiculo::create([
-            'nombre' => 'C4',
-            'nomenclatura' => null,
+            'nombre' => 'Camión rígido C4',
+            'nomenclatura' => 'C4',
             'descripcion' => null
         ]);
 
         Vehiculo::create([
-            'nombre' => 'T2-S1',
-            'nomenclatura' => null,
+            'nombre' => 'Tractocamión T2-S1',
+            'nomenclatura' => 'T2-S1',
             'descripcion' => null
         ]);
 
         Vehiculo::create([
-            'nombre' => 'T2-S2',
-            'nomenclatura' => null,
+            'nombre' => 'Tractocamión T2-S2',
+            'nomenclatura' => 'T2-S2',
             'descripcion' => null
         ]);
 
         Vehiculo::create([
-            'nombre' => 'T2-S3',
-            'nomenclatura' => null,
+            'nombre' => 'Tractocamión T2-S3',
+            'nomenclatura' => 'T2-S3',
             'descripcion' => null
         ]);
 
         Vehiculo::create([
-            'nombre' => 'T3-S1',
-            'nomenclatura' => null,
+            'nombre' => 'Tractocamión T3-S1',
+            'nomenclatura' => 'T3-S1',
             'descripcion' => null
         ]);
 
         Vehiculo::create([
-            'nombre' => 'T3-S2',
-            'nomenclatura' => null,
+            'nombre' => 'Tractocamión T3-S2',
+            'nomenclatura' => 'T3-S2',
             'descripcion' => null
         ]);
 
         Vehiculo::create([
-            'nombre' => 'T3-S3',
-            'nomenclatura' => null,
+            'nombre' => 'Tractocamión T3-S3',
+            'nomenclatura' => 'T3-S3',
             'descripcion' => null
         ]);
     }

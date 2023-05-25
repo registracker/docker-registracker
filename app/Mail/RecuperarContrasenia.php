@@ -21,6 +21,7 @@ class RecuperarContrasenia extends Mailable
     public function __construct(private $email, private $name)
     {
         //
+        // return $this;
     }
 
     /**
