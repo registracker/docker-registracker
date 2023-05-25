@@ -2,6 +2,7 @@
 
 use App\Exports\ReporteContadorExport;
 use App\Exports\DetalleMedioRecorridoExport;
+use App\Exports\ReporteContadorAgrupadoExport;
 use App\Http\Controllers\Api\BitacoraTablaController;
 use App\Http\Controllers\Api\ClasesServiciosRutasController;
 use App\Http\Controllers\Api\ZonaController;
@@ -34,6 +35,7 @@ use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
 use App\Models\Levantamiento;
 use App\Models\LevantamientoContador;
+use App\Models\ReporteMarcadores;
 use App\Models\SolicitudCuenta;
 use App\Models\User;
 use App\Models\Vehiculo;
@@ -49,6 +51,7 @@ use Illuminate\Validation\ValidationException;
 use Orion\Facades\Orion;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Excel as ExcelFormat;
 use Maatwebsite\Excel\Facades\Excel;
 
 /*
@@ -422,27 +425,28 @@ Route::get('/estado-cuenta', function (Request $request) {
     ]);
 });
 
-Route::post('/reporte-contador/{codigo}/csv', function (Request $request,$codigo) {
+Route::post('/reporte-marcador/{codigo}/csv', function (Request $request, $codigo) {
+    $levantamientoContador = ReporteMarcadores::where('codigo', $codigo)->firstOrFail();
+    return Excel::download(new ReporteContadorExport($levantamientoContador), 'reporte-marcador.csv', ExcelFormat::CSV);
+});
+
+Route::post('/reporte-contador/{codigo}/csv', function (Request $request, $codigo) {
     $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
-    return Excel::download(new ReporteContadorExport, 'reporte-contador.xlsx');
+    return Excel::download(new ReporteContadorExport($levantamientoContador), 'reporte-contador.csv', ExcelFormat::CSV);
 });
 
 Route::get('/download-desplazamientos/csv', function (Request $request) {
     //$levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
+<<<<<<< HEAD
     $fecha_inicio = $request->fecha_inicio;
     $fecha_fin = $request->fecha_fin;
     return Excel::download(new DetalleMedioRecorridoExport($fecha_inicio,$fecha_fin), 'desplazamientos.xlsx');
+=======
+    return Excel::download(new DetalleMedioRecorridoExport, 'desplazamientos.csv', ExcelFormat::CSV);
+>>>>>>> 06949251db958eb5fd7a55e7eb3aeaf18672464f
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
-
-    // SELECT DATE(fecha_hora) AS fecha, COUNT(*) AS cantidad_registros
-    // FROM coordenadas_desplazamiento
-    // WHERE TIME(fecha_hora) >= '06:00:00' 
-    //   AND TIME(fecha_hora) <= '06:15:00' 
-    //   AND DATE(fecha_hora) >= '2023-01-01' 
-    //   AND DATE(fecha_hora) <= '2023-02-20'
-    // GROUP BY DATE(fecha_hora);
     if ($request->query('total_vehiculos', null) == 'yes') {
         $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
         $totalElementos = Vehiculo::withCount(['reporte' => function (Builder $query) use ($levantamientoContador) {
@@ -540,6 +544,10 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
     array_push($totalElementos, collect($totalElementos)->sum());
     array_unshift($totalElementos, 'Total registros');
     array_push($datosTabla, $totalElementos);
+
+    if ($request->query('csv', null) == 'yes') {
+        return Excel::download(new ReporteContadorAgrupadoExport($datosTabla), 'reporte-contador.csv', ExcelFormat::CSV);
+    }
 
     return response()->json([
         'data' =>  $datosTabla,

@@ -17,6 +17,7 @@ class ReporteMarcadores extends Model
         'posicion',
         'altitud',
         'comentario',
+        'fecha_reporte',
         // 'latitud',
         // 'longitud',
     ];

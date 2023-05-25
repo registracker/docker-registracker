@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\ReporteMarcadores;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,8 @@ class ReporteMarcadoresSeeder extends Seeder
             'id_levantamiento' => 1,
             'id_marcador' => 1,
             'posicion' => DB::raw("ST_SetSRID(ST_Point(-89.1998, 13.716789), 4326)"),
-            'comentario' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+            'comentario' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            'fecha_reporte' => Carbon::now(),
         ]);
 
         ReporteMarcadores::create([
@@ -29,6 +31,7 @@ class ReporteMarcadoresSeeder extends Seeder
             'id_levantamiento' => 1,
             'id_marcador' => 2,
             'posicion' => DB::raw("ST_SetSRID(ST_Point( -89.206324, 13.714913), 4326)"),
+            'fecha_reporte' => Carbon::now(),
         ]);
 
         ReporteMarcadores::create([
@@ -36,6 +39,7 @@ class ReporteMarcadoresSeeder extends Seeder
             'id_levantamiento' => 1,
             'id_marcador' => 3,
             'posicion' => DB::raw("ST_SetSRID(ST_Point(-89.215765, 13.704365), 4326)"),
+            'fecha_reporte' => Carbon::now(),
         ]);
 
         ReporteMarcadores::create([
@@ -43,6 +47,7 @@ class ReporteMarcadoresSeeder extends Seeder
             'id_levantamiento' => 1,
             'id_marcador' => 4,
             'posicion' => DB::raw("ST_SetSRID(ST_Point(-89.149718, 13.698486), 4326)"),
+            'fecha_reporte' => Carbon::now(),
             'comentario' => 'Ut ornare placerat sodales.'
         ]);
     }

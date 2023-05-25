@@ -24,4 +24,9 @@ class ReporteContador extends Model
     {
         return $this->belongsTo(LevantamientoContador::class, 'id_levantamiento_contador');
     }
+
+    public function vehiculo()
+    {
+        return $this->belongsTo(Vehiculo::class, 'id_vehiculo');
+    }
 }
