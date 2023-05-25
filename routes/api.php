@@ -443,12 +443,12 @@ Route::get('/download-desplazamientos/csv', function (Request $request) {
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
+    $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     if ($request->query('total_vehiculos', null) == 'yes') {
-        $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
         $totalElementos = Vehiculo::withCount(['reporte' => function (Builder $query) use ($levantamientoContador) {
             $query
                 ->where('id_levantamiento_contador', $levantamientoContador->id)
-                ->whereDate('registrado', '<=', $levantamientoContador->periodo_inicio)
+                ->whereDate('registrado', '>=', $levantamientoContador->periodo_inicio)
                 ->whereDate('registrado', '<=', $levantamientoContador->periodo_fin);
         }])
             ->orderBy('id')
@@ -469,7 +469,7 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
 
     $bloquesEnUnDia = $minutosEnUnDia / $agrupacionMinutos;
 
-    $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
+    // $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     $periodoInicio = $levantamientoContador->periodo_inicio;
     $fechasAgrupadas = collect([]);
     $datosTabla = array();
@@ -501,7 +501,7 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
                 ->where('id_levantamiento_contador', $levantamientoContador->id)
                 ->whereTime('registrado', '>=', $rangoFecha->first())
                 ->whereTime('registrado', '<=', $rangoFecha->last())
-                ->whereDate('registrado', '<=', $levantamientoContador->periodo_inicio)
+                ->whereDate('registrado', '>=', $levantamientoContador->periodo_inicio)
                 ->whereDate('registrado', '<=', $levantamientoContador->periodo_fin);
         }])
             ->orderBy('id')
@@ -529,7 +529,7 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
     $totalElementos = Vehiculo::withCount(['reporte' => function (Builder $query) use ($levantamientoContador) {
         $query
             ->where('id_levantamiento_contador', $levantamientoContador->id)
-            ->whereDate('registrado', '<=', $levantamientoContador->periodo_inicio)
+            ->whereDate('registrado', '>=', $levantamientoContador->periodo_inicio)
             ->whereDate('registrado', '<=', $levantamientoContador->periodo_fin);
     }])
         ->orderBy('id')
