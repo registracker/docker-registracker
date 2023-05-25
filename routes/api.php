@@ -31,6 +31,7 @@ use App\Http\Controllers\Api\TiposServiciosRutasController;
 use App\Http\Controllers\Api\TiposVehiculosRutasController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\Api\ReporteMarcadoresController;
+use App\Mail\JustTesting;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
@@ -46,6 +47,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Orion\Facades\Orion;
@@ -64,6 +66,12 @@ use Maatwebsite\Excel\Facades\Excel;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
+Route::get('/email', function (Request $request) {
+    Mail::send(new JustTesting());
+    return 'OK';
+});
 
 function calcularDuracionMediosPorUuid($id, $costos)
 {

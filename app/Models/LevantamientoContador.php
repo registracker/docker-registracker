@@ -29,11 +29,11 @@ class LevantamientoContador extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(User::class, 'id_usuario');
+        return $this->belongsTo(User::class, 'id_usuario')->withTrashed();
     }
 
     public function levantamiento()
     {
-        return $this->hasMany(ReporteContador::class, 'id_levantamiento_contador');
+        return $this->hasMany(ReporteContador::class, 'id_levantamiento_contador')->withTrashed();
     }
 }
