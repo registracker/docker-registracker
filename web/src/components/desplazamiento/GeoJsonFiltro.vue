@@ -9,17 +9,58 @@
       >
         Regresar
       </v-btn>
-      Agregar filtro de fechas
+      <br>
     </v-card-title>
     <v-card-subtitle>
-      Cantidad de registros: {{ features ? features : '0' }}
+      <v-row>
+        <v-col>
+          <v-menu
+            ref="menu"
+            v-model="menu"
+            :close-on-content-click="false"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                label="Periodo"
+                ref="fechas"
+                v-model="dateRangeText"
+                placeholder="DD / MM / YYYY -- DD / MM / YYYY"
+                prepend-inner-icon="mdi-calendar-month-outline"
+                v-bind="attrs"
+                v-on="on"
+                readonly
+                outlined
+                @click:clear="dateRange = []"
+                clearable
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              locale="es"
+              v-model="dateRange"
+              range
+              @change="save"
+            ></v-date-picker>
+          </v-menu>
+        </v-col>
+        <v-col>
+          <v-btn color="red darken-2" @click="fetchCoordenadas()">Buscar</v-btn>
+        </v-col>
+      </v-row>
+    </v-card-subtitle>
+    <v-card-subtitle>
       <v-btn
         @click="downloadDesplazamientos()"
         color="success"
         size="small"
+        :disabled = "dateRangeText ? false : true "
       >
         Descargar
       </v-btn>
+      <br><br>
+      Cantidad de registros: {{ features ? features : '0' }}
     </v-card-subtitle>
     <v-card-text>
       <v-img height="72vh" width="100vw">
@@ -81,6 +122,8 @@ export default {
   data() {
     return {
       features: null,
+      dateRange: [],
+      menu: false,
       geojsonOptions: {
         style(feature) {
           return {
@@ -136,10 +179,33 @@ export default {
     };
   },
 
+  computed: {
+    dateRangeText: {
+      get() {
+        if (!this.dateRange) return null;
+
+        if (this.dateRange.length === 2) {
+          const fechaInicio = this.formatDate(this.dateRange[0]);
+          const fechaFin = this.formatDate(this.dateRange[1]);
+
+          return `${fechaInicio} ~ ${fechaFin}`;
+        }
+        return '';
+      },
+      set() {
+        return '';
+      },
+    },
+  },
+
   methods: {
     ready(mapa) {
       this.mapa = mapa;
       this.fetchCoordenadas();
+    },
+
+    save(dateRange) {
+      this.$refs.menu.save(dateRange);
     },
 
     async fetchCoordenadas() {
@@ -147,7 +213,7 @@ export default {
         const {
           data: { coleccion },
         } = await this.axios.get('recorrido/geojson/filtro', {
-          params: { fecha_inicio: undefined, fecha_fin: undefined },
+          params: { fecha_inicio: this.dateRange[0], fecha_fin: this.dateRange[1] },
         });
 
         this.geojson = coleccion;
@@ -161,6 +227,7 @@ export default {
       // await this.axios.get('/download-desplazamientos/csv', { responseType: 'blob' });
       await this.axios({
         url: '/download-desplazamientos/csv',
+        params: { fecha_inicio: this.dateRange[0], fecha_fin: this.dateRange[1] },
         responseType: 'arraybuffer',
         responseEncoding: 'binary',
         headers: {
@@ -189,6 +256,20 @@ export default {
           console.log(error);
         });
     },
+
+    formatDate(date) {
+      if (!date) return null;
+
+      const [year, month, day] = date.split('-');
+      return `${day}/${month}/${year}`;
+    },
+    parseDate(date) {
+      if (!date) return null;
+
+      const [month, day, year] = date.split('/');
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    },
+
   },
 };
 </script>
