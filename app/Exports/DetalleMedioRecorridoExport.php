@@ -2,20 +2,22 @@
 
 namespace App\Exports;
 
+use App\Models\CoordenadaDesplazamiento;
+use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use Illuminate\Support\Facades\DB;
 
-class DetalleMedioRecorridoExport implements FromCollection, WithHeadings
+class DetalleMedioRecorridoExport implements FromCollection, WithHeadings, WithMapping
 {
-    protected $fechaInicio;
-    protected $fechaFin;
+    private $desplazamiento;
 
-    public function __construct(string $fechaInicio, string $fechaFin)
+    public function __construct(Desplazamiento $desplazamiento)
     {
-        $this->fechaInicio = $fechaInicio;
-        $this->fechaFin = $fechaFin;
+        $this->desplazamiento = $desplazamiento;
+        return $this;
     }
 
     /**
@@ -29,23 +31,51 @@ class DetalleMedioRecorridoExport implements FromCollection, WithHeadings
         //->whereBetween('DATE(detalle_medios_recorrido.fecha_creado)',[$this->fechaInicio , $this->fechaFin])
         //->get();
 
-        return DB::table('detalle_medios_recorrido  as mr')
-            ->join('medios_desplazamiento', 'mr.id_medio_desplazamiento', '=', 'medios_desplazamiento.id')
-            ->select('mr.id', 'mr.desplazamiento_id', 'medios_desplazamiento.nombre','mr.duracion','mr.fecha_creado')
-            ->whereDate('mr.fecha_creado','>=',$this->fechaInicio)
-            ->whereDate('mr.fecha_creado','<=',$this->fechaFin)
+        // return DB::table('detalle_medios_recorrido  as mr')
+        //     ->join('medios_desplazamiento', 'mr.id_medio_desplazamiento', '=', 'medios_desplazamiento.id')
+        //     ->select('mr.id', 'mr.desplazamiento_id', 'medios_desplazamiento.nombre','mr.duracion','mr.fecha_creado')
+        //     ->whereDate('mr.fecha_creado','>=',$this->fechaInicio)
+        //     ->whereDate('mr.fecha_creado','<=',$this->fechaFin)
+        //     ->get();
+        // }
+
+
+        //->whereBetween('DATE(mr.fecha_creado)', [$this->fechaInicio, $this->fechaFin]
+        // dd( $this->desplazamiento);
+        // dd($this->desplazamiento->id);
+        return CoordenadaDesplazamiento::with('medio')
+            ->select(
+                'id',
+                DB::raw('ST_AsText(posicion) AS latlng'),
+                'altitud',
+                'velocidad',
+                'fecha_registro',
+                '*'
+            )
+            ->where('desplazamiento_id', $this->desplazamiento->id)
+            ->orderBy('fecha_registro', 'asc')
             ->get();
-        }
-        //->whereBetween('DATE(mr.fecha_creado)', [$this->fechaInicio, $this->fechaFin])
+    }
 
     public function headings(): array
     {
         return [
-            '#',
-            'Uuid',
             'Medio desplazamiento',
-            'Duración',
-            'Fecha creado',
+            'LatLng',
+            'Altitud',
+            'Velocidad',
+            'Fecha registro',
+        ];
+    }
+
+    public function map($reporte): array
+    {
+        return [
+            $reporte->medio->nombre,
+            $reporte->latlng,
+            $reporte->altitud,
+            $reporte->velocidad,
+            $reporte->fecha_registro,
         ];
     }
 }
