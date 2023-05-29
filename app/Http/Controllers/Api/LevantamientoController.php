@@ -45,6 +45,14 @@ class LevantamientoController extends Controller
         if (!$this->resolveUser()->hasRole(Constant::ROL_ADMINISTRADOR)) {
             $query->where('id_usuario', $this->resolveUser()->id);
         }
+
+        if ($request->has('order_by')) {
+            $orderBy = explode(',', $request->query('order_by'));
+            $column = $orderBy[0];
+            $direction = isset($orderBy[1]) ? $orderBy[1] : 'asc';
+            $query->orderBy($column, $direction);
+        }
+
         return $query;
     }
 

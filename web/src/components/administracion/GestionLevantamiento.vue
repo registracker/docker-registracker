@@ -61,6 +61,7 @@
                           locale="es-SV"
                           :min-date="new Date()"
                           v-model="editedItem.fecha_vencimiento"
+                          ref="calendar"
                         />
                         <!-- <vc-date-picker>
                           <template v-slot="{ inputValue, inputEvents }">
@@ -292,7 +293,7 @@ export default {
       }
     },
 
-    setItemValues(item) {
+    async setItemValues(item) {
       this.editedIndex = this.items.indexOf(item);
       const { id, fecha_vencimiento: fechaVencimiento, codigo } = item;
       let fecha = fechaVencimiento;
@@ -305,6 +306,9 @@ export default {
         codigo,
         fecha_vencimiento: fecha,
       };
+
+      const { calendar } = this.$refs;
+      await calendar.move(fecha);
 
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
