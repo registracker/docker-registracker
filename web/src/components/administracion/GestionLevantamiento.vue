@@ -307,9 +307,6 @@ export default {
         fecha_vencimiento: fecha,
       };
 
-      const { calendar } = this.$refs;
-      await calendar.move(fecha);
-
       if (this.$refs.form) {
         this.$refs.form.resetValidation();
       }
@@ -323,6 +320,14 @@ export default {
     editItem(item) {
       this.setItemValues(item);
       this.dialog = true;
+      this.$nextTick(async () => {
+        const { calendar } = this.$refs;
+        if (this.editedItem.fecha_vencimiento) {
+          await calendar.move(this.editedItem.fecha_vencimiento);
+        } else {
+          await calendar.move(new Date());
+        }
+      });
     },
 
     async handleSave() {
