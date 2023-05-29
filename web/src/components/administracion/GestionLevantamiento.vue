@@ -59,6 +59,7 @@
                           is-expanded
                           color="red"
                           locale="es-SV"
+                          :min-date="new Date()"
                           v-model="editedItem.fecha_vencimiento"
                         />
                         <!-- <vc-date-picker>
@@ -267,10 +268,11 @@ export default {
             limit: this.limit,
             page: this.page,
             include: ['usuario'].join(','),
+            order_by: 'id,desc',
           },
         });
         this.total = response.data.meta.total;
-        this.items = response.data.data.sort((a, b) => a.id - b.id);
+        this.items = response.data.data;
       } catch (error) {
         console.log(error);
         this.total = 0;
