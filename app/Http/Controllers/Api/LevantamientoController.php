@@ -31,7 +31,7 @@ class LevantamientoController extends Controller
 
     public function sortableBy(): array
     {
-        return ['codigo', 'fecha_vencimiento'];
+        return ['codigo', 'fecha_vencimiento', 'id'];
     }
 
     public function includes(): array

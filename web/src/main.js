@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueAxios from 'vue-axios';
 import Toast from 'vue-toastification';
 import VueProgressBar from 'vue-progressbar';
+import VCalendar from 'v-calendar';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -22,6 +23,9 @@ Vue.use(VueProgressBar, {
   height: '2px',
   thickness: '4px',
   position: 'relative',
+});
+Vue.use(VCalendar, {
+  componentPrefix: 'vc',
 });
 
 new Vue({

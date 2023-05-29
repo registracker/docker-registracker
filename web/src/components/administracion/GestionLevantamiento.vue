@@ -54,7 +54,26 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12" sm="12" class="my-0 py-0">
-                        <v-menu
+                        <!-- <vc-date-picker :value="null" color="red" is-range /> -->
+                        <vc-date-picker
+                          is-expanded
+                          color="red"
+                          locale="es-SV"
+                          v-model="editedItem.fecha_vencimiento"
+                        />
+                        <!-- <vc-date-picker>
+                          <template v-slot="{ inputValue, inputEvents }">
+                            {{ inputEvents }}
+                            <v-text-field
+                              outlined
+                              required
+                              label="Fecha vencimiento"
+                              v-on="inputEvents"
+                            >
+                            </v-text-field>
+                          </template>
+                        </vc-date-picker> -->
+                        <!-- <v-menu
                           v-model="menuDatePicker"
                           :close-on-content-click="false"
                           :nudge-right="40"
@@ -79,7 +98,7 @@
                             @input="menuDatePicker = false"
                             locale="es-SV"
                           ></v-date-picker>
-                        </v-menu>
+                        </v-menu> -->
                       </v-col>
                     </v-row>
                   </v-container>
@@ -251,7 +270,7 @@ export default {
           },
         });
         this.total = response.data.meta.total;
-        this.items = response.data.data;
+        this.items = response.data.data.sort((a, b) => a.id - b.id);
       } catch (error) {
         console.log(error);
         this.total = 0;
@@ -274,11 +293,15 @@ export default {
     setItemValues(item) {
       this.editedIndex = this.items.indexOf(item);
       const { id, fecha_vencimiento: fechaVencimiento, codigo } = item;
+      let fecha = fechaVencimiento;
+      if (typeof fechaVencimiento === 'string') {
+        fecha = fechaVencimiento.split('-').reverse().join('/');
+      }
 
       this.editedItem = {
         id,
         codigo,
-        fecha_vencimiento: fechaVencimiento,
+        fecha_vencimiento: fecha,
       };
 
       if (this.$refs.form) {
@@ -307,7 +330,6 @@ export default {
           ...this.editedItem,
           id: undefined,
         });
-        console.log(response);
         this.$toast.success(`Código creado: ${response.data.data.codigo}`);
       } catch (error) {
         console.log(error);
