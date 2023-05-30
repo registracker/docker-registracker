@@ -79,9 +79,9 @@ Route::post('/forgot-password', function (Request $request) {
     );
     /**
      * TODO
-     * LLAMAR envio de correo
+     * LLAMAR envio de correo enviado el token
      */
-    return response()->json(['remember_token' =>  $token], Response::HTTP_OK);
+    return response(null);
 });
 
 Route::post('/reset-password', function (Request $request) {
