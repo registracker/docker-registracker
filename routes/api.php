@@ -49,6 +49,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Orion\Facades\Orion;
@@ -68,6 +69,45 @@ use Maatwebsite\Excel\Facades\Excel;
 |
 */
 
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate(['email' => ['required', 'email', 'exists:users,email']]);
+
+    $user = User::where('email', $request->get("email"))->firstOrFail();
+
+    $token = Password::createToken(
+        $user
+    );
+    // developer@gmail.com
+
+    return response()->json(['remember_token' =>  $token], Response::HTTP_OK); 
+});
+
+Route::post('/reset-password', function (Request $request) {
+    $request->validate([
+        'token' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:8|confirmed',
+    ]);
+
+    $user = User::where('email', $request->get("email"))->firstOrFail();
+    $tokenExists = Password::tokenExists($user, $request->get("token"));
+
+    if (!$tokenExists){
+        abort(Response::HTTP_BAD_REQUEST);
+    }
+
+    Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function (User $user, string $password) {
+            $user->forceFill([
+                'password' => Hash::make($password)
+            ])->setRememberToken(Str::random(60));
+            $user->save();
+        }
+    );
+
+    return response(null); 
+});
 
 Route::get('/email', function (Request $request) {
     Mail::send(new JustTesting());
@@ -459,7 +499,7 @@ Route::get('/download-desplazamientos/csv', function (Request $request) {
     //$levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     $fecha_inicio = $request->fecha_inicio;
     $fecha_fin = $request->fecha_fin;
-    return Excel::download(new DetalleMedioRecorridoMultipleExport($fecha_inicio,$fecha_fin), 'desplazamientos.xlsx');
+    return Excel::download(new DetalleMedioRecorridoMultipleExport($fecha_inicio, $fecha_fin), 'desplazamientos.xlsx');
 });
 
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
