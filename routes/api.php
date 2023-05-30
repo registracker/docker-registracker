@@ -77,9 +77,11 @@ Route::post('/forgot-password', function (Request $request) {
     $token = Password::createToken(
         $user
     );
-    // developer@gmail.com
-
-    return response()->json(['remember_token' =>  $token], Response::HTTP_OK); 
+    /**
+     * TODO
+     * LLAMAR envio de correo
+     */
+    return response()->json(['remember_token' =>  $token], Response::HTTP_OK);
 });
 
 Route::post('/reset-password', function (Request $request) {
@@ -92,7 +94,7 @@ Route::post('/reset-password', function (Request $request) {
     $user = User::where('email', $request->get("email"))->firstOrFail();
     $tokenExists = Password::tokenExists($user, $request->get("token"));
 
-    if (!$tokenExists){
+    if (!$tokenExists) {
         abort(Response::HTTP_BAD_REQUEST);
     }
 
@@ -106,7 +108,7 @@ Route::post('/reset-password', function (Request $request) {
         }
     );
 
-    return response(null); 
+    return response(null);
 });
 
 Route::get('/email', function (Request $request) {
