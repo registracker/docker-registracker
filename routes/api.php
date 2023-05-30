@@ -72,7 +72,7 @@ use Maatwebsite\Excel\Facades\Excel;
 Route::post('/forgot-password', function (Request $request) {
     $request->validate(['email' => ['required', 'email', 'exists:users,email']]);
 
-    $user = User::where('email', $request->get("email"))->firstOrFail();
+    $user = User::where('email', $request->input("email"))->firstOrFail();
 
     $token = Password::createToken(
         $user
@@ -91,8 +91,8 @@ Route::post('/reset-password', function (Request $request) {
         'password' => 'required|min:8|confirmed',
     ]);
 
-    $user = User::where('email', $request->get("email"))->firstOrFail();
-    $tokenExists = Password::tokenExists($user, $request->get("token"));
+    $user = User::where('email', $request->input("email"))->firstOrFail();
+    $tokenExists = Password::tokenExists($user, $request->input("token"));
 
     if (!$tokenExists) {
         abort(Response::HTTP_BAD_REQUEST);
