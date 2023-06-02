@@ -85,11 +85,9 @@
         <v-card>
           <v-card-title class="mb-0 pb-0">
             Fecha registro:
-            {{ desplazamiento.fecha_creado.split(".").at(0).replace("T", " ") }}
+            {{ desplazamiento.fecha_creado.split('.').at(0).replace('T', ' ') }}
             <v-spacer></v-spacer>
-            <div class="body-1">
-              Costo
-            </div>
+            <div class="body-1">Costo</div>
           </v-card-title>
           <v-card-text class="my-0 py-0">
             <v-list>
@@ -126,14 +124,14 @@
               </v-col>
               <v-col class="d-flex justify-end">
                 <v-btn
-                class="mr-2"
-                outlined
-                @click="descargar(desplazamiento)"
-                color="green darken-2"
-              >
-                <v-icon>mdi-file-delimited-outline</v-icon>
-                Descargar
-              </v-btn>
+                  class="mr-2"
+                  outlined
+                  @click="descargar(desplazamiento)"
+                  color="green darken-2"
+                >
+                  <v-icon>mdi-file-delimited-outline</v-icon>
+                  Descargar
+                </v-btn>
                 <v-btn
                   dark
                   outlined
@@ -174,8 +172,8 @@ export default {
     async obtenerDesplazamientos() {
       const search = typeof this.searchUuid === 'string' && !!this.searchUuid
         ? {
-          value: this.searchUuid,
-          case_sensitive: false,
+          value: this.searchUuid.toLowerCase(),
+          case_sensitive: true,
         }
         : undefined;
       try {
