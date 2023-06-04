@@ -39,6 +39,11 @@ class LevantamientoController extends Controller
         return ['usuario'];
     }
 
+    public function searchableBy() : array
+    {
+        return ['codigo'];
+    }
+
     protected function buildIndexFetchQuery(Request $request, array $requestedRelations): Builder
     {
         $query = parent::buildIndexFetchQuery($request, $requestedRelations);

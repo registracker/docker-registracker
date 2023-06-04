@@ -44,7 +44,7 @@ class LevantamientoContadorController extends Controller
 
     public function searchableBy(): array
     {
-        return ['nombre_via'];
+        return ['nombre_via','codigo'];
     }
 
     public function filterableBy(): array

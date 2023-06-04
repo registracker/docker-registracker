@@ -87,6 +87,13 @@ export default {
 
   methods: {
     async fetchLevantamientos() {
+      const search = typeof this.form.codigo === 'string' && !!this.form.codigo
+        ? {
+          value: this.form.codigo.toLowerCase(),
+          case_sensitive: true,
+        }
+        : undefined;
+
       const filters = [];
 
       if (this.form.codigo) {
@@ -107,6 +114,7 @@ export default {
           'levantamientos/search',
           {
             filters: [],
+            search,
           },
           {
             params: {

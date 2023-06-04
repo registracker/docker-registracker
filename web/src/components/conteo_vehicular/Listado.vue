@@ -89,6 +89,13 @@ export default {
     async fetchLevantamientos() {
       const filters = [];
 
+      const search = typeof this.form.codigo === 'string' && !!this.form.codigo
+        ? {
+          value: this.form.codigo.toLowerCase(),
+          case_sensitive: true,
+        }
+        : undefined;
+
       if (this.form.codigo) {
         filters.push({
           field: 'codigo',
@@ -107,6 +114,7 @@ export default {
           'conteo-vehicular/search',
           {
             filters: [],
+            search,
           },
           {
             params: {
@@ -116,6 +124,7 @@ export default {
           },
         );
         this.levantamientos = data;
+        console.log(data);
         this.numeroDePaginas = lastPage;
       } catch (error) {
         this.$toast.error('Error al obtener los registros de levantamiento.');
