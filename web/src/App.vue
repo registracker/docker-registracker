@@ -1,14 +1,14 @@
 <template>
-  <v-app
-    :style="[
+  <v-app :style="[
       !isAuthenticated
         ? {
             background:
-              'url(' + minerva + ') center no-repeat fixed !important',
-          }
+              `url(${require('@/assets/fondo.png')})`,
+              'background-repeat': 'repeat',
+              'background-size': '200px 200px' }
         : '',
-    ]"
-  >
+    ]">
+  <div class="">
     <vue-progress-bar></vue-progress-bar>
     <v-navigation-drawer
       app
@@ -119,9 +119,17 @@
       </v-card>
     </v-dialog>
     <Footer></Footer>
+    </div>
   </v-app>
 </template>
-
+<style>
+.background-image {
+  height: 100vh;
+  width: 100%;
+  background-size: contain;
+  background-position: center;
+}
+</style>
 <script>
 import { mapActions, mapState } from 'vuex';
 import Footer from '@/components/Footer.vue';
@@ -378,6 +386,7 @@ export default {
     right: null,
     drawer: null,
     dialogLogout: false,
+    fondo: '@/assets/fondo.png',
     minerva:
       'https://eluniversitario.ues.edu.sv/wp-content/uploads/sites/11/2021/02/Minerva-Universidad-de-El-Salvador-UES.jpg',
   }),

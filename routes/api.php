@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\TiposServiciosRutasController;
 use App\Http\Controllers\Api\TiposVehiculosRutasController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\Api\ReporteMarcadoresController;
+use App\Http\Controllers\Api\TerminosCondicionesController;
 use App\Mail\JustTesting;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
@@ -725,7 +726,10 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('reporte-contador', ReporteContadorController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
         ->withSoftDeletes();
-
+    
+    Orion::resource('terminos-condiciones', TerminosCondicionesController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        ->withSoftDeletes();
     /**
      * TODO
      * Revisar la documentación para verificar las relaciones
