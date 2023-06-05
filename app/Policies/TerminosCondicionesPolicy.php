@@ -43,7 +43,8 @@ class TerminosCondicionesPolicy
      */
     public function create(User $user)
     {
-        return $user->can('api:terminos_condiciones:crear');
+        // return $user->can('api:terminos_condiciones:crear');
+        return true;
     }
 
     /**
