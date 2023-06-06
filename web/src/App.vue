@@ -312,10 +312,14 @@ export default {
       } catch (error) {
         this.logout();
       }
-    } else {
-      console.log('No tiene token');
-      this.logout();
     }
+
+    this.$nextTick(() => {
+      console.log('No tiene token');
+      if (this.$route?.meta?.requiresAuth === true) {
+        this.logout();
+      }
+    });
 
     // this.userIsAuthenticated
     if (!this.accesoPermitido(this.$route.name) && this.isAuthenticated) {
