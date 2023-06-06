@@ -14,7 +14,7 @@ const routes = [
     ),
   },
   {
-    path: '/ingresar',
+    path: '/',
     name: 'web:ingresar',
     meta: { requiresAuth: false },
     component: () => import(
