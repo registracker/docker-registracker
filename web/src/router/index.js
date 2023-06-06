@@ -22,6 +22,14 @@ const routes = [
     ),
   },
   {
+    path: '/terminos-condiciones',
+    name: 'web:terminos-condiciones',
+    meta: { requiresAuth: false },
+    component: () => import(
+      /* webpackChunkName: "login" */ '@/views/terminosCondiciones.vue'
+    ),
+  },
+  {
     path: '/administracion',
     name: 'administracion',
     meta: { requiresAuth: true },

@@ -43,8 +43,11 @@
             Contraseña <span class="red--text"><strong>* </strong></span>
           </template>
         </v-text-field>
-        <v-checkbox v-model="isChecked" label="Acepto los términos y condiciones"></v-checkbox>
-        <a v-if="isChecked" href="#">Ver términos y condiciones</a>
+        <label>
+            <input v-model="agree" type="checkbox">
+            <router-link class="ml-2" :to="{ name: 'web:terminos-condiciones' }">
+            Acepto Terminos y Condiciones</router-link>
+          </label>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -70,6 +73,7 @@ export default {
 
   data: () => ({
     valid: true,
+    agree: false,
     showPassword: false,
     roles: [],
     form: {
@@ -100,6 +104,11 @@ export default {
 
     async crearUsuario() {
       if (!this.$refs.form.validate()) return;
+      if (!this.agree) {
+        const message = 'Debe aceptar los terminos y condiciones';
+        this.$toast.info(message);
+        return;
+      }
 
       try {
         const path = '/usuario';
