@@ -43,6 +43,8 @@
             Contraseña <span class="red--text"><strong>* </strong></span>
           </template>
         </v-text-field>
+        <v-checkbox v-model="isChecked" label="Acepto los términos y condiciones"></v-checkbox>
+        <a v-if="isChecked" href="#">Ver términos y condiciones</a>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
