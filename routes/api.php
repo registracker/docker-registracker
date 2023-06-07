@@ -729,6 +729,7 @@ Route::group(['as' => 'api.'], function () {
     
     Orion::resource('terminos-condiciones', TerminosCondicionesController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+        // ->only(['index', 'search', 'show'])
         ->withSoftDeletes();
     /**
      * TODO
