@@ -32,5 +32,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         //
+        // DUI en la tabla temporal cuando existe
     }
 }

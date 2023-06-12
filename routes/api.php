@@ -5,6 +5,8 @@ use App\Exports\DetalleMedioRecorridoExport;
 use App\Exports\DetalleMedioRecorridoMultipleExport;
 use App\Exports\ReporteContadorAgrupadoExport;
 use App\Exports\ReporteMarcadoresExport;
+use App\Http\Controllers\Api\AgrupacionLevantamientoContadorController;
+use App\Http\Controllers\Api\AgrupacionLevantamientoController;
 use App\Http\Controllers\Api\BitacoraTablaController;
 use App\Http\Controllers\Api\ClasesServiciosRutasController;
 use App\Http\Controllers\Api\ZonaController;
@@ -34,6 +36,7 @@ use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\Api\ReporteMarcadoresController;
 use App\Http\Controllers\Api\TerminosCondicionesController;
 use App\Mail\JustTesting;
+use App\Models\AgrupacionLevantamiento;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
@@ -505,6 +508,10 @@ Route::get('/download-desplazamientos/csv', function (Request $request) {
     return Excel::download(new DetalleMedioRecorridoMultipleExport($fecha_inicio, $fecha_fin), 'desplazamientos.xlsx');
 });
 
+Route::get('open/{codigo}', function (Request $request, $codigo) {
+    return redirect('registracker://' . $codigo);
+});
+
 Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $codigo) {
     $levantamientoContador = LevantamientoContador::where('codigo', $codigo)->firstOrFail();
     if ($request->query('total_vehiculos', null) == 'yes') {
@@ -726,10 +733,18 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('reporte-contador', ReporteContadorController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
         ->withSoftDeletes();
-    
+
     Orion::resource('terminos-condiciones', TerminosCondicionesController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
         // ->only(['index', 'search', 'show'])
+        ->withSoftDeletes();
+
+    Orion::morphManyResource('levantamiento', 'agrupacion', AgrupacionLevantamientoController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
+        ->withSoftDeletes();
+        
+    Orion::morphManyResource('levantamiento-contador', 'agrupacion', AgrupacionLevantamientoContadorController::class)
+        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
         ->withSoftDeletes();
     /**
      * TODO

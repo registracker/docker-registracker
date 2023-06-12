@@ -36,4 +36,9 @@ class LevantamientoContador extends Model
     {
         return $this->hasMany(ReporteContador::class, 'id_levantamiento_contador');
     }
+
+    public function agrupacion()
+    {
+        return $this->morphMany(AgrupacionLevantamiento::class, 'levantamiento');
+    }
 }

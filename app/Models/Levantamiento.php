@@ -26,4 +26,9 @@ class Levantamiento extends Model
     {
         return $this->belongsTo(User::class, 'id_usuario');
     }
+
+    public function agrupacion()
+    {
+        return $this->morphMany(AgrupacionLevantamiento::class, 'levantamiento');
+    }
 }
