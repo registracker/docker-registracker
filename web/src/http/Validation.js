@@ -3,7 +3,9 @@ import Joi from 'joi';
 function validate(schema) {
   // eslint-disable-next-line func-names
   return function (value) {
-    const { error } = schema.validate(value);
+    const {
+      error,
+    } = schema.validate(value);
     if (!error) return true;
     return error.message || 'Campo requerido.';
   };
@@ -32,7 +34,9 @@ export function string(message = 'Campo requerido.') {
     $                         End anchor.
 */
 export function password(message = 'Campo requerido.') {
-  const schema = Joi.string().pattern(new RegExp(/^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/))
+  const schema = Joi.string().pattern(new RegExp(
+    /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/,
+  ))
     .error(new Error(message));
 
   return validate(schema);
@@ -60,7 +64,14 @@ export function number(message = 'Campo requerido.') {
 }
 
 export function email(message = 'Campo requerido.') {
-  const schema = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'sv'] } }).required()
+  const schema = Joi.string().email({
+    allowUnicode: false,
+    minDomainSegments: 2,
+    tlds: {
+      allow: true,
+      deny: [],
+    },
+  }).required().pattern(new RegExp(/^(\*(@[a-zA-Z0-9_.]+)?|[a-zA-Z0-9_@.]+)$/))
     .error(new Error(message));
 
   return validate(schema);
