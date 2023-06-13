@@ -72,7 +72,7 @@
                         <v-select
                           v-model="editedItem.categoria_via"
                           label="Categoria de la vía"
-                          :items="['Carretera', 'Calle','Camino vecinal']"
+                          :items="['Carretera', 'Calle', 'Camino vecinal']"
                           :rules="[fieldRule]"
                           outlined
                         ></v-select>
@@ -94,7 +94,7 @@
                         >
                           <template v-slot:activator="{ on, attrs }">
                             <v-text-field
-                             :rules="[fieldRule]"
+                              :rules="[fieldRule]"
                               label="Periodo"
                               ref="fechas"
                               v-model="dateRangeText"
@@ -153,17 +153,25 @@
       </template>
 
       <template #item.actions="{ item }">
-        <v-icon v-if="!item.fecha_eliminado" @click="editItem(item)">
+        <v-icon
+          v-if="!item.fecha_eliminado"
+          @click="addUser(item)"
+          class="mx-1"
+        >
+          mdi-account-multiple-plus-outline
+        </v-icon>
+        <v-icon v-if="!item.fecha_eliminado" @click="editItem(item)" class="mx-1">
           mdi-pencil
         </v-icon>
         <v-icon
           v-if="item.fecha_eliminado"
           @click="restoreItem(item)"
           color="grey"
+          class="mx-1"
         >
           mdi-delete-restore
         </v-icon>
-        <v-icon v-else color="red lighten-2" @click="deleteItem(item)">
+        <v-icon v-else color="red lighten-2" @click="deleteItem(item)" class="mx-1">
           mdi-delete
         </v-icon>
       </template>
@@ -323,6 +331,13 @@ export default {
 
     save(dateRange) {
       this.$refs.menu.save(dateRange);
+    },
+
+    addUser({ id }) {
+      this.$router.push({
+        name: 'web:administracion:conteo-vehicular-usuario',
+        params: { id },
+      });
     },
 
     async obtenerItems() {

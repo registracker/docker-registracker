@@ -57,7 +57,7 @@
 import { email } from '../../http/Validation';
 
 export default {
-  name: 'GestionLevantamientoUsuario',
+  name: 'GestionLevantamientoContadorUsuario',
 
   data() {
     return {
@@ -82,12 +82,14 @@ export default {
     async obtenerUsers() {
       const { id } = this.$route.params;
       try {
-        const response = await this.axios.get(`levantamiento/${id}/agrupacion`);
+        const response = await this.axios.get(
+          `levantamiento-contador/${id}/agrupacion`,
+        );
         this.users = response.data.data;
         this.enabled = true;
       } catch (error) {
         console.log(error);
-        this.$toast.error('Error al obtener los usuarios del levantamiento.');
+        this.$toast.error('Error al obtener los usuarios del contador.');
         this.users = [];
       }
     },
@@ -103,7 +105,7 @@ export default {
           data: {
             data: { email: correo },
           },
-        } = await this.axios.post(`levantamiento/${id}/agrupacion`, {
+        } = await this.axios.post(`levantamiento-contador/${id}/agrupacion`, {
           email: this.email,
         });
         this.$toast.success(`El correo ${correo} se ha agregado.`);
@@ -120,11 +122,14 @@ export default {
       const { id } = this.$route.params;
       const { id: IdUser, email: correo } = item;
       try {
-        await this.axios.delete(`levantamiento/${id}/agrupacion/${IdUser}`, {
-          params: {
-            force: true,
+        await this.axios.delete(
+          `levantamiento-contador/${id}/agrupacion/${IdUser}`,
+          {
+            params: {
+              force: true,
+            },
           },
-        });
+        );
         this.$toast.info(`El correo ${correo} se ha eliminado.`);
       } catch (error) {
         console.log(error);

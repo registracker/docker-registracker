@@ -119,7 +119,7 @@
         >
           mdi-delete-restore
         </v-icon>
-        <v-icon v-else color="red lighten-2" @click="deleteItem(item)">
+        <v-icon v-else color="red lighten-2" @click="deleteItem(item)" class="mx-1">
           mdi-delete
         </v-icon>
       </template>

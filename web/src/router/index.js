@@ -244,6 +244,25 @@ const routes = [{
     ),
   },
   {
+    path: 'conteo-vehicular/:id',
+    name: 'web:administracion:conteo-vehicular-usuario',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import(
+      /* webpackChunkName: "administracion:rutas-transportes" */
+      '@/components/administracion/GestionLevantamientoContadorUsuario.vue'
+    ),
+    beforeEnter: (to, from, next) => {
+      const userId = parseInt(to.params.id, 10);
+      if (!Number.isNaN(userId)) {
+        next();
+      } else {
+        next('/NotFound');
+      }
+    },
+  },
+  {
     path: 'table',
     name: 'administracion-marcadores',
     meta: {
