@@ -310,16 +310,17 @@ export default {
           this.logout();
         }
       } catch (error) {
+        console.log('PORQUE CIERRA');
         this.logout();
       }
     }
 
-    this.$nextTick(() => {
-      console.log('No tiene token');
-      if (this.$route?.meta?.requiresAuth === true) {
-        this.logout();
-      }
-    });
+    // this.$nextTick(() => {
+    //   console.log('No tiene token');
+    //   if (this.$route?.meta?.requiresAuth === true) {
+    //     // this.logout();
+    //   }
+    // });
 
     // this.userIsAuthenticated
     if (!this.accesoPermitido(this.$route.name) && this.isAuthenticated) {

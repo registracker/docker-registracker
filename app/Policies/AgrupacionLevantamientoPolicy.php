@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\TerminosCondiciones;
+use App\Models\AgrupacionLevantamiento;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TerminosCondicionesPolicy
+class AgrupacionLevantamientoPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class TerminosCondicionesPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\TerminosCondiciones  $terminosCondiciones
+     * @param  \App\Models\AgrupacionLevantamiento  $agrupacionLevantamiento
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, TerminosCondiciones $terminosCondiciones)
+    public function view(User $user, AgrupacionLevantamiento $agrupacionLevantamiento)
     {
         return true;
     }
@@ -48,10 +48,10 @@ class TerminosCondicionesPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\TerminosCondiciones  $terminosCondiciones
+     * @param  \App\Models\AgrupacionLevantamiento  $agrupacionLevantamiento
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, TerminosCondiciones $terminosCondiciones)
+    public function update(User $user, AgrupacionLevantamiento $agrupacionLevantamiento)
     {
         return true;
     }
@@ -60,10 +60,10 @@ class TerminosCondicionesPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\TerminosCondiciones  $terminosCondiciones
+     * @param  \App\Models\AgrupacionLevantamiento  $agrupacionLevantamiento
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, TerminosCondiciones $terminosCondiciones)
+    public function delete(User $user, AgrupacionLevantamiento $agrupacionLevantamiento)
     {
         return true;
     }
@@ -72,10 +72,10 @@ class TerminosCondicionesPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\TerminosCondiciones  $terminosCondiciones
+     * @param  \App\Models\AgrupacionLevantamiento  $agrupacionLevantamiento
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, TerminosCondiciones $terminosCondiciones)
+    public function restore(User $user, AgrupacionLevantamiento $agrupacionLevantamiento)
     {
         return true;
     }
@@ -84,10 +84,10 @@ class TerminosCondicionesPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\TerminosCondiciones  $terminosCondiciones
+     * @param  \App\Models\AgrupacionLevantamiento  $agrupacionLevantamiento
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, TerminosCondiciones $terminosCondiciones)
+    public function forceDelete(User $user, AgrupacionLevantamiento $agrupacionLevantamiento)
     {
         return true;
     }

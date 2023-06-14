@@ -66,7 +66,9 @@ class RolPermissionSeeder extends Seeder
             'web:administracion:clases-servicios-rutas',
             'web:administracion:rutas-transporte',
             'web:administracion:levantamiento',
+            'web:administracion:levantamiento-usuario',
             'web:administracion:conteo-vehicular',
+            'web:administracion:conteo-vehicular-usuario',
             // Usuarios
             'web:desplazamiento:movil',
             'web:desplazamiento:detalle',

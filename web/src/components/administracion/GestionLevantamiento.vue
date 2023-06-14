@@ -63,44 +63,6 @@
                           v-model="editedItem.fecha_vencimiento"
                           ref="calendar"
                         />
-                        <!-- <vc-date-picker>
-                          <template v-slot="{ inputValue, inputEvents }">
-                            {{ inputEvents }}
-                            <v-text-field
-                              outlined
-                              required
-                              label="Fecha vencimiento"
-                              v-on="inputEvents"
-                            >
-                            </v-text-field>
-                          </template>
-                        </vc-date-picker> -->
-                        <!-- <v-menu
-                          v-model="menuDatePicker"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              :rules="[fieldRule]"
-                              v-model="editedItem.fecha_vencimiento"
-                              label="Fecha vencimiento del código"
-                              prepend-icon="mdi-calendar"
-                              readonly
-                              clearable
-                              v-bind="attrs"
-                              v-on="on"
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
-                            v-model="editedItem.fecha_vencimiento"
-                            @input="menuDatePicker = false"
-                            locale="es-SV"
-                          ></v-date-picker>
-                        </v-menu> -->
                       </v-col>
                     </v-row>
                   </v-container>
@@ -135,17 +97,29 @@
       </template>
 
       <template #item.actions="{ item }">
-        <v-icon v-if="!item.fecha_eliminado" @click="editItem(item)">
+        <v-icon
+          v-if="!item.fecha_eliminado"
+          @click="addUser(item)"
+          class="mx-1"
+        >
+          mdi-account-multiple-plus-outline
+        </v-icon>
+        <v-icon
+          v-if="!item.fecha_eliminado"
+          @click="editItem(item)"
+          class="mx-1"
+        >
           mdi-pencil
         </v-icon>
         <v-icon
           v-if="item.fecha_eliminado"
           @click="restoreItem(item)"
           color="grey"
+          class="mx-1"
         >
           mdi-delete-restore
         </v-icon>
-        <v-icon v-else color="red lighten-2" @click="deleteItem(item)">
+        <v-icon v-else color="red lighten-2" @click="deleteItem(item)" class="mx-1">
           mdi-delete
         </v-icon>
       </template>
@@ -327,6 +301,13 @@ export default {
         } else {
           await calendar.move(new Date());
         }
+      });
+    },
+
+    addUser({ id }) {
+      this.$router.push({
+        name: 'web:administracion:levantamiento-usuario',
+        params: { id },
       });
     },
 
