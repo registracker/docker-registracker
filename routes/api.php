@@ -461,7 +461,6 @@ Route::post('/usuario', function (Request $request) {
 
         $rol = Role::findOrFail($request->rol);
         $usuario->assignRole($rol->name);
-        DB::commit();
 
         $estadoCuenta = $ID_ESTADO_REVISION;
 
@@ -474,6 +473,7 @@ Route::post('/usuario', function (Request $request) {
             'id_estado_solicitud' => $estadoCuenta,
         ]);
 
+        DB::commit();
         return response()->json([
             'usuario' =>  $usuario,
             'estado_cuenta' =>  $usuario->solicitud->estado->nombre,

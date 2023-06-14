@@ -109,17 +109,13 @@
         </v-icon>
       </template>
 
-      <template v-slot:item.solicitud.estado.nombre="{ item }">
+      <template v-slot:item.solicitud="{ item }">
         <v-chip
-          v-if="item.solicitud.estado.id == 1"
           small
-          color="green"
+          :color="item?.solicitud?.estado?.id == 1 ? 'green': 'red'"
           text-color="white"
         >
-          {{ item.solicitud.estado.nombre }}
-        </v-chip>
-        <v-chip v-else color="red" text-color="white" small>
-          {{ item.solicitud.estado.nombre }}
+          {{ item?.solicitud?.estado?.nombre }}
         </v-chip>
       </template>
     </v-data-table>
@@ -272,7 +268,7 @@ export default {
       // },
       { text: 'Correo', align: 'start', value: 'email' },
       { text: 'Rol', align: 'start', value: 'roles' },
-      { text: 'Estado', align: 'center', value: 'solicitud.estado.nombre' },
+      { text: 'Estado', align: 'center', value: 'solicitud' },
       {
         text: 'Acciones',
         align: 'start',
@@ -379,7 +375,7 @@ export default {
     openDialog(item) {
       this.editedIndex = this.items.indexOf(item);
       this.editedItem = { ...item };
-      this.estado = item.solicitud.estado.id;
+      this.estado = item.solicitud?.estado?.id || 1;
       this.dialogEstado = true;
     },
     openDialogChangePass(item) {
@@ -397,7 +393,7 @@ export default {
         if (validate) {
           const data = { id_estado_solicitud: nuevoEstado };
           await this.axios.put(
-            `/solicitudes-cuentas/${this.editedItem.id}`,
+            `/solicitudes-cuentas/${this.editedItem.solicitud.id}`,
             data,
           );
           this.initialize();

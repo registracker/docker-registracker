@@ -1,5 +1,5 @@
 <template>
-  <v-footer dark class="red darken-4 footer">
+  <v-footer dark class="red darken-4 footer" v-if="false">
     <v-container class="text-center" id="text" fixed>
           Copyright © 2023 Universidad de El Salvador. Todos los derechos reservados
     </v-container>
