@@ -58,6 +58,9 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Excel as ExcelFormat;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Mail\MyTestEmail;
+use App\Mail\RecuperarContrasenia;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -71,43 +74,52 @@ use Maatwebsite\Excel\Facades\Excel;
 */
 
 Route::post('/forgot-password', function (Request $request) {
+    
+    $email = $request->input('email');
     $request->validate(['email' => ['required', 'email', 'exists:users,email']]);
-
+    
     $user = User::where('email', $request->input("email"))->firstOrFail();
-
+    
     $token = Password::createToken(
         $user
     );
+    $url = url('/reset-password').'?token='.$token.'&email='.urlencode($email);
+    //$url = 'http://localhost:8087/reset-password'.'?token='.$token.'&email='.urlencode($email);
     /**
      * TODO
      * LLAMAR envio de correo enviado el token
      */
-    return response(null);
+    Mail::send(new RecuperarContrasenia($email,'USER',$url));
+    return 'Se ha enviando enlace a tu correo, corrobora por favor';
 });
 
 Route::post('/reset-password', function (Request $request) {
-    $request->validate([
-        'token' => 'required',
-        'email' => 'required|email',
-        'password' => 'required|min:8|confirmed',
-    ]);
-
-    $user = User::where('email', $request->input("email"))->firstOrFail();
-    $tokenExists = Password::tokenExists($user, $request->input("token"));
-
-    if (!$tokenExists) {
-        abort(Response::HTTP_BAD_REQUEST);
-    }
-
-    Password::reset(
-        $request->only('email', 'password', 'password_confirmation', 'token'),
-        function (User $user, string $password) {
-            $user->forceFill([
-                'password' => Hash::make($password)
-            ])->setRememberToken(Str::random(60));
-            $user->save();
+    try {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+    
+        $user = User::where('email', $request->input("email"))->firstOrFail();
+        $tokenExists = Password::tokenExists($user, $request->input("token"));
+    
+        if (!$tokenExists) {
+            abort(Response::HTTP_BAD_REQUEST);
         }
-    );
+    
+        Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+                $user->save();
+            }
+        );
+    } catch (\Throwable $th) {
+        dd($th);
+    }
 
     return response(null);
 });
@@ -672,7 +684,7 @@ Route::group(['as' => 'api.'], function () {
         ->withSoftDeletes();
 
     Orion::resource('usuarios', UsuarioController::class)
-        ->only(['index', 'search', 'show', 'update'])
+        ->only(['index', 'search', 'show', 'update','store'])
         ->withSoftDeletes();
 
     Orion::resource('solicitudes-cuentas', SolicitudCuentaController::class)

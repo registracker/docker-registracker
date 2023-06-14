@@ -18,7 +18,7 @@ class RecuperarContrasenia extends Mailable
      *
      * @return void
      */
-    public function __construct(private $email, private $name)
+    public function __construct(private $email, private $name, private $link)
     {
         //
         // return $this;
@@ -43,7 +43,7 @@ class RecuperarContrasenia extends Mailable
                    ->markdown('mail.recuperacion-email')
                    ->with([
                      'name' => $this->name,
-                     'link' => 'https://registracker.me/' //link para restablecer contraseña del usuario CAMBIAR
+                     'link' => $this->link
                    ]);
     }
 

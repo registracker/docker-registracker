@@ -30,6 +30,22 @@ const routes = [
     ),
   },
   {
+    path: '/forgot-password',
+    name: 'web:forgot-password',
+    meta: { requiresAuth: false },
+    component: () => import(
+      /* webpackChunkName: "forgotPassword" */ '@/views/forgotPassword.vue'
+    ),
+  },
+  {
+    path: '/reset-password',
+    name: 'web:reset-password',
+    meta: { requiresAuth: false },
+    component: () => import(
+      /* webpackChunkName: "resetPassword" */ '@/views/resetPassword.vue'
+    ),
+  },
+  {
     path: '/administracion',
     name: 'administracion',
     meta: { requiresAuth: true },

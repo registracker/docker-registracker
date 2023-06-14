@@ -23,6 +23,15 @@
                           class="mb-0 pb-0 mx-9"
                           v-if="esInicioSesion"
                         >
+                        <v-alert
+                          v-if="showSuccessAlert"
+                          dense
+                          text
+                          type="success"
+                          class="py-4 px-3"
+                        >
+                          La constraseña se restauro correctamente
+                        </v-alert>
                           <v-card-title> Iniciar sesión </v-card-title>
                           <v-card-text class="mb-0 pb-0">
                             <v-form ref="form" v-model="valid">
@@ -81,6 +90,13 @@
                                     Registrarse
                                   </v-btn>
                                 </v-col>
+                              </v-row>
+                              <v-row no-gutters class="mt-6" justify="center">
+                                  <v-col sm="8" md="8" lg="8" align-self="center">
+                                    <router-link class="ml-2"
+                                    :to="{ name: 'web:forgot-password' }">
+                                    Olvidaste tu contraseña?</router-link>
+                                  </v-col>
                               </v-row>
                             </v-container>
                           </v-card-actions>
@@ -150,12 +166,20 @@ export default {
     showPassword: false,
     valid: false,
     esInicioSesion: true,
+    showSuccessAlert: false,
     form: {
       email: '',
       password: '',
     },
     show: false,
   }),
+
+  created() {
+    if (this.$route.query.resetSuccess) {
+      this.showSuccessAlert = true;
+    }
+  },
+
   props: {
     source: String,
   },
