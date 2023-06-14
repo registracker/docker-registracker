@@ -77,22 +77,22 @@ use App\Mail\RecuperarContrasenia;
 */
 
 Route::post('/forgot-password', function (Request $request) {
-    
+
     $email = $request->input('email');
     $request->validate(['email' => ['required', 'email', 'exists:users,email']]);
-    
+
     $user = User::where('email', $request->input("email"))->firstOrFail();
-    
+
     $token = Password::createToken(
         $user
     );
-    $url = url('/reset-password').'?token='.$token.'&email='.urlencode($email);
+    $url = url('/reset-password') . '?token=' . $token . '&email=' . urlencode($email);
     //$url = 'http://localhost:8087/reset-password'.'?token='.$token.'&email='.urlencode($email);
     /**
      * TODO
      * LLAMAR envio de correo enviado el token
      */
-    Mail::send(new RecuperarContrasenia($email,'USER',$url));
+    Mail::send(new RecuperarContrasenia($email, 'USER', $url));
     return 'Se ha enviando enlace a tu correo, corrobora por favor';
 });
 
@@ -103,14 +103,14 @@ Route::post('/reset-password', function (Request $request) {
             'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
         ]);
-    
+
         $user = User::where('email', $request->input("email"))->firstOrFail();
         $tokenExists = Password::tokenExists($user, $request->input("token"));
-    
+
         if (!$tokenExists) {
             abort(Response::HTTP_BAD_REQUEST);
         }
-    
+
         Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
@@ -436,8 +436,9 @@ Route::middleware('auth:sanctum')->delete('/tokens', function (Request $request)
 });
 
 Route::post('/usuario', function (Request $request) {
-    $ID_ESTADO_REVISION = 2;
     $ID_ESTADO_ACTIVA = 1;
+    $ID_ESTADO_REVISION = 2;
+    $ID_ROL_PARTICIPANTE = 3;
 
     $request->validate([
         'email' => ['required', 'email', 'unique:users,email', 'max:255'],
@@ -464,7 +465,7 @@ Route::post('/usuario', function (Request $request) {
 
         $estadoCuenta = $ID_ESTADO_REVISION;
 
-        if ($request->rol ==  $ID_ESTADO_REVISION && Str::of($request->email)->endsWith('@ues.edu.sv')) {
+        if ($request->rol == $ID_ROL_PARTICIPANTE && Str::of($request->email)->endsWith('@ues.edu.sv')) {
             $estadoCuenta = $ID_ESTADO_ACTIVA;
         }
 
@@ -478,7 +479,6 @@ Route::post('/usuario', function (Request $request) {
             'estado_cuenta' =>  $usuario->solicitud->estado->nombre,
         ]);
     } catch (\Throwable $th) {
-        //throw $th;
         DB::rollBack();
         return response($th);
     }
@@ -691,7 +691,7 @@ Route::group(['as' => 'api.'], function () {
         ->withSoftDeletes();
 
     Orion::resource('usuarios', UsuarioController::class)
-        ->only(['index', 'search', 'show', 'update','store'])
+        ->only(['index', 'search', 'show', 'update', 'store'])
         ->withSoftDeletes();
 
     Orion::resource('solicitudes-cuentas', SolicitudCuentaController::class)
@@ -754,7 +754,7 @@ Route::group(['as' => 'api.'], function () {
     Orion::morphManyResource('levantamiento', 'agrupacion', AgrupacionLevantamientoController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
         ->withSoftDeletes();
-        
+
     Orion::morphManyResource('levantamiento-contador', 'agrupacion', AgrupacionLevantamientoContadorController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
         ->withSoftDeletes();
