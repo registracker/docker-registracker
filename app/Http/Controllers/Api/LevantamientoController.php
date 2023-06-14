@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Support\Str;
 use App\Models\Levantamiento;
+use Carbon\Carbon;
 use Database\Seeders\Constant;
 use Orion\Http\Requests\Request;
 use Orion\Http\Controllers\Controller;
@@ -39,7 +40,7 @@ class LevantamientoController extends Controller
         return ['usuario'];
     }
 
-    public function searchableBy() : array
+    public function searchableBy(): array
     {
         return ['codigo'];
     }
@@ -58,7 +59,19 @@ class LevantamientoController extends Controller
             $query->orderBy($column, $direction);
         }
 
-        return $query;
+        if ($request->query('personal', 'no') == 'yes') {
+            $email = $this->resolveUser()->email;
+            $wildcardDomain = Str::of($email)->match('/(@.+)/')->prepend('*');
+            $query
+                ->whereDate('fecha_vencimiento', '>=', Carbon::now())
+                ->whereHas('agrupacion', function (Builder $query) use ($email, $wildcardDomain) {
+                    $query
+                        ->where('email', $email)
+                        ->orWhere('email', $wildcardDomain);
+                });
+        }
+
+        return $query->orderBy('id', 'desc');
     }
 
     protected function performStore(Request $request, Model $levantaminto, array $attributes): void
