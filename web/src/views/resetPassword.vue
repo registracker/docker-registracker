@@ -80,6 +80,7 @@ export default {
             token: this.$route.query.token,
             email: this.$route.query.email,
           });
+          router.push({ name: 'web:ingresar', query: { resetSuccess: true } });
           this.$toast.success('Realizado.');
         } catch (error) {
           this.$toast.error('Error al restaurar la contraseña.');
