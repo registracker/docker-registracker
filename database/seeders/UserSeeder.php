@@ -19,28 +19,28 @@ class UserSeeder extends Seeder
     public function run()
     {
         $usuario = User::create([
-            'name' => 'developer',
-            'email' => 'developer@gmail.com',
-            'password' => Hash::make('password'),
+            'name' => env('ADMIN_NAME', 'developer'),
+            'email' => env('ADMIN_EMAIL', 'developer@gmail.com'),
+            'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
         ]);
 
         $usuario->assignRole(Constant::ROL_ADMINISTRADOR);
 
-        $usuario2 = User::create([
-            'name' => 'Usuario Investigador',
-            'email' => 'investigador@gmail.com',
-            'password' => Hash::make('Pa$$w0rd'),
-        ]);
+        // $usuario2 = User::create([
+        //     'name' => 'Usuario Investigador',
+        //     'email' => 'investigador@gmail.com',
+        //     'password' => Hash::make('Pa$$w0rd'),
+        // ]);
 
-        $usuario2->assignRole(Constant::ROL_INVESTIGADOR);
+        // $usuario2->assignRole(Constant::ROL_INVESTIGADOR);
 
-        $usuario3 = User::create([
-            'name' => 'Usuario Participante',
-            'email' => 'participante@gmail.com',
-            'password' => Hash::make('Pa$$w0rd'),
-        ]);
+        // $usuario3 = User::create([
+        //     'name' => 'Usuario Participante',
+        //     'email' => 'participante@gmail.com',
+        //     'password' => Hash::make('Pa$$w0rd'),
+        // ]);
 
-        $usuario3->assignRole(Constant::ROL_PARTICIPANTE);
+        // $usuario3->assignRole(Constant::ROL_PARTICIPANTE);
 
         // Esta línea ya no es necesaria ya que no se usa Sanctum
         // $user = $usuario->createToken($usuario->getNombreRoles(), []);

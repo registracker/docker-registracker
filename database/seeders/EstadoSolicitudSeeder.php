@@ -16,22 +16,18 @@ class EstadoSolicitudSeeder extends Seeder
     {
         $data = [
             [
-                'id' => 1,
                 'nombre' => 'Activa',
                 'permitir_acceso' => true,
             ],
             [
-                'id' => 2,
                 'nombre' => 'En revisión',
                 'permitir_acceso' => false,
             ],
             [
-                'id' => 3,
                 'nombre' => 'Suspendida',
                 'permitir_acceso' => false,
             ],
             [
-                'id' => 4,
                 'nombre' => 'Rechazada',
                 'permitir_acceso' => false,
             ],

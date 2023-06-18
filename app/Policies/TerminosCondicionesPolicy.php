@@ -41,7 +41,7 @@ class TerminosCondicionesPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->can('api:terminos_condiciones:crear');
     }
 
     /**
@@ -53,7 +53,7 @@ class TerminosCondicionesPolicy
      */
     public function update(User $user, TerminosCondiciones $terminosCondiciones)
     {
-        return true;
+        return $user->can('api:terminos_condiciones:actualizar');
     }
 
     /**
@@ -65,7 +65,7 @@ class TerminosCondicionesPolicy
      */
     public function delete(User $user, TerminosCondiciones $terminosCondiciones)
     {
-        return true;
+        return $user->can('api:terminos_condiciones:eliminar');
     }
 
     /**
@@ -77,7 +77,7 @@ class TerminosCondicionesPolicy
      */
     public function restore(User $user, TerminosCondiciones $terminosCondiciones)
     {
-        return true;
+        return $user->can('api:terminos_condiciones:eliminar');
     }
 
     /**
@@ -89,6 +89,6 @@ class TerminosCondicionesPolicy
      */
     public function forceDelete(User $user, TerminosCondiciones $terminosCondiciones)
     {
-        return true;
+        return $user->can('api:terminos_condiciones:eliminar');
     }
 }

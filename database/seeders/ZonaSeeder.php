@@ -21,19 +21,15 @@ class ZonaSeeder extends Seeder
         // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $data = [
             [
-                'id' => 1,
                 'nombre' => 'Zona Occidental',
             ],
             [
-                'id' => 2,
                 'nombre' => 'Zona Central',
             ],
             [
-                'id' => 3,
                 'nombre' => 'Zona Paracentral',
             ],
             [
-                'id' => 4,
                 'nombre' => 'Zona Oriental',
             ],
         ];

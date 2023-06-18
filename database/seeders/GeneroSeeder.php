@@ -17,22 +17,18 @@ class GeneroSeeder extends Seeder
     {
         $data = [
             [
-                'id' => 1,
                 'nombre' => 'Hombre',
                 'abreviatura' => 'H',
             ],
             [
-                'id' => 2,
                 'nombre' => 'Mujer',
                 'abreviatura' => 'M',
             ],
             [
-                'id' => 3,
                 'nombre' => 'No Binario',
                 'abreviatura' => 'NB',
             ],
             [
-                'id' => 4,
                 'nombre' => 'Prefiero No Decirlo',
                 'abreviatura' => 'PND',
             ],

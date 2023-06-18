@@ -17,22 +17,18 @@ class IncidenteSeeder extends Seeder
     {
         $data = [
             [
-                'id' => 1,
                 'nombre' => 'Tráfico pesado',
                 'icono' => 'car-speed-limiter',
             ],
             [
-                'id' => 2,
                 'nombre' => 'Vehículo quedado',
                 'icono' => 'car-off',
             ],
             [
-                'id' => 3,
                 'nombre' => 'Reten vehicular',
                 'icono' => 'car',
             ],
             [
-                'id' => 4,
                 'nombre' => 'Protesta',
                 'icono' => 'account-group',
             ],
