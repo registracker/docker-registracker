@@ -18,3 +18,4 @@ yarn-error.log
 /docker/certs/*.key
 /docker/certs/*.crt
 /docker/certs/*.ca-bundle
+/docker/certs/
