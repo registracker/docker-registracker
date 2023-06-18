@@ -68,7 +68,6 @@
       <v-card-text>
         <v-img height="72vh" width="100vw">
           <l-map
-            v-if="!false"
             :style="{ position: 'absolute', height: '100%', width: '100%' }"
             :zoom="config.zoom"
             :center="config.center"
@@ -129,6 +128,7 @@ export default {
   data() {
     return {
       features: null,
+      geojson: null,
       dateRange: [],
       menu: false,
       geojsonOptions: {
@@ -182,14 +182,13 @@ export default {
         center: [13.794185, -88.89652999999998],
       },
       mapa: null,
-      segmentosDesplazamiento: [],
     };
   },
 
   computed: {
     dateRangeText: {
       get() {
-        if (!this.dateRange) return null;
+        if (!this.dateRange || !Array.isArray(this.dateRange)) return null;
 
         if (this.dateRange.length === 2) {
           const fechaInicio = this.formatDate(this.dateRange[0]);
@@ -229,8 +228,10 @@ export default {
           params: { fecha_inicio: this.dateRange[0], fecha_fin: this.dateRange[1] },
         });
 
-        this.geojson = coleccion;
-        this.features = coleccion?.features?.length || 0;
+        if (Array.isArray(coleccion.features)) {
+          this.geojson = coleccion;
+          this.features = coleccion?.features?.length || 0;
+        }
       } catch (error) {
         this.$toast.error('Error al cargar los datos.');
         console.log(error);
@@ -281,6 +282,7 @@ export default {
       const [year, month, day] = date.split('-');
       return `${day}/${month}/${year}`;
     },
+
     parseDate(date) {
       if (!date) return null;
 

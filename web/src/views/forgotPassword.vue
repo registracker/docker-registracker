@@ -54,7 +54,6 @@
 
 export default {
   data: () => ({
-
     form: {
       email: null,
       enviado: false,

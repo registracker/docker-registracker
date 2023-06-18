@@ -1,124 +1,114 @@
 <template>
-  <v-app :style="[
+  <v-app
+    :style="[
       !isAuthenticated
         ? {
-            background:
-              `url(${require('@/assets/fondo.png')})`,
-              'background-repeat': 'repeat',
-              'background-size': '200px 200px' }
+            background: `url(${require('@/assets/fondo.png')})`,
+            'background-repeat': 'repeat',
+            'background-size': '200px 200px',
+          }
         : '',
-    ]">
-  <div class="">
-    <vue-progress-bar></vue-progress-bar>
-    <v-navigation-drawer
-      app
-      v-model="drawer"
-      v-if="isAuthenticated"
-      color="blue-grey lighten-5"
-    >
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6 text-center">
-            REGISTRACKER
-          </v-list-item-title>
-          <v-list-item-subtitle class="text-h4 text-center">
-            🛴
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
+    ]"
+  >
+    <div class="">
+      <vue-progress-bar></vue-progress-bar>
+      <v-navigation-drawer
+        app
+        v-model="drawer"
+        v-if="isAuthenticated"
+        color="blue-grey lighten-5"
+      >
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title class="text-h6 text-center">
+              REGISTRACKER
+            </v-list-item-title>
+            <v-list-item-subtitle class="text-h4 text-center">
+              🛴
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
 
-      <v-divider></v-divider>
+        <v-divider></v-divider>
 
-      <v-list dense nav>
-        <template v-for="item in items">
-          <v-list-group color="red" v-if="item.children" :key="item.index">
-            <template v-slot:activator>
-              <v-list-item-title class="text-capitalize">
-                {{ item.title }}
-              </v-list-item-title>
-            </template>
+        <v-list dense nav>
+          <template v-for="item in items">
+            <v-list-group color="red" v-if="item.children" :key="item.index">
+              <template v-slot:activator>
+                <v-list-item-title class="text-capitalize">
+                  {{ item.title }}
+                </v-list-item-title>
+              </template>
 
-            <template #prependIcon>
-              <v-icon>{{ item.icon }}</v-icon>
-            </template>
+              <template #prependIcon>
+                <v-icon>{{ item.icon }}</v-icon>
+              </template>
 
-            <v-list-item
-              v-for="(child, j) in item.children"
-              :key="j"
-              :to="child.path"
-              class="ml-4"
-              color="red"
-            >
+              <v-list-item
+                v-for="(child, j) in item.children"
+                :key="j"
+                :to="child.path"
+                class="ml-4"
+                color="red"
+              >
+                <v-list-item-icon>
+                  <v-icon>{{ child.icon }} </v-icon>
+                </v-list-item-icon>
+                <v-list-item-title class="text-capitalize">
+                  <span>{{ child.title }}</span>
+                </v-list-item-title>
+              </v-list-item>
+            </v-list-group>
+
+            <v-list-item v-else :key="item.title" :to="item.path">
               <v-list-item-icon>
-                <v-icon>{{ child.icon }} </v-icon>
+                <v-icon>{{ item.icon }} </v-icon>
               </v-list-item-icon>
               <v-list-item-title class="text-capitalize">
-                <span>{{ child.title }}</span>
+                <span>{{ item.title }}</span>
               </v-list-item-title>
             </v-list-item>
-          </v-list-group>
+          </template>
+        </v-list>
+      </v-navigation-drawer>
 
-          <v-list-item v-else :key="item.title" :to="item.path">
-            <v-list-item-icon>
-              <v-icon>{{ item.icon }} </v-icon>
-            </v-list-item-icon>
-            <v-list-item-title class="text-capitalize">
-              <span>{{ item.title }}</span>
-            </v-list-item-title>
-          </v-list-item>
+      <v-app-bar app color="blue-grey lighten-5" v-if="isAuthenticated">
+        <v-app-bar-nav-icon
+          @click="drawer = !drawer"
+          v-if="isAuthenticated"
+        ></v-app-bar-nav-icon>
+        <v-spacer></v-spacer>
+
+        <template v-if="isAuthenticated">
+          <v-btn icon class="mx-2" plain @click="dialogLogout = true">
+            <v-icon> mdi-logout </v-icon>
+          </v-btn>
         </template>
-      </v-list>
-    </v-navigation-drawer>
+      </v-app-bar>
 
-    <v-app-bar app color="blue-grey lighten-5" v-if="isAuthenticated">
-      <v-app-bar-nav-icon
-        @click="drawer = !drawer"
-        v-if="isAuthenticated"
-      ></v-app-bar-nav-icon>
-      <v-spacer></v-spacer>
+      <v-main>
+        <v-container fluid>
+          <router-view></router-view>
+        </v-container>
+      </v-main>
 
-      <template v-if="isAuthenticated">
-        <v-btn icon class="mx-2" plain @click="dialogLogout = true">
-          <v-icon> mdi-logout </v-icon>
-        </v-btn>
-      </template>
-
-      <!-- <template v-else>
-        <v-btn
-          :color="loginColor"
-          small
-          class="mx-2"
-          plain
-          :to="{ name: 'web:ingresar' }"
-        >
-          Ingresar2
-        </v-btn>
-      </template>-->
-    </v-app-bar>
-
-    <v-main>
-      <v-container fluid>
-        <router-view></router-view>
-      </v-container>
-    </v-main>
-
-    <v-footer app v-if="false"> </v-footer>
-    <v-dialog v-model="dialogLogout" max-width="530px">
-      <v-card>
-        <v-card-title class="text-h5 justify-center">
-          ¿Está seguro que desea cerrar sesión?
-        </v-card-title>
-        <v-card-actions class="py-3">
-          <v-spacer></v-spacer>
-          <v-btn class="red darken-2" @click="logout" dark>Si</v-btn>
-          <v-btn class="default" color="" @click="dialogLogout = false"
-            >No</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <Footer></Footer>
+      <v-footer app v-if="false"> </v-footer>
+      <v-dialog v-model="dialogLogout" max-width="530px">
+        <v-card>
+          <v-card-title class="text-h5 justify-center">
+            ¿Está seguro que desea cerrar sesión?
+          </v-card-title>
+          <v-card-actions class="py-3">
+            <v-spacer></v-spacer>
+            <v-btn class="red darken-2" @click="logout" dark>Si</v-btn>
+            <v-btn class="default" color="" @click="dialogLogout = false">
+              No
+            </v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <Footer></Footer>
     </div>
   </v-app>
 </template>
@@ -133,146 +123,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import Footer from '@/components/Footer.vue';
-
-const items = [
-  {
-    title: 'Administración',
-    icon: 'mdi-database',
-    children: [
-      {
-        title: 'Usuarios',
-        icon: 'mdi-account-multiple',
-        path: { name: 'web:administracion:usuarios' },
-      },
-      {
-        title: 'Permisos',
-        icon: 'mdi-security',
-        path: { name: 'web:administracion:permisos' },
-      },
-      {
-        title: 'Roles',
-        icon: 'mdi-account-check',
-        path: { name: 'web:administracion:roles' },
-      },
-      {
-        title: 'Estados solicitud',
-        icon: 'mdi-account-details',
-        path: { name: 'web:administracion:estados-solicitud' },
-      },
-      {
-        title: 'Medios desplazamiento',
-        icon: 'mdi-train-car',
-        path: { name: 'web:administracion:medios-desplazamiento' },
-      },
-      {
-        title: 'Incidentes',
-        icon: 'mdi-alert',
-        path: { name: 'web:administracion:incidentes' },
-      },
-      {
-        title: 'Marcadores',
-        icon: 'mdi-map-marker-star',
-        path: { name: 'web:administracion:marcadores' },
-      },
-      {
-        title: 'Clasificación Vehicular',
-        icon: 'mdi-car-info',
-        path: { name: 'web:administracion:clasificacion-vehicular' },
-      },
-      {
-        title: 'Tipos vehiculos rutas',
-        icon: 'mdi-format-list-group',
-        path: { name: 'web:administracion:tipos-vehiculos-rutas' },
-      },
-      {
-        title: 'Tipos servicios rutas',
-        icon: 'mdi-format-list-group',
-        path: { name: 'web:administracion:tipos-servicios-rutas' },
-      },
-      {
-        title: 'Clases servicios rutas',
-        icon: 'mdi-format-list-group',
-        path: { name: 'web:administracion:clases-servicios-rutas' },
-      },
-      {
-        title: 'Rutas transporte',
-        icon: 'mdi-bus-stop',
-        path: { name: 'web:administracion:rutas-transporte' },
-      },
-
-      {
-        title: 'Vehiculos',
-        icon: 'mdi-car-info',
-        path: { name: 'web:administracion:vehiculos' },
-      },
-    ],
-  },
-  {
-    title: 'Levantamiento',
-    icon: 'mdi-clipboard-outline',
-    children: [
-      {
-        title: 'Gestión Marcadores',
-        icon: 'mdi-folder-search-outline',
-        path: { name: 'web:administracion:levantamiento' },
-      },
-      {
-        title: 'Gestión Conteo vehicular',
-        icon: 'mdi-format-list-group-plus',
-        path: { name: 'web:administracion:conteo-vehicular' },
-      },
-    ],
-  },
-
-  {
-    title: 'Recorridos',
-    icon: 'mdi-crosshairs-gps',
-    children: [
-      {
-        title: 'Individual',
-        icon: 'mdi-cellphone-marker',
-        path: {
-          name: 'web:desplazamiento:movil',
-        },
-      },
-      {
-        title: 'Multiple',
-        icon: 'mdi-database-marker-outline',
-        path: {
-          name: 'web:desplazamiento:geojson',
-        },
-      },
-    ],
-  },
-
-  {
-    title: 'Reportes',
-    icon: 'mdi-folder-outline',
-    children: [
-      // {
-      //   title: 'Incidentes',
-      //   icon: 'mdi-map-search-outline',
-      //   path: {
-      //     name: 'web:levantamiento:marcador',
-      //   },
-      // },
-      {
-        title: 'Marcadores',
-        icon: 'mdi-map-search-outline',
-        path: {
-          name: 'web:levantamiento:marcador',
-        },
-      },
-      {
-        title: 'Conteo vehicular',
-        icon: 'mdi-clipboard-edit-outline',
-        path: {
-          name: 'web:conteo-vehicular:lista',
-        },
-      },
-    ],
-  },
-];
+import items from '@/router/navbarItems';
 
 export default {
   name: 'App',
