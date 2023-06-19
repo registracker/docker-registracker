@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_usuario')->constrained('users');
             $table->string('codigo', 128);
-            // $table->string('punto_aforo');
             $table->string('nombre_via');
             $table->string('identificacion_via');
             $table->string('categoria_via');
@@ -37,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('levantamiento_contadors');
+        Schema::dropIfExists('levantamiento_contador');
     }
 };
