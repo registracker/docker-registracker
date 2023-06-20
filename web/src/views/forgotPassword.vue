@@ -2,10 +2,10 @@
     <div>
         <v-card class="mx-auto"
             max-width="600">
-            <v-card-title  class="justify-center py-6 mb-4">
-                <h3 class="text-center">OLVIDASTE TU CONTRASENIA</h3>
+            <v-card-title  class="justify-center mb-4 mb-0 pb-0">
+                <h3 class="text-center">OLVIDASTE TU CONTRASEÑA</h3>
             </v-card-title>
-            <v-card-text class="mb-0 pb-0">
+            <v-card-text class="mt-0 pt-0 mb-0 pb-0">
               <v-alert
                   v-if="enviado"
                   dense
@@ -14,21 +14,22 @@
                   class="py-4 px-3"
                 >
                   Se ha enviado a tu correo un enlace para que puedas reestablecer
-                  tu contrasenia
+                  tu contraseña
                 </v-alert>
-               <v-form>
+               <v-form ref="form">
                 <v-text-field
-                    v-model="form.email"
+                    :rules="[emailRule]"
+                    v-model="email"
                     label="Ingrese su correo electronico"
                     outlined
-                    class="mx-8"
+                    class="mx-8 mt-6"
                 ></v-text-field>
                </v-form>
             </v-card-text>
             <v-card-actions class="mt-0 pb-10">
                 <v-row>
                   <v-col cols="12" class="px-12">
-                    <v-btn block color="error py-6">Enviar</v-btn>
+                    <v-btn @click="sendLinkResetPassword()" block color="error py-6">Enviar</v-btn>
                   </v-col>
                   <v-col cols="12" class="px-12">
                     <v-btn class="py-6"  block text color="gray darken-1"
@@ -51,13 +52,30 @@
 
 </style>
 <script>
+import {
+  email,
+} from '../http/Validation';
 
 export default {
   data: () => ({
-    form: {
-      email: null,
-      enviado: false,
-    },
+    email: null,
+    enviado: false,
   }),
+  methods: {
+    emailRule: email('Debe agregar un correo válido.'),
+    async sendLinkResetPassword() {
+      const isValid = this.$refs.form.validate();
+      if (isValid) {
+        try {
+          await this.axios.post('forgot-password', {
+            email: this.email,
+          });
+          this.enviado = true;
+        } catch (error) {
+          this.$toast.error('Error al restaurar la contraseña.');
+        }
+      }
+    },
+  },
 };
 </script>
