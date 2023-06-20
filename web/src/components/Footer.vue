@@ -1,6 +1,6 @@
 <template>
-  <v-footer dark class="red darken-4 footer">
-    <v-container class="text-center" id="text" fixed>
+  <v-footer dark class="red darken-4"  absolute>
+    <v-container class="text-center" id="text" >
           Copyright © 2023 Universidad de El Salvador. Todos los derechos reservados
     </v-container>
   </v-footer>
@@ -18,11 +18,4 @@ export default {
   #text{
     font-size: 0.875rem;
   }
-
-  .footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
 </style>

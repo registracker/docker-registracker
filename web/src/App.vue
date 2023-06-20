@@ -10,7 +10,7 @@
         : '',
     ]"
   >
-    <div class="">
+
       <vue-progress-bar></vue-progress-bar>
       <v-navigation-drawer
         app
@@ -86,13 +86,14 @@
         </template>
       </v-app-bar>
 
-      <v-main>
-        <v-container fluid>
+      <v-main class="pb-0">
+        <v-container fluid class="py-0">
           <router-view></router-view>
         </v-container>
+        <Footer/>
+
       </v-main>
 
-      <v-footer app v-if="false"> </v-footer>
       <v-dialog v-model="dialogLogout" max-width="530px">
         <v-card>
           <v-card-title class="text-h5 justify-center">
@@ -108,8 +109,6 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <Footer></Footer>
-    </div>
   </v-app>
 </template>
 <style>
