@@ -91,11 +91,13 @@
                                   </v-btn>
                                 </v-col>
                               </v-row>
-                              <v-row no-gutters class="mt-6" justify="center">
-                                  <v-col sm="8" md="8" lg="8" align-self="center">
-                                    <router-link class="ml-2"
+                              <v-row class="mt-6">
+                                  <v-col class="d-flex justify-center" sm="12"
+                                  md="12" lg="12">
+                                    <router-link
+                                    class="forgot-password-link"
                                     :to="{ name: 'web:forgot-password' }">
-                                    Olvidaste tu contraseña?</router-link>
+                                  ¿Olvidaste tu contraseña?</router-link>
                                   </v-col>
                               </v-row>
                             </v-container>
@@ -152,6 +154,15 @@
     </v-main>
   </v-app>
 </template>
+<style>
+.forgot-password-link{
+  color: #580e0e !important; /* Color personalizado */
+  text-decoration: none; /* Quitar subrayado */
+  font-weight: bold; /* Negrita */
+  font-size: 16px; /* Tamaño de fuente */
+  transition: color 0.3s;
+}
+</style>
 <script>
 import RegistroUsuario from '@/components/users/RegistroUsuario.vue';
 import { passwordLogin, email } from '../../http/Validation';
