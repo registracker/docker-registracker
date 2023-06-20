@@ -343,9 +343,7 @@ export default {
       if (!this.$refs.form.validate()) return;
 
       try {
-        const path = this.$route.name === 'signup' ? '/usuario' : '/usuario/admin';
-
-        const { data } = await this.axios.post(path, { ...this.form });
+        const { data } = await this.axios.post('/usuario', { ...this.form });
 
         this.$refs.form.reset();
 
@@ -362,9 +360,8 @@ export default {
       }
     },
     async initialize() {
-      const response = await this.axios.post('/usuarios/search?limit=100', {
+      const response = await this.axios.post('/usuarios/search?limit=10000', {
         includes: [{ relation: 'roles' }, { relation: 'solicitud.estado' }],
-        filters: [{ field: 'roles.id', operator: '!=', value: 1 }],
       });
 
       this.items = response.data.data.map((user) => ({

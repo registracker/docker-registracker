@@ -63,7 +63,8 @@ use Maatwebsite\Excel\Excel as ExcelFormat;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Mail\MyTestEmail;
 use App\Mail\RecuperarContrasenia;
-
+use Database\Seeders\Constant;
+use Laravel\Sanctum\PersonalAccessToken;
 
 /*
 |--------------------------------------------------------------------------
@@ -443,7 +444,7 @@ Route::post('/usuario', function (Request $request) {
     $request->validate([
         'email' => ['required', 'email', 'unique:users,email', 'max:255'],
         'password' => ['required'],
-        'nombre_usuario' => ['nullable'],
+        'nombre_usuario' => ['nullable', 'string'],
         'rol' => ['required', 'exists:roles,id'],
     ], [
         'email' => 'El correo es requerido y debe ser único.',
@@ -454,9 +455,9 @@ Route::post('/usuario', function (Request $request) {
     DB::beginTransaction();
     try {
         $usuario = User::create([
-            'email' => $request->email,
+            'email' => Str::lower($request->email),
             'password' => Hash::make($request->password),
-            'name' => $request->nombre_usuario ?? '',
+            'name' => Str::lower($request->nombre_usuario ?? ''),
         ]);
 
         $rol = Role::findOrFail($request->rol);
@@ -465,6 +466,11 @@ Route::post('/usuario', function (Request $request) {
         $estadoCuenta = $ID_ESTADO_REVISION;
 
         if ($request->rol == $ID_ROL_PARTICIPANTE && Str::of($request->email)->endsWith('@ues.edu.sv')) {
+            $estadoCuenta = $ID_ESTADO_ACTIVA;
+        }
+
+        $validUser = auth('sanctum')->user();
+        if ($validUser && $validUser->hasRole(Constant::ROL_ADMINISTRADOR)){
             $estadoCuenta = $ID_ESTADO_ACTIVA;
         }
 
