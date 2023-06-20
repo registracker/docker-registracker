@@ -1,7 +1,6 @@
 <template>
-    <v-app id="inspire" style="height: 0; "><!--Solucion temporal-->
-      <v-main>
-        <v-container class="fill-height" fluid>
+
+        <v-container class="fill-height">
           <v-row justify="center">
             <v-col cols="12" sm="10" md="12" lg="10" xl="8">
               <v-card class="elevation-1">
@@ -151,8 +150,6 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-main>
-  </v-app>
 </template>
 <style>
 .forgot-password-link{

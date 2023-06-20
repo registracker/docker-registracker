@@ -5,7 +5,6 @@
         ? {
             background: `url(${require('@/assets/fondo.png')})`,
             'background-repeat': 'repeat',
-            'background-size': '200px 200px',
           }
         : '',
     ]"
@@ -87,11 +86,10 @@
       </v-app-bar>
 
       <v-main class="pb-0">
-        <v-container fluid class="py-0">
+        <v-container fluid class="py-0 mb-16">
           <router-view></router-view>
         </v-container>
         <Footer/>
-
       </v-main>
 
       <v-dialog v-model="dialogLogout" max-width="530px">
