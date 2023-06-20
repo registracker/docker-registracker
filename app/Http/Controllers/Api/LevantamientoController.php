@@ -49,7 +49,7 @@ class LevantamientoController extends Controller
     {
         $query = parent::buildIndexFetchQuery($request, $requestedRelations);
         if (
-            !$this->resolveUser()->hasRole(Constant::ROL_ADMINISTRADOR)
+            !$this->resolveUser()->hasRole([Constant::ROL_ADMINISTRADOR, Constant::ROL_INVESTIGADOR])
             && !($request->query('personal', 'no') == 'yes')
         ) {
             $query->where('id_usuario', $this->resolveUser()->id);
