@@ -9,17 +9,13 @@ use App\Http\Controllers\Api\AgrupacionLevantamientoContadorController;
 use App\Http\Controllers\Api\AgrupacionLevantamientoController;
 use App\Http\Controllers\Api\BitacoraTablaController;
 use App\Http\Controllers\Api\ClasesServiciosRutasController;
-use App\Http\Controllers\Api\ZonaController;
 use App\Http\Controllers\Api\DepartamentoController;
 use App\Http\Controllers\Api\MunicipioController;
-use App\Http\Controllers\Api\GeneroController;
 use App\Http\Controllers\Api\RoleController;
-use App\Http\Controllers\Api\UniversidadController;
 use App\Http\Controllers\Api\IncidenteController;
 use App\Http\Controllers\Api\MarcadorController;
 use App\Http\Controllers\Api\MedioDesplazamientoController;
 use App\Http\Controllers\Api\PermissionController;
-use App\Http\Controllers\Api\RoleDisableAuthorizationController;
 use App\Http\Controllers\Api\VehiculoController;
 use App\Http\Controllers\Api\DesplazamientoController;
 use App\Http\Controllers\Api\DetalleMedioRecorridoController;
@@ -34,9 +30,9 @@ use App\Http\Controllers\Api\TiposServiciosRutasController;
 use App\Http\Controllers\Api\TiposVehiculosRutasController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\Api\ReporteMarcadoresController;
+use App\Http\Controllers\Api\RoleDisabledAuthorizationController;
 use App\Http\Controllers\Api\TerminosCondicionesController;
 use App\Mail\JustTesting;
-use App\Models\AgrupacionLevantamiento;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
@@ -61,10 +57,8 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Excel as ExcelFormat;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Mail\MyTestEmail;
 use App\Mail\RecuperarContrasenia;
 use Database\Seeders\Constant;
-use Laravel\Sanctum\PersonalAccessToken;
 
 /*
 |--------------------------------------------------------------------------
@@ -470,7 +464,7 @@ Route::post('/usuario', function (Request $request) {
         }
 
         $validUser = auth('sanctum')->user();
-        if ($validUser && $validUser->hasRole(Constant::ROL_ADMINISTRADOR)){
+        if ($validUser && $validUser->hasRole(Constant::ROL_ADMINISTRADOR)) {
             $estadoCuenta = $ID_ESTADO_ACTIVA;
         }
 
@@ -640,23 +634,27 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
 
 
 Route::group(['as' => 'api.'], function () {
-    Orion::resource('zonas', ZonaController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-        ->withSoftDeletes();
+    // Orion::resource('zonas', ZonaController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
+
+    // Orion::resource('generos', GeneroController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
+
+    // Orion::resource('universidades', UniversidadController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
+
+    // Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
+
+    // Orion::resource('municipios', MunicipioController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
 
     Orion::resource('departamentos', DepartamentoController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-        ->withSoftDeletes();
-
-    Orion::resource('municipios', MunicipioController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-        ->withSoftDeletes();
-
-    Orion::resource('generos', GeneroController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-        ->withSoftDeletes();
-
-    Orion::resource('universidades', UniversidadController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
         ->withSoftDeletes();
 
@@ -664,7 +662,7 @@ Route::group(['as' => 'api.'], function () {
         ->only(['search', 'show', 'store', 'update', 'destroy', 'restore'])
         ->withSoftDeletes();
 
-    Orion::resource('roles', RoleDisableAuthorizationController::class)
+    Orion::resource('roles', RoleDisabledAuthorizationController::class)
         ->only(['index'])
         ->withSoftDeletes();
 
@@ -683,10 +681,6 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('marcadores', MarcadorController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
         ->withSoftDeletes();
-
-    //Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)
-    //->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-    //->withSoftDeletes();
 
     Orion::resource('vehiculos', VehiculoController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])
