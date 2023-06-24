@@ -6,7 +6,7 @@ use Orion\Concerns\DisableAuthorization;
 use Orion\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role;
 
-class RoleDisableAuthorizationController extends Controller
+class RoleDisabledAuthorizationController extends Controller
 {
     use DisableAuthorization;
 
