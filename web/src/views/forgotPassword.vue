@@ -60,6 +60,7 @@ export default {
   data: () => ({
     email: null,
     enviado: false,
+    mensaje: '',
   }),
   methods: {
     emailRule: email('Debe agregar un correo válido.'),
@@ -72,7 +73,12 @@ export default {
           });
           this.enviado = true;
         } catch (error) {
-          this.$toast.error('Error al restaurar la contraseña.');
+          if (error.response.request.status === 422) {
+            this.mensaje = 'Correo no registrado';
+          } else {
+            this.mensaje = 'Error al restaurar la contraseña';
+          }
+          this.$toast.error(this.mensaje);
         }
       }
     },

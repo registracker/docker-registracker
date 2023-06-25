@@ -158,7 +158,7 @@
   </div>
 </template>
 <script>
-import { integer, string, number } from '../../http/Validation';
+import { string } from '../../http/Validation';
 
 export default {
   data() {
