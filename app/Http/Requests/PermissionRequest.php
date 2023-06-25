@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Database\Seeders\Constant;
 use Orion\Http\Requests\Request;
 
 class PermissionRequest extends Request
@@ -10,7 +11,7 @@ class PermissionRequest extends Request
     public function updateRules(): array
     {
         return [
-            'id' => ['required', 'integer', 'min:88'],
+            'id' => ['required', 'integer', 'min:' . Constant::DEFAULT_PERMISSIONS],
             'name' => ['required', 'unique:permissions,name', 'max:255'],
         ];
     }

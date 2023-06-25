@@ -17,4 +17,9 @@ class ReporteIncidente extends Model
     const DELETED_AT = 'fecha_eliminado';
 
     protected $fillable = ['id_incidente', 'fecha_reporte', 'altitud', 'posicion'];
+
+    public function incidente()
+    {
+        return $this->belongsTo(Incidente::class, 'id_incidente');
+    }
 }

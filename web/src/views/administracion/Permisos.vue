@@ -10,6 +10,8 @@
         'items-per-page-text': 'Elementos por página',
       }"
       :disable-sort="true"
+      @update:options="actualizarOpcionesTabla"
+      :server-items-length="total"
     >
       <template v-slot:no-data> Sin registros </template>
       <template v-slot:top>
@@ -17,7 +19,12 @@
           <v-toolbar-title class="text-capitalize"> Permisos </v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-btn title="ver permisos predefinidos" icon class="mr-2" @click="updateSearch">
+          <v-btn
+            title="ver permisos predefinidos"
+            icon
+            class="mr-2"
+            @click="updateSearch"
+          >
             <v-icon :color="showBaseRoles ? 'red darken-2' : 'grey'">
               mdi-shield-lock-open-outline
             </v-icon>
@@ -89,7 +96,11 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-icon v-if="item.id > permisosDefault" class="mr-2" @click="editItem(item)">
+        <v-icon
+          v-if="item.id > permisosDefault"
+          class="mr-2"
+          @click="editItem(item)"
+        >
           mdi-pencil
         </v-icon>
         <v-icon
@@ -119,15 +130,24 @@
   </div>
 </template>
 <script>
-import { string } from '../../http/Validation';
+import { string, permisosDefault } from '../../http/Validation';
 
 export default {
   data() {
     return {
+      permisosDefault,
+      limit: 10,
+      page: 1,
+      total: 0,
       showBaseRoles: false,
-      permisosDefault: 88,
       requiredField: [(v) => !!v || 'Name is required'],
       headers: [
+        {
+          text: 'id',
+          align: 'start',
+          value: 'id',
+          sortable: false,
+        },
         {
           text: 'Nombre',
           align: 'start',
@@ -168,22 +188,40 @@ export default {
     fieldRule: string('Debe completar el campo.'),
 
     async initialize() {
-      const response = await this.axios.post('/permisos/search', {
-        sort: [{ field: 'id', direction: 'desc' }],
-        filters: [
-          {
-            field: 'id',
-            operator: '>',
-            value: this.showBaseRoles ? 0 : this.permisosDefault,
-          },
-        ],
-      });
+      const response = await this.axios.post(
+        '/permisos/search',
+        {
+          sort: [{ field: 'id', direction: 'desc' }],
+          filters: [
+            {
+              field: 'id',
+              operator: '>',
+              value: this.showBaseRoles ? 0 : this.permisosDefault,
+            },
+          ],
+        },
+        { params: { limit: this.limit, page: this.page } },
+      );
+
       this.items = response.data.data;
+      this.total = response.data.meta.total;
     },
 
     updateSearch() {
       this.showBaseRoles = !this.showBaseRoles;
       this.initialize();
+    },
+
+    actualizarOpcionesTabla(config) {
+      if (config.page !== this.page) {
+        this.page = config.page;
+        this.initialize();
+      }
+
+      if (config.itemsPerPage !== this.limit) {
+        this.limit = config.itemsPerPage;
+        this.initialize();
+      }
     },
 
     async save() {

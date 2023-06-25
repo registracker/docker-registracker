@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\PermissionRequest;
+use Database\Seeders\Constant;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Orion\Http\Controllers\Controller;
@@ -16,7 +17,7 @@ class PermissionController extends Controller
 
     protected $request = PermissionRequest::class;
 
-    private $defaultPermisos = 88;
+    private $defaultPermisos = Constant::DEFAULT_PERMISSIONS;
 
     public function limit(): int
     {
@@ -46,18 +47,4 @@ class PermissionController extends Controller
             $permission->delete();
         }
     }
-
-    // protected function runUpdateFetchQuery(Request $request, Builder $query, $key): Model
-    // {
-    //     return $query->findOrFail($key);
-    // }
-
-
-    // protected function runDestroyFetchQuery(Request $request,  Builder $query): Model
-    // {
-    //     return $query->select($this->attributes)->findOrFail($key);
-    // }
-
-
-
 }

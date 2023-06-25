@@ -4,22 +4,19 @@ use App\Exports\ReporteContadorExport;
 use App\Exports\DetalleMedioRecorridoExport;
 use App\Exports\DetalleMedioRecorridoMultipleExport;
 use App\Exports\ReporteContadorAgrupadoExport;
+use App\Exports\ReporteIncidentesExport;
 use App\Exports\ReporteMarcadoresExport;
 use App\Http\Controllers\Api\AgrupacionLevantamientoContadorController;
 use App\Http\Controllers\Api\AgrupacionLevantamientoController;
 use App\Http\Controllers\Api\BitacoraTablaController;
 use App\Http\Controllers\Api\ClasesServiciosRutasController;
-use App\Http\Controllers\Api\ZonaController;
 use App\Http\Controllers\Api\DepartamentoController;
 use App\Http\Controllers\Api\MunicipioController;
-use App\Http\Controllers\Api\GeneroController;
 use App\Http\Controllers\Api\RoleController;
-use App\Http\Controllers\Api\UniversidadController;
 use App\Http\Controllers\Api\IncidenteController;
 use App\Http\Controllers\Api\MarcadorController;
 use App\Http\Controllers\Api\MedioDesplazamientoController;
 use App\Http\Controllers\Api\PermissionController;
-use App\Http\Controllers\Api\RoleDisableAuthorizationController;
 use App\Http\Controllers\Api\VehiculoController;
 use App\Http\Controllers\Api\DesplazamientoController;
 use App\Http\Controllers\Api\DetalleMedioRecorridoController;
@@ -34,9 +31,9 @@ use App\Http\Controllers\Api\TiposServiciosRutasController;
 use App\Http\Controllers\Api\TiposVehiculosRutasController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\Api\ReporteMarcadoresController;
+use App\Http\Controllers\Api\RoleDisabledAuthorizationController;
 use App\Http\Controllers\Api\TerminosCondicionesController;
 use App\Mail\JustTesting;
-use App\Models\AgrupacionLevantamiento;
 use App\Models\CoordenadaDesplazamiento;
 use App\Models\Desplazamiento;
 use App\Models\DetalleMedioRecorrido;
@@ -61,10 +58,8 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Excel as ExcelFormat;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Mail\MyTestEmail;
 use App\Mail\RecuperarContrasenia;
 use Database\Seeders\Constant;
-use Laravel\Sanctum\PersonalAccessToken;
 
 /*
 |--------------------------------------------------------------------------
@@ -259,7 +254,7 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
             FROM coordenadas_desplazamiento cd
             JOIN medios_desplazamiento md ON cd.id_medio_desplazamiento = md.id
             WHERE cd.posicion IS NOT NULL
-            AND cd.desplazamiento_id = :desplazamiento_id 
+            AND cd.desplazamiento_id = :desplazamiento_id
             GROUP BY cd.agrupacion_medio_desplazamiento, md.id, md.nombre
         ) subconsulta;";
 
@@ -336,10 +331,61 @@ Route::middleware('auth:sanctum')->get('/recorrido/geojson/filtro', function (Re
         SELECT c.desplazamiento_id, ST_MakeLine(ST_Transform(c.posicion::geometry, 4326) ORDER BY c.fecha_registro) AS linestring
         FROM desplazamientos d
         JOIN coordenadas_desplazamiento c ON d.id = c.desplazamiento_id
-        WHERE d.fecha_creado BETWEEN ? AND ?
+        WHERE Date(d.fecha_creado) BETWEEN ? AND ?
         GROUP BY c.desplazamiento_id
     ) AS subquery
     JOIN desplazamientos d ON subquery.desplazamiento_id = d.id;";
+
+    $resultadoGeoJSON = DB::select($queryLineString, $fechas);
+
+    return response()->json([
+        'coleccion' => json_decode($resultadoGeoJSON[0]->geojson)
+    ]);
+});
+
+Route::middleware('auth:sanctum')->get('/incidente/geojson/filtro', function (Request $request) {
+    $request->validate([
+        'fecha_inicio' => ['date_format:Y-m-d'],
+        'fecha_fin' => ['date_format:Y-m-d'],
+    ]);
+
+    $fechaInicio = $request->query('fecha_inicio', (new Carbon())->format('Y-m-d'));
+    $fechaFin = $request->query('fecha_fin', (new Carbon())->addDay()->format('Y-m-d'));
+    $fechas = [new Carbon($fechaInicio), new Carbon($fechaFin)];
+    usort($fechas, function ($a, $b) {
+        return $a->timestamp - $b->timestamp;
+    });
+
+    $queryLineString = "SELECT
+            jsonb_build_object(
+            'type', 'FeatureCollection',
+            'features', jsonb_agg(feature)
+            ) AS geojson
+        FROM (
+            SELECT
+            jsonb_build_object(
+                'type', 'Feature',
+                'id', ri.id,
+                'geometry', ST_AsGeoJSON(ri.posicion)::jsonb,
+                'properties', (
+                SELECT jsonb_build_object(
+                    'id', ri.id,
+                    'fecha_reporte', TO_CHAR(ri.fecha_reporte, 'DD-MM-YYYY HH24:MI'),
+                    'incidente_id', i.id,
+                    'nombre', i.nombre,
+                    'icono', i.icono
+                )
+                FROM incidentes i
+                WHERE i.id = ri.id_incidente
+                )
+            ) AS feature
+            FROM reportes_incidentes ri
+            WHERE Date(ri.fecha_reporte) BETWEEN ? AND ?
+        ) subquery;";
+
+    if ($request->query('csv', null) == 'yes') {
+        return Excel::download(new ReporteIncidentesExport($fechas), 'reporte-incidentes.csv', ExcelFormat::CSV);
+    }
 
     $resultadoGeoJSON = DB::select($queryLineString, $fechas);
 
@@ -470,7 +516,7 @@ Route::post('/usuario', function (Request $request) {
         }
 
         $validUser = auth('sanctum')->user();
-        if ($validUser && $validUser->hasRole(Constant::ROL_ADMINISTRADOR)){
+        if ($validUser && $validUser->hasRole(Constant::ROL_ADMINISTRADOR)) {
             $estadoCuenta = $ID_ESTADO_ACTIVA;
         }
 
@@ -640,23 +686,27 @@ Route::get('/reporte-contador/{codigo}/agrupado', function (Request $request, $c
 
 
 Route::group(['as' => 'api.'], function () {
-    Orion::resource('zonas', ZonaController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-        ->withSoftDeletes();
+    // Orion::resource('zonas', ZonaController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
+
+    // Orion::resource('generos', GeneroController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
+
+    // Orion::resource('universidades', UniversidadController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
+
+    // Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
+
+    // Orion::resource('municipios', MunicipioController::class)
+    //     ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
+    //     ->withSoftDeletes();
 
     Orion::resource('departamentos', DepartamentoController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-        ->withSoftDeletes();
-
-    Orion::resource('municipios', MunicipioController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-        ->withSoftDeletes();
-
-    Orion::resource('generos', GeneroController::class)
-        ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-        ->withSoftDeletes();
-
-    Orion::resource('universidades', UniversidadController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
         ->withSoftDeletes();
 
@@ -664,7 +714,7 @@ Route::group(['as' => 'api.'], function () {
         ->only(['search', 'show', 'store', 'update', 'destroy', 'restore'])
         ->withSoftDeletes();
 
-    Orion::resource('roles', RoleDisableAuthorizationController::class)
+    Orion::resource('roles', RoleDisabledAuthorizationController::class)
         ->only(['index'])
         ->withSoftDeletes();
 
@@ -683,10 +733,6 @@ Route::group(['as' => 'api.'], function () {
     Orion::resource('marcadores', MarcadorController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
         ->withSoftDeletes();
-
-    //Orion::resource('clasificaciones-vehicular', ClasificacionVehicularController::class)
-    //->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore'])
-    //->withSoftDeletes();
 
     Orion::resource('vehiculos', VehiculoController::class)
         ->only(['index', 'search', 'show', 'store', 'update', 'destroy', 'restore', 'batchStore'])

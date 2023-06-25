@@ -11,4 +11,5 @@ class Constant
     const GUARD_API = 'api';
     const GUARD_WEB = 'web';
     const ULID_BASE = '90dd-3e07-2cad';
+    const DEFAULT_PERMISSIONS = 118;
 }

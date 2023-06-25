@@ -15,7 +15,7 @@ class ReporteIncidenteController extends Controller
 
     protected function performStore(Request $request, Model $reporteIncidente, array $attributes): void
     {
-        $attributes['fecha_reporte'] = Carbon::createFromTimestampMs($attributes['fecha_reporte']);
+        $attributes['fecha_reporte'] = $attributes['fecha_reporte'];
         $longitud = number_format($attributes['longitud'], 6);
         $latitud = number_format($attributes['latitud'], 6);
         $attributes['altitud'] = number_format($attributes['altitud'], 6);

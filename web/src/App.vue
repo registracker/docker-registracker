@@ -4,112 +4,93 @@
       !isAuthenticated
         ? {
             background: `url(${require('@/assets/fondo.png')})`,
-            'background-repeat': 'repeat',
-            'background-size': '200px 200px',
           }
         : '',
     ]"
   >
-    <div class="">
-      <vue-progress-bar></vue-progress-bar>
-      <v-navigation-drawer
-        app
-        v-model="drawer"
-        v-if="isAuthenticated"
-        color="blue-grey lighten-5"
-      >
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="text-h6 text-center">
-              REGISTRACKER
-            </v-list-item-title>
-            <v-list-item-subtitle class="text-h4 text-center">
-              🛴
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+    <vue-progress-bar></vue-progress-bar>
+    <v-navigation-drawer app v-model="drawer" v-if="isAuthenticated" color="blue-grey lighten-5">
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="text-h6 text-center"> REGISTRACKER </v-list-item-title>
+          <v-list-item-subtitle class="text-h4 text-center"> 🛴 </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
 
-        <v-divider></v-divider>
+      <v-divider></v-divider>
 
-        <v-list dense nav>
-          <template v-for="item in items">
-            <v-list-group color="red" v-if="item.children" :key="item.index">
-              <template v-slot:activator>
-                <v-list-item-title class="text-capitalize">
-                  {{ item.title }}
-                </v-list-item-title>
-              </template>
+      <v-list dense nav>
+        <template v-for="item in items">
+          <v-list-group color="red" v-if="item.children" :key="item.index">
+            <template v-slot:activator>
+              <v-list-item-title class="text-capitalize">
+                {{ item.title }}
+              </v-list-item-title>
+            </template>
 
-              <template #prependIcon>
-                <v-icon>{{ item.icon }}</v-icon>
-              </template>
+            <template #prependIcon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </template>
 
-              <v-list-item
-                v-for="(child, j) in item.children"
-                :key="j"
-                :to="child.path"
-                class="ml-4"
-                color="red"
-              >
-                <v-list-item-icon>
-                  <v-icon>{{ child.icon }} </v-icon>
-                </v-list-item-icon>
-                <v-list-item-title class="text-capitalize">
-                  <span>{{ child.title }}</span>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list-group>
-
-            <v-list-item v-else :key="item.title" :to="item.path">
+            <v-list-item
+              v-for="(child, j) in item.children"
+              :key="j"
+              :to="child.path"
+              class="ml-4"
+              color="red"
+            >
               <v-list-item-icon>
-                <v-icon>{{ item.icon }} </v-icon>
+                <v-icon>{{ child.icon }} </v-icon>
               </v-list-item-icon>
               <v-list-item-title class="text-capitalize">
-                <span>{{ item.title }}</span>
+                <span>{{ child.title }}</span>
               </v-list-item-title>
             </v-list-item>
-          </template>
-        </v-list>
-      </v-navigation-drawer>
+          </v-list-group>
 
-      <v-app-bar app color="blue-grey lighten-5" v-if="isAuthenticated">
-        <v-app-bar-nav-icon
-          @click="drawer = !drawer"
-          v-if="isAuthenticated"
-        ></v-app-bar-nav-icon>
-        <v-spacer></v-spacer>
-
-        <template v-if="isAuthenticated">
-          <v-btn icon class="mx-2" plain @click="dialogLogout = true">
-            <v-icon> mdi-logout </v-icon>
-          </v-btn>
+          <v-list-item v-else :key="item.title" :to="item.path">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }} </v-icon>
+            </v-list-item-icon>
+            <v-list-item-title class="text-capitalize">
+              <span>{{ item.title }}</span>
+            </v-list-item-title>
+          </v-list-item>
         </template>
-      </v-app-bar>
+      </v-list>
+    </v-navigation-drawer>
 
-      <v-main>
-        <v-container fluid>
-          <router-view></router-view>
-        </v-container>
-      </v-main>
+    <v-app-bar app color="blue-grey lighten-5" v-if="isAuthenticated">
+      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="isAuthenticated"></v-app-bar-nav-icon>
+      <v-spacer></v-spacer>
 
-      <v-footer app v-if="false"> </v-footer>
-      <v-dialog v-model="dialogLogout" max-width="530px">
-        <v-card>
-          <v-card-title class="text-h5 justify-center">
-            ¿Está seguro que desea cerrar sesión?
-          </v-card-title>
-          <v-card-actions class="py-3">
-            <v-spacer></v-spacer>
-            <v-btn class="red darken-2" @click="logout" dark>Si</v-btn>
-            <v-btn class="default" color="" @click="dialogLogout = false">
-              No
-            </v-btn>
-            <v-spacer></v-spacer>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <Footer></Footer>
-    </div>
+      <template v-if="isAuthenticated">
+        <v-btn icon class="mx-2" plain @click="dialogLogout = true">
+          <v-icon> mdi-logout </v-icon>
+        </v-btn>
+      </template>
+    </v-app-bar>
+
+    <v-main class="pb-0">
+      <v-container fluid class="mb-16">
+        <router-view></router-view>
+      </v-container>
+      <Footer />
+    </v-main>
+
+    <v-dialog v-model="dialogLogout" max-width="530px">
+      <v-card>
+        <v-card-title class="text-h5 justify-center">
+          ¿Está seguro que desea cerrar sesión?
+        </v-card-title>
+        <v-card-actions class="py-3">
+          <v-spacer></v-spacer>
+          <v-btn class="red darken-2" @click="logout" dark>Si</v-btn>
+          <v-btn class="default" color="" @click="dialogLogout = false"> No </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 <style>
@@ -155,9 +136,7 @@ export default {
             })
             .filter(Boolean);
         } else {
-          this.$toast.error(
-            'No tiene permisos para acceder al componente web.',
-          );
+          this.$toast.error('No tiene permisos para acceder al componente web.');
           this.logout();
         }
       } catch (error) {

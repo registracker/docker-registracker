@@ -1,54 +1,5 @@
 <template>
   <div>
-    <!-- <v-row>
-      <v-col>
-        <v-menu
-          :close-on-content-click="false"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              label="Date"
-              hint="MM/DD/YYYY format"
-              persistent-hint
-              prepend-icon="mdi-calendar"
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker no-title></v-date-picker>
-        </v-menu>
-      </v-col>
-
-      <v-col>
-        <v-menu
-          :close-on-content-click="false"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              label="Date (read only text field)"
-              hint="MM/DD/YYYY format"
-              persistent-hint
-              prepend-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            no-title
-          ></v-date-picker>
-        </v-menu>
-      </v-col>
-      <v-col> <v-btn color="red darken-2"> Filtrar </v-btn></v-col>
-    </v-row> -->
     <v-row>
       <v-col md="6" sm="12" lg="6" xl="6" xs="12">
         <v-text-field

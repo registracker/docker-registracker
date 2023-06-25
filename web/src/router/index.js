@@ -347,8 +347,8 @@ const routes = [{
 },
 
 {
-  path: '/levantamiento',
-  name: 'levantamiento',
+  path: '/reporte',
+  name: 'reporte',
   meta: {
     requiresAuth: true,
   },
@@ -356,50 +356,62 @@ const routes = [{
     /* webpackChunkName: "levantamiento" */
     '@/views/administracion/Base.vue'
   ),
-  children: [{
-    path: 'marcador',
-    name: 'web:levantamiento:marcador',
-    meta: {
-      requiresAuth: true,
+  children: [
+    {
+      path: 'incidentes',
+      name: 'web:reporte:incidente',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+        /* webpackChunkName: "web:reporte:incidente" */
+        '@/components/desplazamiento/IncidenteGeoJson.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "web:levantamiento:marcador" */
-      '@/components/levantamiento/Listado.vue'
-    ),
-  },
-  {
-    path: 'marcador/:codigo',
-    name: 'web:levantamiento:detalle-marcador',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'marcadores',
+      name: 'web:reporte:marcador',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:reporte:marcador" */
+        '@/components/levantamiento/Listado.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "eb:levantamiento:marcador" */
-      '@/components/levantamiento/Marker.vue'
-    ),
-  },
-  {
-    path: 'conteo-vehicular',
-    name: 'web:conteo-vehicular:lista',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'marcador/:codigo',
+      name: 'web:reporte:detalle-marcador',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:reporte:detalle-marcador" */
+        '@/components/levantamiento/Marker.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "web:levantamiento:detalle-marcador" */
-      '@/components/conteo_vehicular/Listado.vue'
-    ),
-  },
-  {
-    path: 'conteo-vehicular/:codigo',
-    name: 'web:conteo-vehicular:detalle',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'conteo-vehicular',
+      name: 'web:reporte:conteo-vehicular',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:reporte:conteo-vehicular" */
+        '@/components/conteo_vehicular/Listado.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "web:conteo-vehicular:detalle" */
-      '@/components/conteo_vehicular/Tabla.vue'
-    ),
-  },
+    {
+      path: 'conteo-vehicular/:codigo',
+      name: 'web:reporte:detalle-conteo-vehicular',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:reporte:detalle-conteo-vehicular" */
+        '@/components/conteo_vehicular/Tabla.vue'
+      ),
+    },
   ],
 },
 
