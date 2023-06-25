@@ -99,10 +99,12 @@
   </v-form>
 </template>
 <script>
-import { LMap, LTileLayer, LGeoJson, LControlLayers } from 'vue2-leaflet';
-import { string } from '../../http/Validation';
+import {
+  LMap, LTileLayer, LGeoJson, LControlLayers,
+} from 'vue2-leaflet';
 import { circleMarker } from 'leaflet';
 import { saveAs } from 'file-saver';
+import { string } from '../../http/Validation';
 
 export default {
   name: 'IncidenteGeoJson',
@@ -125,7 +127,7 @@ export default {
           const data = feature?.properties?.nombre;
           const fechaReporte = feature?.properties?.fecha_reporte;
           if (data) {
-            layer.bindPopup(data + '<br>' + fechaReporte);
+            layer.bindPopup(`${data}<br>${fechaReporte}`);
           }
         },
         pointToLayer(feature, latlng) {
@@ -182,11 +184,10 @@ export default {
       },
     },
     dateRangeRules() {
-      return () =>
-        new Date(this.dateRange[1]).getTime() >=
-          new Date(this.dateRange[0]).getTime() ||
-        this.dateRange[0] === this.dateRange[1] ||
-        'Error en las fechas';
+      return () => new Date(this.dateRange[1]).getTime()
+          >= new Date(this.dateRange[0]).getTime()
+        || this.dateRange[0] === this.dateRange[1]
+        || 'Error en las fechas';
     },
   },
 
@@ -208,7 +209,7 @@ export default {
         } = await this.axios.get('incidente/geojson/filtro', {
           params: {
             fecha_inicio: this.dateRange?.[0],
-            fecha_fin: this.dateRange?.[1]
+            fecha_fin: this.dateRange?.[1],
           },
         });
 
@@ -238,7 +239,7 @@ export default {
         .then((response) => {
           const csvData = response.data;
           const blob = new Blob([csvData], { type: 'text/plain' });
-          const fileName = `reporte-incidentes.csv`;
+          const fileName = 'reporte-incidentes.csv';
           saveAs(blob, fileName);
         })
         .catch((error) => {
