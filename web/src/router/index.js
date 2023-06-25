@@ -358,18 +358,18 @@ const routes = [{
   ),
   children: [
     {
-      path: 'incidente',
+      path: 'incidentes',
       name: 'web:reporte:incidente',
       meta: {
         requiresAuth: true,
       },
       component: () => import(
         /* webpackChunkName: "web:reporte:incidente" */
-        '@/components/levantamiento/Listado.vue'
+        '@/components/desplazamiento/IncidenteGeoJson.vue'
       ),
     },
     {
-      path: 'marcador',
+      path: 'marcadores',
       name: 'web:reporte:marcador',
       meta: {
         requiresAuth: true,

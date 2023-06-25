@@ -4,6 +4,7 @@ use App\Exports\ReporteContadorExport;
 use App\Exports\DetalleMedioRecorridoExport;
 use App\Exports\DetalleMedioRecorridoMultipleExport;
 use App\Exports\ReporteContadorAgrupadoExport;
+use App\Exports\ReporteIncidentesExport;
 use App\Exports\ReporteMarcadoresExport;
 use App\Http\Controllers\Api\AgrupacionLevantamientoContadorController;
 use App\Http\Controllers\Api\AgrupacionLevantamientoController;
@@ -253,7 +254,7 @@ Route::middleware('auth:sanctum')->get('/desplazamiento/{desplazamiento}', funct
             FROM coordenadas_desplazamiento cd
             JOIN medios_desplazamiento md ON cd.id_medio_desplazamiento = md.id
             WHERE cd.posicion IS NOT NULL
-            AND cd.desplazamiento_id = :desplazamiento_id 
+            AND cd.desplazamiento_id = :desplazamiento_id
             GROUP BY cd.agrupacion_medio_desplazamiento, md.id, md.nombre
         ) subconsulta;";
 
@@ -330,10 +331,61 @@ Route::middleware('auth:sanctum')->get('/recorrido/geojson/filtro', function (Re
         SELECT c.desplazamiento_id, ST_MakeLine(ST_Transform(c.posicion::geometry, 4326) ORDER BY c.fecha_registro) AS linestring
         FROM desplazamientos d
         JOIN coordenadas_desplazamiento c ON d.id = c.desplazamiento_id
-        WHERE d.fecha_creado BETWEEN ? AND ?
+        WHERE Date(d.fecha_creado) BETWEEN ? AND ?
         GROUP BY c.desplazamiento_id
     ) AS subquery
     JOIN desplazamientos d ON subquery.desplazamiento_id = d.id;";
+
+    $resultadoGeoJSON = DB::select($queryLineString, $fechas);
+
+    return response()->json([
+        'coleccion' => json_decode($resultadoGeoJSON[0]->geojson)
+    ]);
+});
+
+Route::middleware('auth:sanctum')->get('/incidente/geojson/filtro', function (Request $request) {
+    $request->validate([
+        'fecha_inicio' => ['date_format:Y-m-d'],
+        'fecha_fin' => ['date_format:Y-m-d'],
+    ]);
+
+    $fechaInicio = $request->query('fecha_inicio', (new Carbon())->format('Y-m-d'));
+    $fechaFin = $request->query('fecha_fin', (new Carbon())->addDay()->format('Y-m-d'));
+    $fechas = [new Carbon($fechaInicio), new Carbon($fechaFin)];
+    usort($fechas, function ($a, $b) {
+        return $a->timestamp - $b->timestamp;
+    });
+
+    $queryLineString = "SELECT
+            jsonb_build_object(
+            'type', 'FeatureCollection',
+            'features', jsonb_agg(feature)
+            ) AS geojson
+        FROM (
+            SELECT
+            jsonb_build_object(
+                'type', 'Feature',
+                'id', ri.id,
+                'geometry', ST_AsGeoJSON(ri.posicion)::jsonb,
+                'properties', (
+                SELECT jsonb_build_object(
+                    'id', ri.id,
+                    'fecha_reporte', TO_CHAR(ri.fecha_reporte, 'DD-MM-YYYY HH24:MI'),
+                    'incidente_id', i.id,
+                    'nombre', i.nombre,
+                    'icono', i.icono
+                )
+                FROM incidentes i
+                WHERE i.id = ri.id_incidente
+                )
+            ) AS feature
+            FROM reportes_incidentes ri
+            WHERE Date(ri.fecha_reporte) BETWEEN ? AND ?
+        ) subquery;";
+
+    if ($request->query('csv', null) == 'yes') {
+        return Excel::download(new ReporteIncidentesExport($fechas), 'reporte-incidentes.csv', ExcelFormat::CSV);
+    }
 
     $resultadoGeoJSON = DB::select($queryLineString, $fechas);
 
