@@ -146,6 +146,7 @@
         </v-card>
       </v-col>
     </v-row>
+    <h2 v-if="no_data" class="grey--text text-lighten-5">No se ha registrado ningún recorrido</h2>
   </div>
 </template>
 <script>
@@ -160,6 +161,7 @@ export default {
 
   data() {
     return {
+      no_data: false,
       searchUuid: null,
       loading: false,
       numeroDePaginas: 0,
@@ -201,6 +203,10 @@ export default {
         );
         this.desplazamientos = desplazamientos;
         this.numeroDePaginas = lastPage;
+
+        if (this.desplazamientos) {
+          this.no_data = true;
+        }
       } catch (error) {
         this.$toast.error('Error al obtener los desplazamiento.');
       }
