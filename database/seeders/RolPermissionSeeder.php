@@ -78,7 +78,7 @@ class RolPermissionSeeder extends Seeder
             '110:api:vehiculo:crear',
             '111:api:vehiculo:listar',
             '100:api:vehiculo:actualizar',
-            '100:pi:vehiculo:eliminar',
+            '100:api:vehiculo:eliminar',
 
             '100:api:estado_solicitud:crear',
             '100:api:estado_solicitud:listar',
@@ -132,8 +132,8 @@ class RolPermissionSeeder extends Seeder
 
             '100:api:levantamiento:crear',
             '111:api:levantamiento:listar',
-            '100:api:levantamiento:actualizar',
-            '100:api:levantamiento:eliminar',
+            '110:api:levantamiento:actualizar',
+            '110:api:levantamiento:eliminar',
 
             '111:api:reporte_marcadores:crear',
             '111:api:reporte_marcadores:listar',
@@ -147,8 +147,8 @@ class RolPermissionSeeder extends Seeder
 
             '111:api:levantamiento_contador:crear',
             '111:api:levantamiento_contador:listar',
-            '100:api:levantamiento_contador:actualizar',
-            '100:api:levantamiento_contador:eliminar',
+            '110:api:levantamiento_contador:actualizar',
+            '110:api:levantamiento_contador:eliminar',
 
             '111:api:reporte_contador:crear',
             '111:api:reporte_contador:listar',
@@ -176,17 +176,18 @@ class RolPermissionSeeder extends Seeder
             '100:web:administracion:clases-servicios-rutas',
             '100:web:administracion:rutas-transporte',
             '110:web:administracion:levantamiento',
-            '100:web:administracion:levantamiento-usuario',
+            '110:web:administracion:levantamiento-usuario',
             '110:web:administracion:conteo-vehicular',
-            '100:web:administracion:conteo-vehicular-usuario',
+            '110:web:administracion:conteo-vehicular-usuario',
             '111:web:desplazamiento:movil',
             '111:web:desplazamiento:detalle',
-            '110:web:levantamiento:marcador',
-            '110:web:levantamiento:detalle-marcador',
+            '110:web:reporte:marcador',
+            '110:web:reporte:detalle-marcador',
             '110:web:levantamiento:levantamiento-contador',
-            '110:web:conteo-vehicular:lista',
-            '110:web:conteo-vehicular:detalle',
+            '110:web:reporte:conteo-vehicular',
+            '110:web:reporte:detalle-conteo-vehicular',
             '110:web:desplazamiento:geojson',
+            '110:web:reporte:incidente',
         ]);
 
         $roleAdministrador = Role::create(['name' => Constant::ROL_ADMINISTRADOR]);

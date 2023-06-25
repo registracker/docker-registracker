@@ -12,7 +12,7 @@ class EnablePostgis extends Migration
      */
     public function up()
     {
-        Schema::enablePostgisIfNotExists();
+        // Schema::enablePostgisIfNotExists();
     }
 
     /**
@@ -22,6 +22,6 @@ class EnablePostgis extends Migration
      */
     public function down()
     {
-        Schema::disablePostgisIfExists();
+        // Schema::disablePostgisIfExists();
     }
 }

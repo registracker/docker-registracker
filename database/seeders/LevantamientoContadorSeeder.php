@@ -19,9 +19,9 @@ class LevantamientoContadorSeeder extends Seeder
         LevantamientoContador::create([
             'id_usuario' => 1,
             'codigo' => Constant::ULID_BASE,
-            'nombre_via' => 'CA-1 SAN MIGUEL, EL DELIRIO –SAN MIGUEL y CA-1 LA UNION',
-            'periodo_inicio' => Carbon::create(2023, 05, 16),
-            'periodo_fin' => Carbon::create(2023, 05, 30),
+            'nombre_via' => 'CA-1 SAN MIGUEL, EL DELIRIO – SAN MIGUEL y CA-1 LA UNION',
+            'periodo_inicio' => Carbon::create(2023, 01, 1),
+            'periodo_fin' => Carbon::create(2023, 07, 30),
             'identificacion_via' => 'Urbana',
             'categoria_via' => 'Carretera',
             'numero_carriles' => '2 carriles de oriente a poniente',

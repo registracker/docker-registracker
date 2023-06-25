@@ -139,25 +139,25 @@ export default [{
   title: 'Reportes',
   icon: 'mdi-folder-outline',
   children: [
-    // {
-    //   title: 'Incidentes',
-    //   icon: 'mdi-map-search-outline',
-    //   path: {
-    //     name: 'web:levantamiento:marcador',
-    //   },
-    // },
+    {
+      title: 'Incidentes',
+      icon: 'mdi-map-marker-multiple-outline',
+      path: {
+        name: 'web:reporte:incidente',
+      },
+    },
     {
       title: 'Marcadores',
       icon: 'mdi-map-search-outline',
       path: {
-        name: 'web:levantamiento:marcador',
+        name: 'web:reporte:marcador',
       },
     },
     {
       title: 'Conteo vehicular',
       icon: 'mdi-clipboard-edit-outline',
       path: {
-        name: 'web:conteo-vehicular:lista',
+        name: 'web:reporte:conteo-vehicular',
       },
     },
   ],

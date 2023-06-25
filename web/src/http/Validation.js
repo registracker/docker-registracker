@@ -1,5 +1,7 @@
 import Joi from 'joi';
 
+export const permisosDefault = 118;
+
 function validate(schema) {
   // eslint-disable-next-line func-names
   return function (value) {

@@ -157,7 +157,7 @@ export default {
 
     visualizar(levantamiento) {
       this.$router.push({
-        name: 'web:conteo-vehicular:detalle',
+        name: 'web:reporte:detalle-conteo-vehicular',
         params: { codigo: levantamiento.codigo },
       });
     },

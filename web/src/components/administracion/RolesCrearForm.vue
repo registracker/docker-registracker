@@ -59,9 +59,7 @@
   </div>
 </template>
 <script>
-import { string } from '../../http/Validation';
-
-const permisosDefault = 88;
+import { string, permisosDefault } from '../../http/Validation';
 
 const filtros = {
   web: {

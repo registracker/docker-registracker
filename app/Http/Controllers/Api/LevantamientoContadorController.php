@@ -29,18 +29,16 @@ class LevantamientoContadorController extends Controller
     {
         $query = parent::buildIndexFetchQuery($request, $requestedRelations);
 
-        if (
-            !$this->resolveUser()->hasAnyRole([Constant::ROL_ADMINISTRADOR, Constant::ROL_INVESTIGADOR])
-            && !($request->query('personal', 'no') == 'yes')
-        ) {
-            $query->where('id_usuario', $this->resolveUser()->id);
+        $esAdministrador = $this->resolveUser()->hasAnyRole([Constant::ROL_ADMINISTRADOR, Constant::ROL_INVESTIGADOR]);
+
+        if ($esAdministrador) {
+            // $query->where('id_usuario', $this->resolveUser()->id);
+            return $query->orderBy('id', 'desc');
         }
 
         if ($request->query('personal', 'no') == 'yes') {
             $email = $this->resolveUser()->email;
             $wildcardDomain = Str::of($email)->match('/(@.+)/')->prepend('*');
-
-            // dd($wildcardDomain);
             $query
                 ->whereDate('periodo_fin', '>=', Carbon::now())
                 ->whereHas('agrupacion', function (Builder $query) use ($email, $wildcardDomain) {
