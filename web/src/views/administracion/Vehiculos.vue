@@ -158,9 +158,9 @@ export default {
     },
   },
   methods: {
-    integerRule: integer('Debe completar el campo.'),
+    // integerRule: integer('Debe completar el campo.'),
     fieldRule: string('Debe ingresar un valor numerico'),
-    numberRule: number('Debe ingresar un valor numerico'),
+    // numberRule: number('Debe ingresar un valor numerico'),
     async initialize() {
       const {
         data: {
