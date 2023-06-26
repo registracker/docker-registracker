@@ -43,10 +43,22 @@
             Contraseña <span class="red--text"><strong>* </strong></span>
           </template>
         </v-text-field>
-        <label>
-            <input v-model="agree" type="checkbox">
-            <a @click="abrir">Acepto terminos y condiciones</a>
-          </label>
+
+          <v-checkbox v-model="agree">
+      <template v-slot:label>
+        <div>
+          Acepto
+            <a
+              target="_blank"
+              :href= url
+              @click.stop
+            >
+              Condiciones de servicio
+            </a>
+        </div>
+      </template>
+    </v-checkbox>
+
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -74,6 +86,7 @@ export default {
     valid: true,
     agree: false,
     showPassword: false,
+    url: `${window.location.origin}/privacy`,
     roles: [],
     form: {
       email: '',
