@@ -89,7 +89,7 @@ Route::post('/forgot-password', function (Request $request) {
      * LLAMAR envio de correo enviado el token
      */
     Mail::send(new RecuperarContrasenia($email, 'USER', $url));
-    return 'Se ha enviando enlace a tu correo, corrobora por favor';
+    return 'Se ha enviado un enlace para reestablecer tu contraseña';
 });
 
 Route::post('/reset-password', function (Request $request) {
