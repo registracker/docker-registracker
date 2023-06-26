@@ -155,7 +155,7 @@ export default {
         this.desplazamientos = desplazamientos;
         this.numeroDePaginas = lastPage;
 
-        if (this.desplazamientos) {
+        if (!this.desplazamientos) {
           this.no_data = true;
         }
       } catch (error) {

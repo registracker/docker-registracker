@@ -176,7 +176,9 @@ export default {
 
       if (to.name === 'web:ingresar' || !this.accesoPermitido(to.name)) {
         console.log('Entra 3');
-        return next(false);
+        if (to.name !== 'web:dashboard') {
+          return next(false);
+        }
       }
 
       // if (to.meta.requiresAuth) {
