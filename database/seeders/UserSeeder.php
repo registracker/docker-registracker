@@ -41,17 +41,5 @@ class UserSeeder extends Seeder
         ]);
 
         $usuario3->assignRole(Constant::ROL_PARTICIPANTE);
-
-        $usuarioDaniel = User::create([
-            'name' => 'Usuario Investigador',
-            'email' => 'cv15018@ues.edu.sv',
-            'password' => Hash::make('password'),
-        ]);
-
-        $usuarioDaniel->assignRole(Constant::ROL_INVESTIGADOR);
-
-        // Esta línea ya no es necesaria ya que no se usa Sanctum
-        // $user = $usuario->createToken($usuario->getNombreRoles(), []);
-        // echo ($user->plainTextToken);
     }
 }
