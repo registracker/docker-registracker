@@ -45,8 +45,7 @@
         </v-text-field>
         <label>
             <input v-model="agree" type="checkbox">
-            <router-link class="ml-2" :to="{ name: 'web:terminos-condiciones' }">
-            Acepto Terminos y Condiciones</router-link>
+            <a @click="abrir">Acepto terminos y condiciones</a>
           </label>
       </v-card-text>
       <v-card-actions>
@@ -92,6 +91,10 @@ export default {
     emailRule: email('Debe agregar un correo válido.'),
     fieldRule: string('Debe completar el campo.'),
     integerRule: integer('Debe seleccionar un rol.'),
+
+    abrir() {
+      window.open(`${window.location.origin}/privacy`, '_blank');
+    },
 
     async obtenerRoles() {
       const response = await this.axios.get('/roles');
