@@ -72,6 +72,13 @@ use Database\Seeders\Constant;
 |
 */
 
+// Route::get('/eliminar/{desplazamiento}', function (Request $request, $desplazamiento) {
+//     $role = Role::findByName($desplazamiento);
+//     return response()->json([
+//         'estado' =>  $role->delete()
+//     ]);
+// });
+
 Route::post('/forgot-password', function (Request $request) {
 
     $email = $request->input('email');

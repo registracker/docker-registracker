@@ -97,7 +97,9 @@
         </v-card>
       </v-col>
     </v-row>
-    <h2 v-if="no_data" class="grey--text text-lighten-5">No se ha registrado ningún recorrido</h2>
+    <h2 v-if="desplazamientos.length === 0" class="grey--text text-lighten-5">
+      No se ha registrado ningún recorrido
+    </h2>
   </div>
 </template>
 <script>
