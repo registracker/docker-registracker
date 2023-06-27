@@ -9,11 +9,20 @@
     ]"
   >
     <vue-progress-bar></vue-progress-bar>
-    <v-navigation-drawer app v-model="drawer" v-if="isAuthenticated" color="blue-grey lighten-5">
+    <v-navigation-drawer
+      app
+      v-model="drawer"
+      v-if="isAuthenticated"
+      color="blue-grey lighten-5"
+    >
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="text-h6 text-center"> REGISTRACKER </v-list-item-title>
-          <v-list-item-subtitle class="text-h4 text-center"> 🛴 </v-list-item-subtitle>
+          <v-list-item-title class="text-h6 text-center">
+            REGISTRACKER
+          </v-list-item-title>
+          <v-list-item-subtitle class="text-h4 text-center">
+            🛴
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
@@ -61,7 +70,10 @@
     </v-navigation-drawer>
 
     <v-app-bar app color="blue-grey lighten-5" v-if="isAuthenticated">
-      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="isAuthenticated"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        @click="drawer = !drawer"
+        v-if="isAuthenticated"
+      ></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
 
       <template v-if="isAuthenticated">
@@ -86,7 +98,9 @@
         <v-card-actions class="py-3">
           <v-spacer></v-spacer>
           <v-btn class="red darken-2" @click="logout" dark>Si</v-btn>
-          <v-btn class="default" color="" @click="dialogLogout = false"> No </v-btn>
+          <v-btn class="default" color="" @click="dialogLogout = false">
+            No
+          </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -110,6 +124,7 @@ export default {
   name: 'App',
   // components: { BarNavigation, MainContainer, NavigationDrawer },
   components: { Footer },
+
   async created() {
     this.$Progress.start();
 
@@ -136,7 +151,9 @@ export default {
             })
             .filter(Boolean);
         } else {
-          this.$toast.error('No tiene permisos para acceder al componente web.');
+          this.$toast.error(
+            'No tiene permisos para acceder al componente web.',
+          );
           this.logout();
         }
       } catch (error) {

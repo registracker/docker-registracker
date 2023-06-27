@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Orion\Http\Requests\Request;
 use Orion\Http\Controllers\Controller;
 use App\Http\Requests\UsuarioRequest;
-
+use Illuminate\Database\Eloquent\Builder;
 
 class UsuarioController extends Controller
 {
@@ -45,4 +45,10 @@ class UsuarioController extends Controller
         $user->fill(['password' => Hash::make($request->password),]);
         $user->save();
     }
+
+    // protected function buildIndexFetchQuery(Request $request, array $requestedRelations): Builder
+    // {
+    //     $query = parent::buildIndexFetchQuery($request, $requestedRelations);
+    //     return $query->orderBy('id', 'desc');
+    // }
 }

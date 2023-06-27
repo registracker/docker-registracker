@@ -104,12 +104,19 @@
 </template>
 <script>
 import { saveAs } from 'file-saver';
+import { mapState } from 'vuex';
 
 export default {
   name: 'DesplazamientoListado',
 
   created() {
-    this.obtenerDesplazamientos();
+    if (this.isAuthenticated) {
+      this.obtenerDesplazamientos();
+    } else {
+      this.$router.push({ name: 'web:ingresar' }, (error) => {
+        console.log(error);
+      });
+    }
   },
 
   data() {
@@ -200,6 +207,10 @@ export default {
     paginaActiva() {
       this.obtenerDesplazamientos();
     },
+  },
+
+  computed: {
+    ...mapState('user', ['isAuthenticated']),
   },
 };
 </script>

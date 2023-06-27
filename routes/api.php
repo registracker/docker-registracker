@@ -388,6 +388,7 @@ Route::middleware('auth:sanctum')->get('/incidente/geojson/filtro', function (Re
             ) AS feature
             FROM reportes_incidentes ri
             WHERE Date(ri.fecha_reporte) BETWEEN ? AND ?
+            AND ri.fecha_eliminado IS NULL
         ) subquery;";
 
     if ($request->query('csv', null) == 'yes') {

@@ -5,25 +5,25 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 const routes = [{
-  path: '/dashboard',
-  name: 'web:dashboard',
-  meta: {
-    requiresAuth: false,
-  },
-  component: () => import(
-    /* webpackChunkName: "dashboard" */
-    '@/components/desplazamiento/DesplazamientoListado.vue'
-  ),
-},
-{
   path: '/',
   name: 'web:ingresar',
   meta: {
     requiresAuth: false,
   },
   component: () => import(
-    /* webpackChunkName: "login" */
+    /* webpackChunkName: "web:ingresar" */
     '@/views/administracion/Login.vue'
+  ),
+},
+{
+  path: '/dashboard',
+  name: 'web:dashboard',
+  meta: {
+    requiresAuth: true,
+  },
+  component: () => import(
+    /* webpackChunkName: "web:dashboard" */
+    '@/components/desplazamiento/DesplazamientoListado.vue'
   ),
 },
 {
@@ -33,24 +33,30 @@ const routes = [{
     requiresAuth: false,
   },
   component: () => import(
-    /* webpackChunkName: "login" */
+    /* webpackChunkName: "web:terminos-condiciones" */
     '@/views/terminosCondiciones.vue'
   ),
 },
 {
   path: '/forgot-password',
   name: 'web:forgot-password',
-  meta: { requiresAuth: false },
+  meta: {
+    requiresAuth: false,
+  },
   component: () => import(
-    /* webpackChunkName: "forgotPassword" */ '@/views/forgotPassword.vue'
+    /* webpackChunkName: "web:forgot-password" */
+    '@/views/forgotPassword.vue'
   ),
 },
 {
   path: '/reset-password',
   name: 'web:reset-password',
-  meta: { requiresAuth: false },
+  meta: {
+    requiresAuth: false,
+  },
   component: () => import(
-    /* webpackChunkName: "resetPassword" */ '@/views/resetPassword.vue'
+    /* webpackChunkName: "web:reset-password" */
+    '@/views/resetPassword.vue'
   ),
 },
 {
@@ -63,240 +69,222 @@ const routes = [{
     /* webpackChunkName: "administracion" */
     '@/views/administracion/Base.vue'
   ),
-  children: [{
-    path: 'usuario',
-    name: 'web:administracion:usuarios',
-    meta: {
-      requiresAuth: true,
+  children: [
+    {
+      path: 'usuario',
+      name: 'web:administracion:usuarios',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:usuarios" */
+        '@/components/users/CreateUserFom.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:usuario" */
-      '@/components/users/CreateUserFom.vue'
-    ),
-  },
 
-  {
-    path: 'roles',
-    name: 'web:administracion:roles',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'roles',
+      name: 'web:administracion:roles',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:roles" */
+        '@/views/administracion/Roles.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:roles" */
-      '@/views/administracion/Roles.vue'
-    ),
-  },
-  {
-    path: 'permisos',
-    name: 'web:administracion:permisos',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'permisos',
+      name: 'web:administracion:permisos',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:permisos" */
+        '@/views/administracion/Permisos.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:permisos" */
-      '@/views/administracion/Permisos.vue'
-    ),
-  },
-  {
-    path: 'medios-desplazamiento',
-    name: 'web:administracion:medios-desplazamiento',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'medios-desplazamiento',
+      name: 'web:administracion:medios-desplazamiento',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:medios-desplazamiento" */
+        '@/components/administracion/GestionIconos.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:medios-desplazamiento" */
-      '@/components/administracion/GestionIconos.vue'
-    ),
-  },
-  {
-    path: 'incidentes',
-    name: 'web:administracion:incidentes',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'incidentes',
+      name: 'web:administracion:incidentes',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:incidentes" */
+        '@/components/administracion/GestionIconos.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:incidentes" */
-      '@/components/administracion/GestionIconos.vue'
-    ),
-  },
-  {
-    path: 'marcadores',
-    name: 'web:administracion:marcadores',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'marcadores',
+      name: 'web:administracion:marcadores',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:marcadores" */
+        '@/components/administracion/GestionIconos.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:marcadores" */
-      '@/components/administracion/GestionIconos.vue'
-    ),
-  },
-  {
-    path: 'clasificacion-vehicular',
-    name: 'web:administracion:clasificacion-vehicular',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'clasificacion-vehicular',
+      name: 'web:administracion:clasificacion-vehicular',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:clasificacion-vehicular" */
+        '@/components/administracion/ClasificacionVehicular.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:marcadores" */
-      '@/components/administracion/ClasificacionVehicular.vue'
-    ),
-  },
-  {
-    path: 'clases-vehiculares',
-    name: 'web:administracion:clases-vehiculares',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'clases-vehiculares',
+      name: 'web:administracion:clases-vehiculares',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:clases-vehiculares" */
+        '@/views/administracion/ClasesVehiculares.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:marcadores" */
-      '@/views/administracion/ClasesVehiculares.vue'
-    ),
-  },
-  {
-    path: 'vehiculos',
-    name: 'web:administracion:vehiculos',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'vehiculos',
+      name: 'web:administracion:vehiculos',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:vehiculos" */
+        '@/views/administracion/Vehiculos.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:marcadores" */
-      '@/views/administracion/Vehiculos.vue'
-    ),
-  },
-  {
-    path: 'estados-solicitud',
-    name: 'web:administracion:estados-solicitud',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'estados-solicitud',
+      name: 'web:administracion:estados-solicitud',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:estados-solicitud" */
+        '@/components/administracion/GestionEstadosCuenta.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:marcadores" */
-      '@/components/administracion/GestionEstadosCuenta.vue'
-    ),
-  },
-  {
-    path: 'tipos-vehiculos-rutas',
-    name: 'web:administracion:tipos-vehiculos-rutas',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'tipos-vehiculos-rutas',
+      name: 'web:administracion:tipos-vehiculos-rutas',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:tipos-vehiculos-rutas" */
+        '@/components/administracion/RutasTransporte/GestionTiposVehiculoRutas.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:tipos-vehiculos-rutas" */
-      '@/components/administracion/RutasTransporte/GestionTiposVehiculoRutas.vue'
-    ),
-  },
-  {
-    path: 'tipos-servicios-rutas',
-    name: 'web:administracion:tipos-servicios-rutas',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'tipos-servicios-rutas',
+      name: 'web:administracion:tipos-servicios-rutas',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:tipos-servicios-rutas" */
+        '@/components/administracion/RutasTransporte/GestionTiposServiciosRutas.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:tipos-servicios-rutas" */
-      '@/components/administracion/RutasTransporte/GestionTiposServiciosRutas.vue'
-    ),
-  },
-  {
-    path: 'clases-servicios-rutas',
-    name: 'web:administracion:clases-servicios-rutas',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'clases-servicios-rutas',
+      name: 'web:administracion:clases-servicios-rutas',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:clases-servicios-rutas" */
+        '@/components/administracion/RutasTransporte/GestionClasesServiciosRutas.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:clases-servicios-rutas" */
-      '@/components/administracion/RutasTransporte/GestionClasesServiciosRutas.vue'
-    ),
-  },
-  {
-    path: 'rutas-transporte',
-    name: 'web:administracion:rutas-transporte',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'rutas-transporte',
+      name: 'web:administracion:rutas-transporte',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:rutas-transporte" */
+        '@/components/administracion/RutasTransporte/GestionRutasTransporte.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:rutas-transportes" */
-      '@/components/administracion/RutasTransporte/GestionRutasTransporte.vue'
-    ),
-  },
-  {
-    path: 'levantamientos',
-    name: 'web:administracion:levantamiento',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'levantamientos',
+      name: 'web:administracion:levantamiento',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:levantamiento" */
+        '@/components/administracion/GestionLevantamiento.vue'
+      ),
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:rutas-transportes" */
-      '@/components/administracion/GestionLevantamiento.vue'
-    ),
-  },
-  {
-    path: 'levantamientos/:id',
-    name: 'web:administracion:levantamiento-usuario',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'levantamientos/:id',
+      name: 'web:administracion:levantamiento-usuario',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:levantamiento-usuario" */
+        '@/components/administracion/GestionLevantamientoUsuario.vue'
+      ),
+      beforeEnter: (to, from, next) => {
+        const userId = parseInt(to.params.id, 10);
+        if (!Number.isNaN(userId)) {
+          next();
+        } else {
+          next('/NotFound');
+        }
+      },
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:rutas-transportes" */
-      '@/components/administracion/GestionLevantamientoUsuario.vue'
-    ),
-    beforeEnter: (to, from, next) => {
-      const userId = parseInt(to.params.id, 10);
-      if (!Number.isNaN(userId)) {
-        next();
-      } else {
-        next('/NotFound');
-      }
+    {
+      path: 'conteo-vehicular',
+      name: 'web:administracion:conteo-vehicular',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:conteo-vehicular" */
+        '@/components/administracion/GestionLevantamientoContador.vue'
+      ),
     },
-  },
-  {
-    path: 'conteo-vehicular',
-    name: 'web:administracion:conteo-vehicular',
-    meta: {
-      requiresAuth: true,
+    {
+      path: 'conteo-vehicular/:id',
+      name: 'web:administracion:conteo-vehicular-usuario',
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import(
+      /* webpackChunkName: "web:administracion:conteo-vehicular-usuario" */
+        '@/components/administracion/GestionLevantamientoContadorUsuario.vue'
+      ),
+      beforeEnter: (to, from, next) => {
+        const userId = parseInt(to.params.id, 10);
+        if (!Number.isNaN(userId)) {
+          next();
+        } else {
+          next('/NotFound');
+        }
+      },
     },
-    component: () => import(
-      /* webpackChunkName: "administracion:rutas-transportes" */
-      '@/components/administracion/GestionLevantamientoContador.vue'
-    ),
-  },
-  {
-    path: 'conteo-vehicular/:id',
-    name: 'web:administracion:conteo-vehicular-usuario',
-    meta: {
-      requiresAuth: true,
-    },
-    component: () => import(
-      /* webpackChunkName: "administracion:rutas-transportes" */
-      '@/components/administracion/GestionLevantamientoContadorUsuario.vue'
-    ),
-    beforeEnter: (to, from, next) => {
-      const userId = parseInt(to.params.id, 10);
-      if (!Number.isNaN(userId)) {
-        next();
-      } else {
-        next('/NotFound');
-      }
-    },
-  },
-  {
-    path: 'table',
-    name: 'administracion-marcadores',
-    meta: {
-      requiresAuth: true,
-    },
-    component: () => import(
-      /* webpackChunkName: "marcadores" */
-      '@/components/administracion/EstadoCuentaTablaPaginada.vue'
-    ),
-  },
-  {
-    path: 'login2',
-    name: 'administracion-login2',
-    component: () => import(
-      /* webpackChunkName: "login2" */
-      '@/views/administracion/Login.vue'
-    ),
-  },
   ],
 },
 
@@ -339,7 +327,7 @@ const routes = [{
       requiresAuth: true,
     },
     component: () => import(
-      /* webpackChunkName: "web:desplazamiento:movil" */
+      /* webpackChunkName: "web:desplazamiento:geojson" */
       '@/components/desplazamiento/GeoJsonFiltro.vue'
     ),
   },
@@ -356,62 +344,61 @@ const routes = [{
     /* webpackChunkName: "levantamiento" */
     '@/views/administracion/Base.vue'
   ),
-  children: [
-    {
-      path: 'incidentes',
-      name: 'web:reporte:incidente',
-      meta: {
-        requiresAuth: true,
-      },
-      component: () => import(
-        /* webpackChunkName: "web:reporte:incidente" */
-        '@/components/desplazamiento/IncidenteGeoJson.vue'
-      ),
+  children: [{
+    path: 'incidentes',
+    name: 'web:reporte:incidente',
+    meta: {
+      requiresAuth: true,
     },
-    {
-      path: 'marcadores',
-      name: 'web:reporte:marcador',
-      meta: {
-        requiresAuth: true,
-      },
-      component: () => import(
+    component: () => import(
+      /* webpackChunkName: "web:reporte:incidente" */
+      '@/components/desplazamiento/IncidenteGeoJson.vue'
+    ),
+  },
+  {
+    path: 'marcadores',
+    name: 'web:reporte:marcador',
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import(
       /* webpackChunkName: "web:reporte:marcador" */
-        '@/components/levantamiento/Listado.vue'
-      ),
+      '@/components/levantamiento/Listado.vue'
+    ),
+  },
+  {
+    path: 'marcador/:codigo',
+    name: 'web:reporte:detalle-marcador',
+    meta: {
+      requiresAuth: true,
     },
-    {
-      path: 'marcador/:codigo',
-      name: 'web:reporte:detalle-marcador',
-      meta: {
-        requiresAuth: true,
-      },
-      component: () => import(
+    component: () => import(
       /* webpackChunkName: "web:reporte:detalle-marcador" */
-        '@/components/levantamiento/Marker.vue'
-      ),
+      '@/components/levantamiento/Marker.vue'
+    ),
+  },
+  {
+    path: 'conteo-vehicular',
+    name: 'web:reporte:conteo-vehicular',
+    meta: {
+      requiresAuth: true,
     },
-    {
-      path: 'conteo-vehicular',
-      name: 'web:reporte:conteo-vehicular',
-      meta: {
-        requiresAuth: true,
-      },
-      component: () => import(
+    component: () => import(
       /* webpackChunkName: "web:reporte:conteo-vehicular" */
-        '@/components/conteo_vehicular/Listado.vue'
-      ),
+      '@/components/conteo_vehicular/Listado.vue'
+    ),
+  },
+  {
+    path: 'conteo-vehicular/:codigo',
+    name: 'web:reporte:detalle-conteo-vehicular',
+    meta: {
+      requiresAuth: true,
     },
-    {
-      path: 'conteo-vehicular/:codigo',
-      name: 'web:reporte:detalle-conteo-vehicular',
-      meta: {
-        requiresAuth: true,
-      },
-      component: () => import(
+    component: () => import(
       /* webpackChunkName: "web:reporte:detalle-conteo-vehicular" */
-        '@/components/conteo_vehicular/Tabla.vue'
-      ),
-    },
+      '@/components/conteo_vehicular/Tabla.vue'
+    ),
+  },
   ],
 },
 
