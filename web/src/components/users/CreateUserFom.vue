@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--Data table-->
     <v-data-table
       :headers="headers"
       :items="items"
@@ -10,7 +9,24 @@
         pageText: '{0}-{1} de {2}',
         'items-per-page-text': 'Elementos por página',
       }"
+      @update:options="update"
+      :server-items-length="total"
+      :page.sync="page"
     >
+      <template v-slot:header.roles>
+        <v-autocomplete
+          v-model="filtroRoles"
+          :items="roles"
+          item-text="name"
+          item-value="id"
+          label="Rol"
+          multiple
+          flat
+          clearable
+          class="mt-2 pt-2"
+        >
+        </v-autocomplete>
+      </template>
       <template v-slot:no-data> Sin registros </template>
       <template #top>
         <v-toolbar flat>
@@ -112,7 +128,7 @@
       <template v-slot:item.solicitud="{ item }">
         <v-chip
           small
-          :color="item?.solicitud?.estado?.id == 1 ? 'green': 'red'"
+          :color="item?.solicitud?.estado?.id == 1 ? 'green' : 'red'"
           text-color="white"
         >
           {{ item?.solicitud?.estado?.nombre }}
@@ -123,7 +139,7 @@
     <!--Modal cambio de rol-->
     <v-dialog v-model="dialogoRol" max-width="530px">
       <v-card v-if="rolSeleccionado">
-        <v-card-title class="text-h5"> Cambio de estado </v-card-title>
+        <v-card-title class="text-h5"> Cambio de rol </v-card-title>
         <v-card-text class="mb-0 pb-0">
           <v-form ref="formRol">
             <v-autocomplete
@@ -144,9 +160,7 @@
           <v-btn class="default" color="" @click="closeDialogoRol">
             Cancelar
           </v-btn>
-          <v-btn color="red darken-3" @click="cambiarRol" dark>
-            Aceptar
-          </v-btn>
+          <v-btn color="red darken-3" @click="cambiarRol" dark> Aceptar </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -187,7 +201,7 @@
     <!--Modal cambio de contraseña-->
     <v-dialog v-model="dialogCambioPassword" max-width="530px">
       <v-card>
-        <v-card-title class="text-h5"> Cambiar contraseña </v-card-title>
+        <v-card-title class="text-h5"> Cambio de contraseña </v-card-title>
         <v-card-text>
           <v-form ref="form_change_pass">
             <v-text-field
@@ -246,9 +260,12 @@ export default {
   },
 
   data: () => ({
+    page: 1,
+    limit: 10,
+    total: 0,
+    filtroRoles: null,
     dialogoRol: false,
     rolSeleccionado: null,
-
     valid: true,
     valid_state: true,
     showPassword: false,
@@ -261,14 +278,31 @@ export default {
       password: '',
     },
     headers: [
-      // {
-      //   text: 'Usuario',
-      //   align: 'start',
-      //   value: 'name',
-      // },
-      { text: 'Correo', align: 'start', value: 'email' },
-      { text: 'Rol', align: 'start', value: 'roles' },
-      { text: 'Estado', align: 'center', value: 'solicitud' },
+      {
+        text: 'Correo',
+        align: 'start',
+        value: 'email',
+        sortable: false,
+      },
+      {
+        text: 'Usuario',
+        align: 'start',
+        value: 'name',
+        sortable: false,
+      },
+      {
+        text: 'Rol',
+        align: 'start',
+        value: 'roles',
+        sortable: false,
+        width: '20%',
+      },
+      {
+        text: 'Estado',
+        align: 'center',
+        value: 'solicitud',
+        sortable: false,
+      },
       {
         text: 'Acciones',
         align: 'start',
@@ -293,10 +327,7 @@ export default {
         || 'La contraseña debe tener al entre 8, al menos un dígito, al menos tres minúscula y al menos una mayúscula.',
     ],
 
-    reglaTexto: [
-      (v) => !!v
-        || 'Debe seleccionar el rol.',
-    ],
+    reglaTexto: [(v) => !!v || 'Debe seleccionar el rol.'],
   }),
 
   methods: {
@@ -306,6 +337,7 @@ export default {
     passwordRule: password(
       'La contraseña debe tener mínimo una letra mayúscula, tres minúscula, un carácter especial, un dígito y mínimo ocho caracteres',
     ),
+
     async obtenerRoles() {
       const response = await this.axios.get('/roles');
       const {
@@ -329,7 +361,9 @@ export default {
       try {
         const validate = this.$refs.formRol.validate();
         if (validate) {
-          await this.axios.put(`/usuarios/${this.rolSeleccionado.id}`, { rol: this.rolSeleccionado.roles });
+          await this.axios.put(`/usuarios/${this.rolSeleccionado.id}`, {
+            rol: this.rolSeleccionado.roles,
+          });
           this.initialize();
           this.$toast.success('Rol actualizado.');
         }
@@ -359,22 +393,65 @@ export default {
         this.$toast.error('No se pudo registrar la cuenta, intente de nuevo.');
       }
     },
+
     async initialize() {
-      const response = await this.axios.post('/usuarios/search?limit=10000', {
-        includes: [{ relation: 'roles' }, { relation: 'solicitud.estado' }],
-      });
+      let filters;
+      if (this.filtroRoles?.length > 0) {
+        filters = [{
+          field: 'roles.id',
+          operator: 'in',
+          value: this.filtroRoles,
+        }];
+      }
+
+      const response = await this.axios.post(
+        '/usuarios/search',
+        {
+          includes: [{ relation: 'roles' }, { relation: 'solicitud.estado' }],
+          sort: [{ field: 'id', direction: 'desc' }],
+          filters,
+        },
+        {
+          params: {
+            limit: this.limit,
+            page: this.page,
+          },
+        },
+      );
 
       this.items = response.data.data.map((user) => ({
         ...user,
         roles: user.roles.map((rol) => rol.name).join(', '),
       }));
+
+      this.total = response.data.meta.total;
     },
+
+    update(config) {
+      if (config.page !== this.page) {
+        this.page = config.page;
+        this.initialize();
+      }
+
+      if (config.itemsPerPage !== this.limit) {
+        this.limit = config.itemsPerPage;
+        this.initialize();
+      }
+    },
+
+    pagination() {
+      return {
+        page: this.page,
+      };
+    },
+
     openDialog(item) {
       this.editedIndex = this.items.indexOf(item);
       this.editedItem = { ...item };
       this.estado = item.solicitud?.estado?.id || 1;
       this.dialogEstado = true;
     },
+
     openDialogChangePass(item) {
       this.editedIndex = this.items.indexOf(item);
       this.editedItem = { ...item };
@@ -383,6 +460,7 @@ export default {
         this.$refs.form_change_pass.reset();
       }
     },
+
     async changeState() {
       const nuevoEstado = this.estado;
       try {
@@ -401,6 +479,7 @@ export default {
         this.$toast.error('Error al actualizar el estado');
       }
     },
+
     async changePassword() {
       try {
         const validate = this.$refs.form_change_pass.validate();
@@ -415,11 +494,13 @@ export default {
         this.$toast.error('Error al actualizar la contraseña');
       }
     },
+
     async getEstadosCuenta() {
       const response = await this.axios.get('/estados-solicitud');
       this.estados = response.data.data;
       console.log(response.data.data);
     },
+
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -430,10 +511,20 @@ export default {
       });
     },
   },
+
   computed: {
     repeatPasswordRules() {
       return () => this.editedItem.password === this.passConfirm
         || 'Contraseñas no coinciden';
+    },
+  },
+
+  watch: {
+    filtroRoles() {
+      this.page = 1;
+      this.$nextTick(() => {
+        this.initialize();
+      });
     },
   },
 };
