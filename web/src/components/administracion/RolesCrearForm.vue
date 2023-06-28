@@ -22,7 +22,7 @@
         </v-form>
       </v-col>
     </v-row>
-    <v-card v-for="seccion in secciones" :key="seccion.etiqueta" class="mt-3 mx-4">
+    <v-card v-for="seccion in secciones" :key="seccion.etiqueta" class="mx-4 mb-2">
       <v-card-title class="m-0 p-0">
         <v-checkbox
           class="m-0 p-0"
