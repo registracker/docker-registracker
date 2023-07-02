@@ -95,8 +95,8 @@ export default {
       password: '',
     },
     passwordRules: [
-      (v) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/.test(v)
-        || 'La contraseña debe tener al entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula y al menos una mayúscula.',
+      (v) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,250}$/.test(v)
+        || 'La contraseña debe contener al menos 8 caracteres con una letra mayúscula, un carácter especial, un dígito.',
     ],
   }),
 
