@@ -10,7 +10,8 @@ services:
         volumes:
             - ./:/var/www/app
             - ./docker/nginx/nginx-site-${SERVER_PROTOCOL:-http}.conf:/etc/nginx/conf.d/default.conf
-            - ./docker/certs/:/etc/certs
+            - ./docker/certs/bundle.crt:/etc/certs/bundle.crt
+            - ./docker/certs/private.key:/etc/certs/private.key
         depends_on:
             - php
 
@@ -38,7 +39,7 @@ services:
             POSTGRES_DB: ${DB_DATABASE:-registrackerdb}
             POSTGRES_USER: ${DB_USERNAME:-registracker}
             POSTGRES_PASSWORD: ${DB_PASSWORD:-registracker#1234}
-  
+
     pgadmin:
         image: dpage/pgadmin4:latest
         restart: always
