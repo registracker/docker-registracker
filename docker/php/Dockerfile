@@ -21,5 +21,6 @@ RUN apt-get update \
         && chown -R www-data:www-data /var/www
 
 WORKDIR /var/www/app
+RUN  [ ! -d "vendor" ] && composer install
 # RUN chmod -R 777 ./storage/
 USER www-data
