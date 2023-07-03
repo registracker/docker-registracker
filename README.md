@@ -4,15 +4,12 @@
 ```
 git clone https://github.com/registracker/docker-registracker.git
 ```
-   
-3. Crear el archivo `.env` copiando y ajustando el `.env.example`.
+2. Crear el archivo `.env` copiando y ajustando el `.env.example`.
 ```
 cp .env.example .env
 ```
-
-1. Run `docker compose up -d`
-   
-2. Acceda a la interfaz de usuario web en `http://localhost:80` (o un puerto diferente, en caso de que haya editado el archivo .env)
+3. Run `docker compose up -d`
+4. Acceda a la interfaz de usuario web en `http://localhost:80` (o un puerto diferente, en caso de que haya editado el archivo .env)
 
 docker compose exec php composer install
 docker compose exec php php artisan orion:specs --path="public/specs/specs.json"
